@@ -23,7 +23,7 @@
 <body>
     <div class="login-box">
         <h2>نظام البصمة والموقع</h2>
-        <p class="subtitle">يرجى تفعيل الموقع (GPS) عند المطالبة بذلك</p>
+        <p class="subtitle">يجب تفعيل الموقع (GPS) لاعتماد البصمة</p>
 
         <!-- اختيار الاسم -->
         <div class="input-group">
@@ -73,6 +73,7 @@
             const msg = document.getElementById("msg");
             const btn = document.getElementById("submitBtn");
 
+            // الشروط الصارمة: لا يمر إذا كان هناك نقص
             if (!name) { msg.style.color = "red"; msg.innerText = "يرجى اختيار الاسم!"; return; }
             if (!type) { msg.style.color = "red"; msg.innerText = "يرجى اختيار نوع البصمة (حضور أو انصراف)!"; return; }
             if (employees[name] !== pass) { msg.style.color = "red"; msg.innerText = "الرقم السري غير صحيح!"; return; }
@@ -82,27 +83,40 @@
             msg.style.color = "#f39c12";
             msg.innerText = "اسمح للمتصفح بتحديد موقعك (Allow Location)...";
 
+            // إجبار الموظف على إعطاء الموقع
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(
-                    pos => sendData(name, type, pos, null),
-                    err => sendData(name, type, null, err)
+                    pos => sendData(name, type, pos),
+                    err => {
+                        // في حال رفض إعطاء الموقع، يتم طرده وإيقاف التسجيل
+                        btn.disabled = false;
+                        btn.innerText = "اعتماد البصمة";
+                        msg.style.color = "red";
+                        msg.innerHTML = "❌ لا يمكنك تسجيل الحضور بدون السماح بالوصول إلى الموقع. يرجى تفعيل (GPS) والمحاولة مجدداً.";
+                    },
+                    { enableHighAccuracy: true } // لطلب دقة عالية للموقع
                 );
             } else {
-                sendData(name, type, null, true);
+                btn.disabled = false;
+                btn.innerText = "اعتماد البصمة";
+                msg.style.color = "red";
+                msg.innerText = "متصفحك لا يدعم تحديد الموقع، يرجى تحديثه.";
             }
         }
 
-        function sendData(name, type, pos, err) {
+        // دالة إرسال البيانات (لا تعمل إلا إذا اجتاز كل الشروط السابقة)
+        function sendData(name, type, pos) {
             const msg = document.getElementById("msg");
             const btn = document.getElementById("submitBtn");
             
-            let loc = "الموظف رفض تحديد الموقع";
-            if (pos) loc = `https://www.google.com/maps?q=${pos.coords.latitude},${pos.coords.longitude}`;
+            const loc = `https://www.google.com/maps?q=${pos.coords.latitude},${pos.coords.longitude}`;
+            const now = new Date();
 
             const data = {
                 employeeName: name,
-                attendanceType: type, // المعلومة الجديدة (حضور/انصراف)
-                deviceTime: new Date().toLocaleString('ar-AE'),
+                attendanceType: type,
+                deviceTime: now.toLocaleString('ar-AE'),
+                isoDate: now.toISOString().split('T')[0], // لتسهيل الفلترة في الإدارة
                 serverTime: { ".sv": "timestamp" },
                 location: loc,
                 deviceInfo: navigator.userAgent
@@ -112,7 +126,7 @@
             .then(res => {
                 if(res.ok) {
                     msg.style.color = "green";
-                    msg.innerHTML = `✅ تم تسجيل ${type} بنجاح يا ${name}`;
+                    msg.innerHTML = `✅ تم اعتماد بصمة الـ(${type}) بنجاح يا ${name}`;
                     btn.innerText = "مكتمل";
                 } else throw new Error();
             })
