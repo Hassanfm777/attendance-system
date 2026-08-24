@@ -8,87 +8,57 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <style>
         body {
-            font-family: 'Cairo', 'Arial', sans-serif; /* خط عربي أنيق */
+            font-family: 'Cairo', 'Arial', sans-serif;
             background-color: #f0f2f5;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
-            overflow: hidden; /* لمنع التمرير على الجوال */
+            overflow: hidden;
         }
-
         .login-card {
             background-color: #fff;
             padding: 40px;
             border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); /* ظل ناعم */
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             width: 100%;
             max-width: 400px;
             text-align: center;
             transition: transform 0.3s ease-in-out;
         }
-
-        .login-card:hover {
-            transform: translateY(-5px); /* تأثير بسيط عند التحويم */
-        }
-
-        .card-header {
-            margin-bottom: 30px;
-        }
-
-        .card-header h1 {
-            font-size: 28px;
-            color: #2c3e50;
-            margin: 0;
-            margin-bottom: 5px;
-        }
-
-        .card-header p {
-            color: #7f8c8d;
-            margin: 0;
-            font-size: 16px;
-        }
-
-        .input-group {
-            position: relative;
-            margin-bottom: 20px;
-        }
-
+        .card-header { margin-bottom: 30px; }
+        .card-header h1 { font-size: 28px; color: #2c3e50; margin: 0 0 5px 0; }
+        .card-header p { color: #7f8c8d; margin: 0; font-size: 16px; }
+        .input-group { position: relative; margin-bottom: 20px; }
         .input-group .material-icons {
             position: absolute;
-            left: 15px; /* للأيقونات في اليسار */
+            left: 15px;
             top: 50%;
             transform: translateY(-50%);
             color: #bdc3c7;
             font-size: 22px;
         }
-
         .input-group input {
             width: 100%;
-            padding: 15px 15px 15px 50px; /* تباعد من اليسار للأيقونة */
+            padding: 15px 15px 15px 50px;
             font-size: 16px;
             border: 2px solid #e0e6ed;
             border-radius: 10px;
             outline: none;
             transition: border-color 0.3s, box-shadow 0.3s;
             background-color: #fafbfc;
+            box-sizing: border-box;
         }
-
         .input-group input:focus {
-            border-color: #2ecc71; /* لون أخضر عند التركيز */
+            border-color: #2ecc71;
             box-shadow: 0 0 10px rgba(46, 204, 113, 0.2);
             background-color: #fff;
         }
-
-        .input-group input[type="password"] {
-            font-family: 'Arial', sans-serif; /* لكي لا يختفي شكل النجوم */
-        }
-
         button.login-btn {
             width: 100%;
             padding: 15px;
-            background: linear-gradient(135deg, #2ecc71, #27ae60); /* تدرج أخضر احترافي */
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
             color: white;
             border: none;
             border-radius: 10px;
@@ -96,38 +66,24 @@
             cursor: pointer;
             transition: background 0.3s, transform 0.2s;
             box-shadow: 0 5px 15px rgba(39, 174, 96, 0.4);
-        }
-
-        button.login-btn:hover {
-            background: linear-gradient(135deg, #27ae60, #2ecc71);
-            transform: scale(1.02);
-        }
-
-        #message {
-            margin-top: 25px;
             font-weight: bold;
-            font-size: 15px;
-            line-height: 1.6;
-            min-height: 50px; /* لمنع قفز العناصر */
         }
-
-        .footer {
-            margin-top: 30px;
-            font-size: 14px;
-            color: #bdc3c7;
-        }
+        button.login-btn:hover { background: linear-gradient(135deg, #27ae60, #2ecc71); transform: scale(1.02); }
+        button.login-btn:disabled { background: #95a5a6; cursor: not-allowed; box-shadow: none; transform: none; }
+        #message { margin-top: 25px; font-weight: bold; font-size: 15px; line-height: 1.6; min-height: 50px; }
+        .footer { margin-top: 30px; font-size: 14px; color: #bdc3c7; }
     </style>
 </head>
 <body>
     <div class="login-card">
         <div class="card-header">
             <h1>بوابة الموظفين</h1>
-            <p>نظام تسجيل الدخول الآمن</p>
+            <p>نظام تسجيل الدخول السحابي</p>
         </div>
 
         <div class="input-group">
             <span class="material-icons">person</span>
-            <input type="text" id="username" placeholder="اسم الموظف الأول" required autocomplete="off">
+            <input type="text" id="username" placeholder="الاسم (مثال: Suhail Satar)" required autocomplete="off">
         </div>
 
         <div class="input-group">
@@ -135,7 +91,7 @@
             <input type="password" id="password" placeholder="كلمة المرور" required>
         </div>
 
-        <button class="login-btn" onclick="checkLogin()">دخول آمن</button>
+        <button id="loginBtn" class="login-btn" onclick="checkLogin()">دخول وتسجيل الحضور</button>
 
         <p id="message"></p>
 
@@ -145,32 +101,62 @@
     </div>
 
     <script>
-        // هنا حددنا أسماء الموظفين من قائمتك وكلمة مرور موحدة "روح" كما ذكرت (123 للتبسيط الآن)
+        // قائمة الموظفين (الأسماء مطابقة لطلبك وكلمة المرور للجميع 123 حالياً)
         const employees = {
-            "Suhail": "123",
-            "bayna": "123",
-            "Fatmah": "123",
+            "Suhail Satar": "123",
+            "bayna ahmed": "123",
+            "Fatmah yamahi": "123",
             "Deema": "123"
         };
+
+        // رابط قاعدة البيانات السحابية الخاصة بك
+        const firebaseUrl = "https://attendance-system-47995-default-rtdb.firebaseio.com/attendance.json";
 
         function checkLogin() {
             const user = document.getElementById("username").value.trim();
             const pass = document.getElementById("password").value.trim();
             const msg = document.getElementById("message");
+            const btn = document.getElementById("loginBtn");
 
-            // التحقق من صحة البيانات
             if (employees[user] && employees[user] === pass) {
-                // التقاط الوقت الفعلي
-                const now = new Date();
-                const timeString = now.toLocaleString('ar-AE'); // صيغة الوقت لدولة الإمارات
+                // تجميد الزر أثناء الإرسال وإظهار رسالة تحميل
+                btn.disabled = true;
+                btn.innerText = "جاري التوثيق...";
+                msg.style.color = "#2980b9";
+                msg.innerHTML = "يتم الآن تسجيل الحضور في الخوادم المشفرة...";
 
-                msg.style.color = "green";
-                msg.innerHTML = `تم تسجيل الدخول بنجاح، يا <span style="font-weight: 800;">${user}</span>!<br>وقت الدخول: ${timeString}<br>(سيتم حفظ هذا الوقت في جدولك في الخطوة التالية)`;
+                // تجهيز البيانات للإرسال (وقت الجهاز + وقت سيرفر جوجل الدقيق)
+                const data = {
+                    employeeName: user,
+                    deviceTime: new Date().toLocaleString('ar-AE'),
+                    serverTime: { ".sv": "timestamp" } // السر هنا: السيرفر سيكتب الوقت الحقيقي بنفسه
+                };
 
-                // هنا سنضع كود إرسال البيانات إلى Google Sheets في الخطوات القادمة
+                // إرسال البيانات إلى Firebase
+                fetch(firebaseUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                })
+                .then(response => {
+                    if(response.ok) {
+                        msg.style.color = "green";
+                        msg.innerHTML = `تم تسجيل الحضور بنجاح واعتماده رسمياً يا <span style="font-weight: 800;">${user}</span>!`;
+                        btn.innerText = "تم التسجيل";
+                    } else {
+                        throw new Error('Network response was not ok.');
+                    }
+                })
+                .catch(error => {
+                    btn.disabled = false;
+                    btn.innerText = "دخول وتسجيل الحضور";
+                    msg.style.color = "red";
+                    msg.innerHTML = "حدث خطأ في الاتصال بالنظام السحابي. يرجى المحاولة مرة أخرى.";
+                });
+
             } else {
                 msg.style.color = "red";
-                msg.innerHTML = "اسم المستخدم أو كلمة المرور غير صحيحة! يرجى التأكد من كتابة الاسم الأول باللغة الإنجليزية كما هو محدد (مثل Suhail).";
+                msg.innerHTML = "الاسم أو كلمة المرور غير صحيحة! تأكد من كتابة الاسم كما هو متفق عليه.";
             }
         }
     </script>
