@@ -7,78 +7,24 @@
     <!-- تضمين أيقونات Google Material Icons -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <style>
-        body {
-            font-family: 'Cairo', 'Arial', sans-serif;
-            background-color: #f0f2f5;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            overflow: hidden;
-        }
-        .login-card {
-            background-color: #fff;
-            padding: 40px;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 400px;
-            text-align: center;
-            transition: transform 0.3s ease-in-out;
-        }
-        .card-header { margin-bottom: 30px; }
+        body { font-family: 'Cairo', 'Arial', sans-serif; background-color: #f0f2f5; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; overflow: hidden; }
+        .login-card { background-color: #fff; padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); width: 100%; max-width: 400px; text-align: center; }
         .card-header h1 { font-size: 28px; color: #2c3e50; margin: 0 0 5px 0; }
-        .card-header p { color: #7f8c8d; margin: 0; font-size: 16px; }
+        .card-header p { color: #7f8c8d; margin: 0; font-size: 16px; margin-bottom: 30px;}
         .input-group { position: relative; margin-bottom: 20px; }
-        .input-group .material-icons {
-            position: absolute;
-            left: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #bdc3c7;
-            font-size: 22px;
-        }
-        .input-group input {
-            width: 100%;
-            padding: 15px 15px 15px 50px;
-            font-size: 16px;
-            border: 2px solid #e0e6ed;
-            border-radius: 10px;
-            outline: none;
-            transition: border-color 0.3s, box-shadow 0.3s;
-            background-color: #fafbfc;
-            box-sizing: border-box;
-        }
-        .input-group input:focus {
-            border-color: #2ecc71;
-            box-shadow: 0 0 10px rgba(46, 204, 113, 0.2);
-            background-color: #fff;
-        }
-        button.login-btn {
-            width: 100%;
-            padding: 15px;
-            background: linear-gradient(135deg, #2ecc71, #27ae60);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 18px;
-            cursor: pointer;
-            transition: background 0.3s, transform 0.2s;
-            box-shadow: 0 5px 15px rgba(39, 174, 96, 0.4);
-            font-weight: bold;
-        }
-        button.login-btn:hover { background: linear-gradient(135deg, #27ae60, #2ecc71); transform: scale(1.02); }
-        button.login-btn:disabled { background: #95a5a6; cursor: not-allowed; box-shadow: none; transform: none; }
+        .input-group .material-icons { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #bdc3c7; font-size: 22px; }
+        .input-group input { width: 100%; padding: 15px 15px 15px 50px; font-size: 16px; border: 2px solid #e0e6ed; border-radius: 10px; outline: none; background-color: #fafbfc; box-sizing: border-box; }
+        .input-group input:focus { border-color: #2ecc71; }
+        button.login-btn { width: 100%; padding: 15px; background: linear-gradient(135deg, #2ecc71, #27ae60); color: white; border: none; border-radius: 10px; font-size: 18px; cursor: pointer; font-weight: bold; }
+        button.login-btn:disabled { background: #95a5a6; cursor: not-allowed; }
         #message { margin-top: 25px; font-weight: bold; font-size: 15px; line-height: 1.6; min-height: 50px; }
-        .footer { margin-top: 30px; font-size: 14px; color: #bdc3c7; }
     </style>
 </head>
 <body>
     <div class="login-card">
         <div class="card-header">
             <h1>بوابة الموظفين</h1>
-            <p>نظام تسجيل الدخول السحابي</p>
+            <p>نظام البصمة والموقع الجغرافي</p>
         </div>
 
         <div class="input-group">
@@ -91,25 +37,20 @@
             <input type="password" id="password" placeholder="كلمة المرور" required>
         </div>
 
-        <button id="loginBtn" class="login-btn" onclick="checkLogin()">دخول وتسجيل الحضور</button>
+        <button id="loginBtn" class="login-btn" onclick="checkLogin()">تسجيل الحضور (بصمة المكان)</button>
 
         <p id="message"></p>
-
-        <div class="footer">
-            © 2026 جميع الحقوق محفوظة لشركتك
-        </div>
     </div>
 
     <script>
-        // قائمة الموظفين (الأسماء مطابقة لطلبك وكلمة المرور للجميع 123 حالياً)
+        // كلمات السر المخصصة لكل موظف (لا يمكن لأحد الدخول باسم الآخر الآن)
         const employees = {
-            "Suhail Satar": "123",
-            "bayna ahmed": "123",
-            "Fatmah yamahi": "123",
-            "Deema": "123"
+            "Suhail Satar": "suh9988",
+            "bayna ahmed": "bay5544",
+            "Fatmah yamahi": "fat7766",
+            "Deema": "dee3322"
         };
 
-        // رابط قاعدة البيانات السحابية الخاصة بك
         const firebaseUrl = "https://attendance-system-47995-default-rtdb.firebaseio.com/attendance.json";
 
         function checkLogin() {
@@ -118,46 +59,78 @@
             const msg = document.getElementById("message");
             const btn = document.getElementById("loginBtn");
 
+            // التحقق من أن الاسم موجود وكلمة المرور مطابقة للاسم
             if (employees[user] && employees[user] === pass) {
-                // تجميد الزر أثناء الإرسال وإظهار رسالة تحميل
                 btn.disabled = true;
-                btn.innerText = "جاري التوثيق...";
+                btn.innerText = "جاري تحديد الموقع...";
                 msg.style.color = "#2980b9";
-                msg.innerHTML = "يتم الآن تسجيل الحضور في الخوادم المشفرة...";
+                msg.innerHTML = "يرجى السماح بصلاحية الموقع (Location) إذا طلب منك المتصفح ذلك...";
 
-                // تجهيز البيانات للإرسال (وقت الجهاز + وقت سيرفر جوجل الدقيق)
-                const data = {
-                    employeeName: user,
-                    deviceTime: new Date().toLocaleString('ar-AE'),
-                    serverTime: { ".sv": "timestamp" } // السر هنا: السيرفر سيكتب الوقت الحقيقي بنفسه
-                };
-
-                // إرسال البيانات إلى Firebase
-                fetch(firebaseUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(data)
-                })
-                .then(response => {
-                    if(response.ok) {
-                        msg.style.color = "green";
-                        msg.innerHTML = `تم تسجيل الحضور بنجاح واعتماده رسمياً يا <span style="font-weight: 800;">${user}</span>!`;
-                        btn.innerText = "تم التسجيل";
-                    } else {
-                        throw new Error('Network response was not ok.');
-                    }
-                })
-                .catch(error => {
-                    btn.disabled = false;
-                    btn.innerText = "دخول وتسجيل الحضور";
-                    msg.style.color = "red";
-                    msg.innerHTML = "حدث خطأ في الاتصال بالنظام السحابي. يرجى المحاولة مرة أخرى.";
-                });
-
+                // محاولة جلب الموقع الجغرافي
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(
+                        (position) => sendDataToFirebase(user, position, null),
+                        (error) => sendDataToFirebase(user, null, error)
+                    );
+                } else {
+                    sendDataToFirebase(user, null, { message: "متصفحك لا يدعم تحديد الموقع" });
+                }
             } else {
                 msg.style.color = "red";
-                msg.innerHTML = "الاسم أو كلمة المرور غير صحيحة! تأكد من كتابة الاسم كما هو متفق عليه.";
+                msg.innerHTML = "الاسم أو كلمة المرور غير صحيحة! تأكد من بياناتك.";
             }
+        }
+
+        // دالة إرسال البيانات للسحابة
+        function sendDataToFirebase(user, position, locationError) {
+            const msg = document.getElementById("message");
+            const btn = document.getElementById("loginBtn");
+
+            // تجهيز رابط خرائط جوجل أو رسالة خطأ الموقع
+            let locationLink = "مجهول";
+            if (position) {
+                const lat = position.coords.latitude;
+                const lon = position.coords.longitude;
+                locationLink = `https://www.google.com/maps?q=${lat},${lon}`;
+            } else if (locationError) {
+                locationLink = "الموظف رفض تحديد الموقع أو الخدمة مغلقة";
+            }
+
+            // سحب نوع الجهاز والمتصفح
+            const deviceInfo = navigator.userAgent;
+
+            // تجميع البيانات
+            const data = {
+                employeeName: user,
+                deviceTime: new Date().toLocaleString('ar-AE'),
+                serverTime: { ".sv": "timestamp" },
+                location: locationLink,
+                deviceInfo: deviceInfo
+            };
+
+            btn.innerText = "جاري الحفظ بالسيرفر...";
+
+            // إرسال لفايربيس
+            fetch(firebaseUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            })
+            .then(response => {
+                if(response.ok) {
+                    msg.style.color = "green";
+                    msg.innerHTML = `تم تسجيل الحضور بنجاح يا <span style="font-weight: 800;">${user}</span>!<br>تم رفع بصمة الموقع ونوع الجهاز.`;
+                    btn.innerText = "تم التسجيل";
+                } else {
+                    throw new Error('Network error');
+                }
+            })
+            .catch(error => {
+                btn.disabled = false;
+                btn.innerText = "تسجيل الحضور (بصمة المكان)";
+                msg.style.color = "red";
+                msg.innerHTML = "حدث خطأ في الاتصال، حاول مرة أخرى.";
+            });
         }
     </script>
 </body>
