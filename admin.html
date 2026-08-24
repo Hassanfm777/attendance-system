@@ -3,133 +3,163 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة تحكم الإدارة | سجلات الحضور</title>
+    <title>الإدارة | تقارير الدوام</title>
     <style>
-        body { font-family: 'Cairo', Arial, sans-serif; background-color: #f4f7f6; padding: 20px; }
-        .container { max-width: 95%; margin: auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); overflow-x: auto; }
-        h2 { text-align: center; color: #2c3e50; border-bottom: 2px solid #2ecc71; padding-bottom: 10px;}
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; min-width: 800px; }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #ecf0f1; padding: 20px; margin: 0; }
+        .panel { background: white; max-width: 1100px; margin: 40px auto; padding: 30px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        h2 { text-align: center; color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 15px; }
+        .login-sec { text-align: center; margin-top: 50px; }
+        input[type="password"] { padding: 12px; width: 250px; text-align: center; font-size: 16px; border: 1px solid #ccc; border-radius: 5px; }
+        button { background: #27ae60; color: white; padding: 12px 25px; border: none; border-radius: 5px; font-size: 16px; cursor: pointer; margin-top: 15px; font-weight: bold; }
+        button:hover { background: #2ecc71; }
+        .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;}
+        select { padding: 10px; font-size: 16px; border-radius: 5px; border: 1px solid #ccc; min-width: 250px; }
+        table { width: 100%; border-collapse: collapse; background: #fff; }
         th, td { padding: 12px; border: 1px solid #ddd; text-align: center; }
-        th { background-color: #2c3e50; color: white; font-size: 16px; }
-        tr:nth-child(even) { background-color: #f9f9f9; }
-        tr:hover { background-color: #f1f1f1; }
-        .btn { display: block; width: 250px; margin: 20px auto; padding: 12px; background-color: #27ae60; color: white; border: none; border-radius: 5px; cursor: pointer; text-align: center; font-size: 16px; font-weight: bold; transition: 0.3s; }
-        .btn:hover { background-color: #2ecc71; }
-        #login-area { text-align: center; margin-top: 100px; background: white; padding: 40px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); max-width: 400px; margin-left: auto; margin-right: auto; }
-        input[type="password"] { padding: 12px; font-size: 16px; border-radius: 5px; border: 1px solid #ccc; width: 80%; margin-bottom: 20px; text-align: center; }
-        .device-info { font-size: 12px; direction: ltr; text-align: left; color: #555; }
+        th { background: #34495e; color: white; }
+        tr:nth-child(even) { background: #f9f9f9; }
+        .badge-in { background: #2ecc71; color: white; padding: 5px 10px; border-radius: 5px; font-size: 12px; }
+        .badge-out { background: #e74c3c; color: white; padding: 5px 10px; border-radius: 5px; font-size: 12px; }
+        a { color: #2980b9; text-decoration: none; font-weight: bold; }
+        a:hover { text-decoration: underline; }
+        .dev-info { font-size: 11px; color: #7f8c8d; direction: ltr; text-align: left; }
     </style>
 </head>
 <body>
 
-    <div id="login-area">
-        <h2>تسجيل دخول الإدارة</h2>
-        <input type="password" id="adminPass" placeholder="أدخل كلمة مرور المدير">
-        <button class="btn" onclick="checkAdmin()">دخول للوحة التحكم</button>
-        <p id="error-msg" style="color:red; font-weight:bold;"></p>
+    <div class="panel" id="loginPanel">
+        <h2>دخول الإدارة</h2>
+        <div class="login-sec">
+            <input type="password" id="adminCode" placeholder="كلمة مرور الإدارة">
+            <br>
+            <button onclick="verifyAdmin()">تسجيل الدخول</button>
+            <p id="err" style="color:red;"></p>
+        </div>
     </div>
 
-    <div class="container" id="admin-area" style="display: none;">
-        <h2>سجل حضور الموظفين الشامل</h2>
-        <button class="btn" onclick="downloadExcel()">📥 تحميل تقرير الدوام (Excel)</button>
+    <div class="panel" id="dataPanel" style="display: none;">
+        <h2>سجل الحضور والمواقع</h2>
         
-        <table id="attendanceTable">
-            <thead>
-                <tr>
-                    <th>الرقم</th>
-                    <th>اسم الموظف</th>
-                    <th>وقت وتاريخ الدخول</th>
-                    <th>الموقع (GPS)</th>
-                    <th>نوع الجهاز والمتصفح</th>
-                </tr>
-            </thead>
-            <tbody id="tableBody">
-            </tbody>
-        </table>
+        <div class="top-bar">
+            <!-- الفلتر الجديد لاختيار الموظف -->
+            <div>
+                <label style="font-weight: bold; margin-left: 10px;">فلترة حسب الموظف:</label>
+                <select id="empFilter" onchange="renderTable()">
+                    <option value="all">عرض جميع الموظفين (الكل)</option>
+                    <option value="Suhail Satar">Suhail Satar</option>
+                    <option value="bayna ahmed">bayna ahmed</option>
+                    <option value="Fatmah yamahi">Fatmah yamahi</option>
+                    <option value="Deema">Deema</option>
+                </select>
+            </div>
+            
+            <button onclick="exportCSV()" style="background:#2980b9; margin:0;">📥 تحميل إكسل للبيانات المعروضة</button>
+        </div>
+        
+        <div style="overflow-x:auto;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>الاسم</th>
+                        <th>نوع البصمة</th>
+                        <th>التاريخ والوقت</th>
+                        <th>الموقع (GPS)</th>
+                        <th>معلومات الجهاز</th>
+                    </tr>
+                </thead>
+                <tbody id="tBody"></tbody>
+            </table>
+        </div>
     </div>
 
     <script>
-        const firebaseUrl = "https://attendance-system-47995-default-rtdb.firebaseio.com/attendance.json";
-        let attendanceData = [];
+        const dbUrl = "https://attendance-system-47995-default-rtdb.firebaseio.com/attendance.json";
+        let rawData = [];
+        let filteredData = []; // البيانات المفلترة للجدول والإكسل
 
-        function checkAdmin() {
-            const pass = document.getElementById("adminPass").value;
-            // كلمة مرور الدخول للوحة التحكم
-            if (pass === "112233") { 
-                document.getElementById("login-area").style.display = "none";
-                document.getElementById("admin-area").style.display = "block";
-                fetchData();
+        function verifyAdmin() {
+            if (document.getElementById("adminCode").value === "112233") {
+                document.getElementById("loginPanel").style.display = "none";
+                document.getElementById("dataPanel").style.display = "block";
+                loadRecords();
             } else {
-                document.getElementById("error-msg").innerText = "كلمة المرور خاطئة!";
+                document.getElementById("err").innerText = "كلمة المرور غير صحيحة!";
             }
         }
 
-        function fetchData() {
-            fetch(firebaseUrl)
-                .then(response => response.json())
-                .then(data => {
-                    const tbody = document.getElementById("tableBody");
-                    tbody.innerHTML = "";
-                    attendanceData = [];
-                    let counter = 1;
-
-                    if (data) {
-                        for (let key in data) {
-                            attendanceData.push(data[key]);
-                        }
-                        
-                        attendanceData.forEach(record => {
-                            let loc = record.location || 'مجهول';
-                            let locLink = loc.startsWith('http') ? `<a href="${loc}" target="_blank" style="color:blue; text-decoration:underline;">📍 عرض الخريطة</a>` : loc;
-                            let device = record.deviceInfo || 'غير معروف';
-
-                            let row = `<tr>
-                                <td>${counter}</td>
-                                <td><strong>${record.employeeName || 'غير معروف'}</strong></td>
-                                <td>${record.deviceTime || 'غير معروف'}</td>
-                                <td>${locLink}</td>
-                                <td class="device-info">${device}</td>
-                            </tr>`;
-                            tbody.innerHTML += row;
-                            counter++;
-                        });
-                    } else {
-                        tbody.innerHTML = "<tr><td colspan='5'>لا توجد سجلات حضور حتى الآن</td></tr>";
+        function loadRecords() {
+            fetch(dbUrl)
+            .then(res => res.json())
+            .then(data => {
+                rawData = [];
+                if (data && !data.error) {
+                    for (let key in data) {
+                        rawData.push(data[key]);
                     }
-                })
-                .catch(error => console.error("Error fetching data:", error));
+                }
+                renderTable(); // عرض الجدول
+            })
+            .catch(e => alert("حدث خطأ في جلب البيانات من السيرفر."));
         }
 
-        function downloadExcel() {
-            if (attendanceData.length === 0) {
-                alert("لا توجد بيانات لتحميلها!");
+        // دالة الفلترة ورسم الجدول
+        function renderTable() {
+            const tbody = document.getElementById("tBody");
+            const filterValue = document.getElementById("empFilter").value;
+            tbody.innerHTML = "";
+            filteredData = [];
+
+            if (rawData.length === 0) {
+                tbody.innerHTML = "<tr><td colspan='5'>لا يوجد أي تسجيل حضور حتى الآن.</td></tr>";
                 return;
             }
 
-            let csvContent = "\uFEFF"; 
-            csvContent += "اسم الموظف,وقت وتاريخ الدخول,رابط الموقع,معلومات الجهاز\n"; 
+            // تصفية البيانات بناءً على القائمة المنسدلة
+            if (filterValue === "all") {
+                filteredData = [...rawData];
+            } else {
+                filteredData = rawData.filter(r => r.employeeName === filterValue);
+            }
 
-            attendanceData.forEach(record => {
-                let name = record.employeeName || "";
-                let time = record.deviceTime || "";
-                let loc = record.location || "";
-                let device = record.deviceInfo || "";
+            if (filteredData.length === 0) {
+                tbody.innerHTML = "<tr><td colspan='5'>لا توجد سجلات لهذا الموظف.</td></tr>";
+                return;
+            }
+
+            // رسم البيانات المفلترة
+            filteredData.forEach(r => {
+                let locHtml = r.location && r.location.includes("http") ? `<a href="${r.location}" target="_blank">📍 عرض الخريطة</a>` : (r.location || "بدون موقع");
                 
-                // تنظيف النصوص من الفواصل حتى لا يخرب الإكسل
-                loc = loc.replace(/,/g, " ");
-                device = device.replace(/,/g, " ");
+                // تحديد شكل البصمة (السجلات القديمة ستكون غير محددة)
+                let typeText = r.attendanceType || 'غير محدد';
+                let typeBadge = typeText === 'حضور' ? `<span class="badge-in">حضور</span>` : (typeText === 'انصراف' ? `<span class="badge-out">انصراف</span>` : typeText);
 
-                csvContent += `${name},${time},${loc},${device}\n`;
+                tbody.innerHTML += `<tr>
+                    <td><strong>${r.employeeName || 'غير متوفر'}</strong></td>
+                    <td>${typeBadge}</td>
+                    <td dir="ltr">${r.deviceTime || 'غير متوفر'}</td>
+                    <td>${locHtml}</td>
+                    <td class="dev-info">${r.deviceInfo || ''}</td>
+                </tr>`;
             });
+        }
 
-            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        // دالة استخراج الإكسل (تسحب البيانات المفلترة فقط)
+        function exportCSV() {
+            if (filteredData.length === 0) { alert("لا توجد بيانات لتحميلها"); return; }
+            let csv = "\uFEFFالاسم,نوع البصمة,الوقت,الموقع,معلومات الجهاز\n";
+            filteredData.forEach(r => {
+                let n = r.employeeName || "";
+                let type = r.attendanceType || "غير محدد";
+                let t = r.deviceTime || "";
+                let l = (r.location || "").replace(/,/g, " ");
+                let d = (r.deviceInfo || "").replace(/,/g, " ");
+                csv += `${n},${type},${t},${l},${d}\n`;
+            });
             const link = document.createElement("a");
-            link.href = URL.createObjectURL(blob);
-            link.download = "تقرير_الدوام_والمواقع.csv";
-            link.style.visibility = 'hidden';
-            document.body.appendChild(link);
+            link.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8;' }));
+            link.download = "تقرير_الدوام.csv";
             link.click();
-            document.body.removeChild(link);
         }
     </script>
 </body>
