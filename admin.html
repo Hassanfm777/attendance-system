@@ -7,16 +7,26 @@
     <style>
         body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #ecf0f1; padding: 20px; margin: 0; }
         .panel { background: white; max-width: 1200px; margin: 20px auto; padding: 30px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
-        h2 { text-align: center; color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 15px; }
+        h2 { text-align: center; color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 15px; margin-bottom: 20px;}
         .login-sec { text-align: center; margin-top: 50px; }
         input[type="password"] { padding: 12px; width: 250px; text-align: center; font-size: 16px; border: 1px solid #ccc; border-radius: 5px; }
         button { background: #27ae60; color: white; padding: 12px 25px; border: none; border-radius: 5px; font-size: 16px; cursor: pointer; font-weight: bold; }
         button:hover { background: #2ecc71; }
+        
+        /* تنسيق النوافذ (التبويبات) */
+        .tabs { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 2px solid #ecf0f1; padding-bottom: 10px; justify-content: center; flex-wrap: wrap;}
+        .tab-btn { background: #ecf0f1; color: #7f8c8d; border: none; padding: 10px 25px; border-radius: 5px; cursor: pointer; font-size: 16px; transition: 0.3s; font-weight: bold;}
+        .tab-btn.active { background: #3498db; color: white; }
+        .tab-btn:hover:not(.active) { background: #bdc3c7; color: white;}
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeIn 0.5s; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
         .controls-bar { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 20px; flex-wrap: wrap; gap: 15px; background: #f9f9f9; padding: 15px; border-radius: 8px; border: 1px solid #ddd; }
         .filter-group { display: flex; flex-direction: column; gap: 5px; }
         .filter-group label { font-weight: bold; font-size: 14px; color: #2c3e50;}
         select, input[type="date"] { padding: 8px; font-size: 15px; border-radius: 5px; border: 1px solid #ccc; min-width: 200px; font-family: inherit;}
-        table { width: 100%; border-collapse: collapse; background: #fff; }
+        table { width: 100%; border-collapse: collapse; background: #fff; margin-bottom: 20px;}
         th, td { padding: 12px; border: 1px solid #ddd; text-align: center; }
         th { background: #34495e; color: white; }
         tr:nth-child(even) { background: #f9f9f9; }
@@ -25,10 +35,12 @@
         a { color: #2980b9; text-decoration: none; font-weight: bold; }
         a:hover { text-decoration: underline; }
         .dev-info { font-size: 11px; color: #7f8c8d; direction: ltr; text-align: left; }
+        .pass-text { font-family: monospace; font-size: 18px; color: #c0392b; font-weight: bold; background: #fadbd8; padding: 5px 10px; border-radius: 5px;}
     </style>
 </head>
 <body>
 
+    <!-- شاشة الدخول -->
     <div class="panel" id="loginPanel">
         <h2>دخول الإدارة</h2>
         <div class="login-sec">
@@ -39,53 +51,106 @@
         </div>
     </div>
 
+    <!-- لوحة التحكم (مخفية حتى تسجيل الدخول) -->
     <div class="panel" id="dataPanel" style="display: none;">
-        <h2>سجل الحضور والمواقع</h2>
         
-        <!-- شريط الفلاتر الشامل -->
-        <div class="controls-bar">
-            <div class="filter-group">
-                <label>اسم الموظف:</label>
-                <select id="empFilter" onchange="renderTable()">
-                    <option value="all">عرض جميع الموظفين</option>
-                    <option value="Suhail Satar">Suhail Satar</option>
-                    <option value="bayna ahmed">bayna ahmed</option>
-                    <option value="Fatmah yamahi">Fatmah yamahi</option>
-                    <option value="Deema">Deema</option>
-                </select>
-            </div>
-            <div class="filter-group">
-                <label>من تاريخ:</label>
-                <input type="date" id="startDate" onchange="renderTable()">
-            </div>
-            <div class="filter-group">
-                <label>إلى تاريخ:</label>
-                <input type="date" id="endDate" onchange="renderTable()">
+        <!-- أزرار التنقل بين النوافذ -->
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('attendanceTab', this)">📋 سجل الحضور والمواقع</button>
+            <button class="tab-btn" onclick="switchTab('usersTab', this)">🔐 أرقام الموظفين السرية</button>
+        </div>
+
+        <!-- النافذة الأولى: سجل الحضور -->
+        <div id="attendanceTab" class="tab-content active">
+            <div class="controls-bar">
+                <div class="filter-group">
+                    <label>اسم الموظف:</label>
+                    <select id="empFilter" onchange="renderTable()">
+                        <option value="all">عرض جميع الموظفين</option>
+                        <option value="Suhail Satar">Suhail Satar</option>
+                        <option value="bayna ahmed">bayna ahmed</option>
+                        <option value="Fatmah yamahi">Fatmah yamahi</option>
+                        <option value="Deema">Deema</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>من تاريخ:</label>
+                    <input type="date" id="startDate" onchange="renderTable()">
+                </div>
+                <div class="filter-group">
+                    <label>إلى تاريخ:</label>
+                    <input type="date" id="endDate" onchange="renderTable()">
+                </div>
+                
+                <button onclick="exportCSV()" style="background:#2980b9;">📥 تحميل (Excel)</button>
             </div>
             
-            <button onclick="exportCSV()" style="background:#2980b9;">📥 تحميل (Excel)</button>
+            <div style="overflow-x:auto;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>الاسم</th>
+                            <th>البصمة</th>
+                            <th>التاريخ والوقت</th>
+                            <th>الموقع (GPS)</th>
+                            <th>معلومات الجهاز</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tBody"></tbody>
+                </table>
+            </div>
         </div>
-        
-        <div style="overflow-x:auto;">
-            <table>
-                <thead>
-                    <tr>
-                        <th>الاسم</th>
-                        <th>البصمة</th>
-                        <th>التاريخ والوقت</th>
-                        <th>الموقع (GPS)</th>
-                        <th>معلومات الجهاز (للرقابة)</th>
-                    </tr>
-                </thead>
-                <tbody id="tBody"></tbody>
-            </table>
+
+        <!-- النافذة الثانية: أرقام الموظفين السرية -->
+        <div id="usersTab" class="tab-content">
+            <h3 style="text-align: center; color: #2c3e50;">قائمة الموظفين والأرقام السرية المعتمدة</h3>
+            <div style="overflow-x:auto; max-width: 600px; margin: 0 auto;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>اسم الموظف</th>
+                            <th>الرقم السري</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Suhail Satar</strong></td>
+                            <td><span class="pass-text">suh9988</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>bayna ahmed</strong></td>
+                            <td><span class="pass-text">bay5544</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Fatmah yamahi</strong></td>
+                            <td><span class="pass-text">fat7766</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Deema</strong></td>
+                            <td><span class="pass-text">dee3322</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p style="text-align: center; color: #7f8c8d; font-size: 14px; margin-top: 15px;">
+                * يرجى تزويد كل موظف برقمه السري الخاص وعدم مشاركته مع الآخرين.
+            </p>
         </div>
+
     </div>
 
     <script>
         const dbUrl = "https://attendance-system-47995-default-rtdb.firebaseio.com/attendance.json";
         let rawData = [];
         let filteredData = [];
+
+        // التنقل بين النوافذ
+        function switchTab(tabId, btn) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            btn.classList.add('active');
+        }
 
         function verifyAdmin() {
             if (document.getElementById("adminCode").value === "112233") {
@@ -110,7 +175,6 @@
             .catch(e => alert("حدث خطأ في جلب البيانات من السيرفر."));
         }
 
-        // استخراج التاريخ الفعلي للتصفية
         function getRecordDate(record) {
             if (record.isoDate) return record.isoDate; 
             if (record.serverTime) {
@@ -120,7 +184,6 @@
             return ""; 
         }
 
-        // فلترة وعرض البيانات
         function renderTable() {
             const tbody = document.getElementById("tBody");
             const emp = document.getElementById("empFilter").value;
@@ -131,7 +194,7 @@
             filteredData = [];
 
             if (rawData.length === 0) {
-                tbody.innerHTML = "<tr><td colspan='5'>لا توجد بيانات.</td></tr>";
+                tbody.innerHTML = "<tr><td colspan='5'>لا توجد بيانات حضور حتى الآن.</td></tr>";
                 return;
             }
 
@@ -147,6 +210,9 @@
                 tbody.innerHTML = "<tr><td colspan='5'>لا توجد سجلات تطابق الفلتر الذي اخترته.</td></tr>";
                 return;
             }
+
+            // ترتيب البيانات ليكون الأحدث في الأعلى
+            filteredData.sort((a, b) => (b.serverTime || 0) - (a.serverTime || 0));
 
             filteredData.forEach(r => {
                 let locHtml = r.location && r.location.includes("http") ? `<a href="${r.location}" target="_blank">📍 عرض الخريطة</a>` : "مرفوض/مجهول";
