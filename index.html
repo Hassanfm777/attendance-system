@@ -3,145 +3,122 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>بوابة تسجيل دخول الموظفين | نظام احترافي</title>
-    <!-- تضمين أيقونات Google Material Icons -->
+    <title>بوابة تسجيل حضور الموظفين</title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <style>
-        body { font-family: 'Cairo', 'Arial', sans-serif; background-color: #f0f2f5; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; overflow: hidden; }
-        .login-card { background-color: #fff; padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); width: 100%; max-width: 400px; text-align: center; }
-        .card-header h1 { font-size: 28px; color: #2c3e50; margin: 0 0 5px 0; }
-        .card-header p { color: #7f8c8d; margin: 0; font-size: 16px; margin-bottom: 30px;}
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .login-box { background: white; padding: 40px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 400px; text-align: center; }
+        h2 { color: #2c3e50; margin-bottom: 5px; }
+        p.subtitle { color: #7f8c8d; margin-bottom: 25px; font-size: 14px; }
         .input-group { position: relative; margin-bottom: 20px; }
-        .input-group .material-icons { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #bdc3c7; font-size: 22px; z-index: 2; pointer-events: none;}
-        
-        /* تنسيق القائمة المنسدلة */
-        .input-group select, .input-group input { width: 100%; padding: 15px 15px 15px 50px; font-size: 16px; border: 2px solid #e0e6ed; border-radius: 10px; outline: none; background-color: #fafbfc; box-sizing: border-box; font-family: inherit; cursor: pointer; appearance: none; -webkit-appearance: none; -moz-appearance: none; }
-        .input-group select:focus, .input-group input:focus { border-color: #2ecc71; background-color: #fff; }
-        /* سهم القائمة المنسدلة */
-        .select-arrow { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #bdc3c7; pointer-events: none; }
-
-        button.login-btn { width: 100%; padding: 15px; background: linear-gradient(135deg, #2ecc71, #27ae60); color: white; border: none; border-radius: 10px; font-size: 18px; cursor: pointer; font-weight: bold; margin-top: 10px;}
-        button.login-btn:disabled { background: #95a5a6; cursor: not-allowed; }
-        #message { margin-top: 25px; font-weight: bold; font-size: 15px; line-height: 1.6; min-height: 50px; }
+        .input-group .icon { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #95a5a6; pointer-events: none; }
+        select, input { width: 100%; padding: 15px; padding-left: 45px; font-size: 16px; border: 2px solid #ecf0f1; border-radius: 10px; outline: none; background: #fafbfc; box-sizing: border-box; cursor: pointer; }
+        select:focus, input:focus { border-color: #3498db; }
+        button { width: 100%; padding: 15px; background: #3498db; color: white; border: none; border-radius: 10px; font-size: 18px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        button:hover { background: #2980b9; }
+        button:disabled { background: #bdc3c7; cursor: not-allowed; }
+        #msg { margin-top: 20px; font-weight: bold; line-height: 1.5; min-height: 45px; }
     </style>
 </head>
 <body>
-    <div class="login-card">
-        <div class="card-header">
-            <h1>بوابة الموظفين</h1>
-            <p>نظام البصمة والموقع الجغرافي</p>
-        </div>
+    <div class="login-box">
+        <h2>نظام البصمة والموقع</h2>
+        <p class="subtitle">يرجى تفعيل الموقع (GPS) عند المطالبة بذلك</p>
 
-        <!-- القائمة المنسدلة للأسماء -->
+        <!-- اختيار الاسم -->
         <div class="input-group">
-            <span class="material-icons" style="right: 15px; left: auto;">person</span>
-            <select id="username" required style="padding-right: 50px; padding-left: 15px;">
-                <option value="" disabled selected>اختر اسمك من القائمة...</option>
+            <span class="material-icons icon">person</span>
+            <select id="userName" required>
+                <option value="" disabled selected>اختر اسمك...</option>
                 <option value="Suhail Satar">Suhail Satar</option>
                 <option value="bayna ahmed">bayna ahmed</option>
                 <option value="Fatmah yamahi">Fatmah yamahi</option>
                 <option value="Deema">Deema</option>
             </select>
-            <span class="material-icons select-arrow">arrow_drop_down</span>
         </div>
 
+        <!-- اختيار حضور أو انصراف -->
         <div class="input-group">
-            <span class="material-icons" style="right: 15px; left: auto;">lock</span>
-            <input type="password" id="password" placeholder="الرقم السري الخاص بك" required style="padding-right: 50px; padding-left: 15px;">
+            <span class="material-icons icon">fingerprint</span>
+            <select id="attendanceType" required>
+                <option value="" disabled selected>نوع البصمة (حضور / انصراف)...</option>
+                <option value="حضور">تسجيل دخول (حضور)</option>
+                <option value="انصراف">تسجيل خروج (انصراف)</option>
+            </select>
         </div>
 
-        <button id="loginBtn" class="login-btn" onclick="checkLogin()">تسجيل الحضور (بصمة المكان)</button>
+        <!-- الرقم السري -->
+        <div class="input-group">
+            <span class="material-icons icon">lock</span>
+            <input type="password" id="userPass" placeholder="الرقم السري" required>
+        </div>
 
-        <p id="message"></p>
+        <button id="submitBtn" onclick="processLogin()">اعتماد البصمة</button>
+        <p id="msg"></p>
     </div>
 
     <script>
-        // كلمات السر المخصصة لكل موظف
         const employees = {
             "Suhail Satar": "suh9988",
             "bayna ahmed": "bay5544",
             "Fatmah yamahi": "fat7766",
             "Deema": "dee3322"
         };
+        const dbUrl = "https://attendance-system-47995-default-rtdb.firebaseio.com/attendance.json";
 
-        const firebaseUrl = "https://attendance-system-47995-default-rtdb.firebaseio.com/attendance.json";
+        function processLogin() {
+            const name = document.getElementById("userName").value;
+            const type = document.getElementById("attendanceType").value;
+            const pass = document.getElementById("userPass").value.trim();
+            const msg = document.getElementById("msg");
+            const btn = document.getElementById("submitBtn");
 
-        function checkLogin() {
-            const user = document.getElementById("username").value;
-            const pass = document.getElementById("password").value.trim();
-            const msg = document.getElementById("message");
-            const btn = document.getElementById("loginBtn");
+            if (!name) { msg.style.color = "red"; msg.innerText = "يرجى اختيار الاسم!"; return; }
+            if (!type) { msg.style.color = "red"; msg.innerText = "يرجى اختيار نوع البصمة (حضور أو انصراف)!"; return; }
+            if (employees[name] !== pass) { msg.style.color = "red"; msg.innerText = "الرقم السري غير صحيح!"; return; }
 
-            if (!user) {
-                msg.style.color = "red";
-                msg.innerHTML = "يرجى اختيار اسمك من القائمة أولاً.";
-                return;
-            }
+            btn.disabled = true;
+            btn.innerText = "جاري التقاط الموقع...";
+            msg.style.color = "#f39c12";
+            msg.innerText = "اسمح للمتصفح بتحديد موقعك (Allow Location)...";
 
-            if (employees[user] && employees[user] === pass) {
-                btn.disabled = true;
-                btn.innerText = "جاري تحديد الموقع...";
-                msg.style.color = "#2980b9";
-                msg.innerHTML = "يرجى السماح بصلاحية الموقع (Location) إذا طلب منك المتصفح ذلك...";
-
-                if (navigator.geolocation) {
-                    navigator.geolocation.getCurrentPosition(
-                        (position) => sendDataToFirebase(user, position, null),
-                        (error) => sendDataToFirebase(user, null, error)
-                    );
-                } else {
-                    sendDataToFirebase(user, null, { message: "متصفحك لا يدعم تحديد الموقع" });
-                }
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    pos => sendData(name, type, pos, null),
+                    err => sendData(name, type, null, err)
+                );
             } else {
-                msg.style.color = "red";
-                msg.innerHTML = "الرقم السري غير صحيح! يرجى التأكد.";
+                sendData(name, type, null, true);
             }
         }
 
-        function sendDataToFirebase(user, position, locationError) {
-            const msg = document.getElementById("message");
-            const btn = document.getElementById("loginBtn");
-
-            let locationLink = "مجهول";
-            if (position) {
-                const lat = position.coords.latitude;
-                const lon = position.coords.longitude;
-                locationLink = `https://www.google.com/maps?q=${lat},${lon}`;
-            } else if (locationError) {
-                locationLink = "الموظف رفض تحديد الموقع أو الخدمة مغلقة";
-            }
-
-            const deviceInfo = navigator.userAgent;
+        function sendData(name, type, pos, err) {
+            const msg = document.getElementById("msg");
+            const btn = document.getElementById("submitBtn");
+            
+            let loc = "الموظف رفض تحديد الموقع";
+            if (pos) loc = `https://www.google.com/maps?q=${pos.coords.latitude},${pos.coords.longitude}`;
 
             const data = {
-                employeeName: user,
+                employeeName: name,
+                attendanceType: type, // المعلومة الجديدة (حضور/انصراف)
                 deviceTime: new Date().toLocaleString('ar-AE'),
                 serverTime: { ".sv": "timestamp" },
-                location: locationLink,
-                deviceInfo: deviceInfo
+                location: loc,
+                deviceInfo: navigator.userAgent
             };
 
-            btn.innerText = "جاري الحفظ بالسيرفر...";
-
-            fetch(firebaseUrl, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data)
-            })
-            .then(response => {
-                if(response.ok) {
+            fetch(dbUrl, { method: 'POST', body: JSON.stringify(data) })
+            .then(res => {
+                if(res.ok) {
                     msg.style.color = "green";
-                    msg.innerHTML = `تم تسجيل الحضور بنجاح يا <span style="font-weight: 800;">${user}</span>!<br>تم رفع بصمة الموقع بنجاح.`;
-                    btn.innerText = "تم التسجيل";
-                } else {
-                    throw new Error('Network error');
-                }
+                    msg.innerHTML = `✅ تم تسجيل ${type} بنجاح يا ${name}`;
+                    btn.innerText = "مكتمل";
+                } else throw new Error();
             })
-            .catch(error => {
-                btn.disabled = false;
-                btn.innerText = "تسجيل الحضور (بصمة المكان)";
-                msg.style.color = "red";
-                msg.innerHTML = "حدث خطأ في الاتصال، حاول مرة أخرى.";
+            .catch(() => {
+                btn.disabled = false; btn.innerText = "اعتماد البصمة";
+                msg.style.color = "red"; msg.innerText = "خطأ في الاتصال، أعد المحاولة.";
             });
         }
     </script>
