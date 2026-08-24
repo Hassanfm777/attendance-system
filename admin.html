@@ -13,7 +13,6 @@
         button { background: #27ae60; color: white; padding: 12px 25px; border: none; border-radius: 5px; font-size: 16px; cursor: pointer; font-weight: bold; }
         button:hover { background: #2ecc71; }
         
-        /* تنسيق النوافذ (التبويبات) */
         .tabs { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 2px solid #ecf0f1; padding-bottom: 10px; justify-content: center; flex-wrap: wrap;}
         .tab-btn { background: #ecf0f1; color: #7f8c8d; border: none; padding: 10px 25px; border-radius: 5px; cursor: pointer; font-size: 16px; transition: 0.3s; font-weight: bold;}
         .tab-btn.active { background: #3498db; color: white; }
@@ -36,11 +35,15 @@
         a:hover { text-decoration: underline; }
         .dev-info { font-size: 11px; color: #7f8c8d; direction: ltr; text-align: left; }
         .pass-text { font-family: monospace; font-size: 18px; color: #c0392b; font-weight: bold; background: #fadbd8; padding: 5px 10px; border-radius: 5px;}
+        
+        /* تنسيق خاص للوقت لضمان عدم تداخله */
+        .time-cell { font-family: Tahoma, sans-serif; }
+        .date-part { color: #2c3e50; font-weight: bold; display: inline-block; direction: ltr; }
+        .time-part { color: #e67e22; font-weight: bold; display: inline-block; direction: ltr; margin-top: 5px; }
     </style>
 </head>
 <body>
 
-    <!-- شاشة الدخول -->
     <div class="panel" id="loginPanel">
         <h2>دخول الإدارة</h2>
         <div class="login-sec">
@@ -51,16 +54,13 @@
         </div>
     </div>
 
-    <!-- لوحة التحكم (مخفية حتى تسجيل الدخول) -->
     <div class="panel" id="dataPanel" style="display: none;">
         
-        <!-- أزرار التنقل بين النوافذ -->
         <div class="tabs">
             <button class="tab-btn active" onclick="switchTab('attendanceTab', this)">📋 سجل الحضور والمواقع</button>
             <button class="tab-btn" onclick="switchTab('usersTab', this)">🔐 أرقام الموظفين السرية</button>
         </div>
 
-        <!-- النافذة الأولى: سجل الحضور -->
         <div id="attendanceTab" class="tab-content active">
             <div class="controls-bar">
                 <div class="filter-group">
@@ -101,7 +101,6 @@
             </div>
         </div>
 
-        <!-- النافذة الثانية: أرقام الموظفين السرية -->
         <div id="usersTab" class="tab-content">
             <h3 style="text-align: center; color: #2c3e50;">قائمة الموظفين والأرقام السرية المعتمدة</h3>
             <div style="overflow-x:auto; max-width: 600px; margin: 0 auto;">
@@ -113,28 +112,13 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td><strong>Suhail Satar</strong></td>
-                            <td><span class="pass-text">suh9988</span></td>
-                        </tr>
-                        <tr>
-                            <td><strong>bayna ahmed</strong></td>
-                            <td><span class="pass-text">bay5544</span></td>
-                        </tr>
-                        <tr>
-                            <td><strong>Fatmah yamahi</strong></td>
-                            <td><span class="pass-text">fat7766</span></td>
-                        </tr>
-                        <tr>
-                            <td><strong>Deema</strong></td>
-                            <td><span class="pass-text">dee3322</span></td>
-                        </tr>
+                        <tr><td><strong>Suhail Satar</strong></td><td><span class="pass-text">suh9988</span></td></tr>
+                        <tr><td><strong>bayna ahmed</strong></td><td><span class="pass-text">bay5544</span></td></tr>
+                        <tr><td><strong>Fatmah yamahi</strong></td><td><span class="pass-text">fat7766</span></td></tr>
+                        <tr><td><strong>Deema</strong></td><td><span class="pass-text">dee3322</span></td></tr>
                     </tbody>
                 </table>
             </div>
-            <p style="text-align: center; color: #7f8c8d; font-size: 14px; margin-top: 15px;">
-                * يرجى تزويد كل موظف برقمه السري الخاص وعدم مشاركته مع الآخرين.
-            </p>
         </div>
 
     </div>
@@ -144,7 +128,6 @@
         let rawData = [];
         let filteredData = [];
 
-        // التنقل بين النوافذ
         function switchTab(tabId, btn) {
             document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -184,6 +167,28 @@
             return ""; 
         }
 
+        // دالة جديدة لتنظيف وترتيب الوقت برمجياً
+        function formatCleanTime(serverTimestamp) {
+            if (!serverTimestamp) return { html: "غير متوفر", text: "غير متوفر" };
+            
+            let d = new Date(serverTimestamp);
+            let year = d.getFullYear();
+            let month = String(d.getMonth() + 1).padStart(2, '0');
+            let day = String(d.getDate()).padStart(2, '0');
+            
+            let hours = d.getHours();
+            let minutes = String(d.getMinutes()).padStart(2, '0');
+            let ampm = hours >= 12 ? 'م' : 'ص';
+            
+            hours = hours % 12;
+            hours = hours ? hours : 12; // تحويل الصفر إلى 12
+            
+            let htmlFormat = `<span class="date-part">${year}/${month}/${day}</span><br><span class="time-part">${hours}:${minutes} ${ampm}</span>`;
+            let textFormat = `${year}/${month}/${day} - ${hours}:${minutes} ${ampm}`;
+            
+            return { html: htmlFormat, text: textFormat };
+        }
+
         function renderTable() {
             const tbody = document.getElementById("tBody");
             const emp = document.getElementById("empFilter").value;
@@ -211,17 +216,19 @@
                 return;
             }
 
-            // ترتيب البيانات ليكون الأحدث في الأعلى
             filteredData.sort((a, b) => (b.serverTime || 0) - (a.serverTime || 0));
 
             filteredData.forEach(r => {
                 let locHtml = r.location && r.location.includes("http") ? `<a href="${r.location}" target="_blank">📍 عرض الخريطة</a>` : "مرفوض/مجهول";
                 let typeBadge = r.attendanceType === 'حضور' ? `<span class="badge-in">حضور</span>` : (r.attendanceType === 'انصراف' ? `<span class="badge-out">انصراف</span>` : 'غير محدد');
+                
+                // استخدام الدالة الجديدة للوقت
+                let timeData = formatCleanTime(r.serverTime);
 
                 tbody.innerHTML += `<tr>
                     <td><strong>${r.employeeName || ''}</strong></td>
                     <td>${typeBadge}</td>
-                    <td dir="ltr">${r.deviceTime || ''}</td>
+                    <td class="time-cell">${timeData.html}</td>
                     <td>${locHtml}</td>
                     <td class="dev-info">${r.deviceInfo || ''}</td>
                 </tr>`;
@@ -230,11 +237,15 @@
 
         function exportCSV() {
             if (filteredData.length === 0) { alert("لا توجد بيانات للتحميل"); return; }
-            let csv = "\uFEFFالاسم,نوع البصمة,الوقت,الموقع,معلومات الجهاز\n";
+            let csv = "\uFEFFالاسم,نوع البصمة,التاريخ والوقت,الموقع,معلومات الجهاز\n";
             filteredData.forEach(r => {
                 let n = r.employeeName || "";
                 let type = r.attendanceType || "غير محدد";
-                let t = r.deviceTime || "";
+                
+                // استخدام الوقت النظيف للإكسل
+                let timeData = formatCleanTime(r.serverTime);
+                let t = timeData.text; 
+
                 let l = (r.location || "").replace(/,/g, " ");
                 let d = (r.deviceInfo || "").replace(/,/g, " ");
                 csv += `${n},${type},${t},${l},${d}\n`;
