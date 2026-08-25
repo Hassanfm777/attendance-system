@@ -5,28 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>لوحة التحكم الإدارية | تقارير وبصمة الدوام</title>
     
-    <!-- خط تجوال والأيقونات -->
+    <!-- خط تجوال والأيقونات ومكتبات الرسوم والتنبيهات -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
-    <!-- التنبيهات الذكية (SweetAlert) -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <style>
         :root {
             --primary: #1e3a8a; --primary-light: #3b82f6; --success: #10b981;
-            --danger: #ef4444; --dark: #1f2937; --light-bg: #f3f4f6;
-            --card-bg: #ffffff; --border-color: #e5e7eb;
+            --danger: #ef4444; --warning: #f59e0b; --dark: #1f2937;
+            --light-bg: #f3f4f6; --card-bg: #ffffff; --border-color: #e5e7eb;
         }
 
         * { box-sizing: border-box; font-family: 'Tajawal', sans-serif; margin: 0; padding: 0; }
         body { background: var(--light-bg); color: var(--dark); padding: 20px 15px; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
         .header-img { width: 100%; max-width: 900px; height: auto; margin-bottom: 20px; border-radius: 8px; mix-blend-mode: multiply; }
-        
         .container { width: 100%; max-width: 1300px; margin: 0 auto; }
 
+        /* Login Card */
         .login-card { background: var(--card-bg); max-width: 420px; margin: 60px auto; padding: 35px 30px; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.06); text-align: center; border: 1px solid var(--border-color); }
         .login-card h2 { color: var(--primary); margin-bottom: 10px; font-size: 24px; }
         .login-input-group { position: relative; margin-bottom: 20px; text-align: right; }
@@ -37,12 +37,17 @@
         .btn-login { width: 100%; background: linear-gradient(135deg, var(--primary), var(--primary-light)); color: white; padding: 14px; border: none; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.3s; }
         .btn-login:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(30,58,138,0.25); }
 
+        /* Dashboard */
         .panel { background: var(--card-bg); width: 100%; padding: 25px 30px; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.04); border: 1px solid var(--border-color); }
         .dashboard-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; padding-bottom: 20px; border-bottom: 2px solid var(--light-bg); margin-bottom: 25px; }
         .dashboard-header h2 { color: var(--primary); font-size: 22px; }
         .header-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
         .admin-badge { background: #eff6ff; color: #1e40af; padding: 6px 12px; border-radius: 20px; font-size: 13px; font-weight: bold; border: 1px solid #bfdbfe; }
 
+        .btn-action { display: inline-flex; align-items: center; gap: 8px; padding: 9px 15px; border-radius: 8px; border: none; font-size: 13px; font-weight: 700; cursor: pointer; color: white; transition: 0.2s;}
+        .btn-export { background: #059669; } .btn-refresh { background: var(--primary); } .btn-logout { background: #ef4444; }
+
+        /* KPIs */
         .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; margin-bottom: 25px; }
         .kpi-card { background: #fff; border: 1px solid var(--border-color); border-radius: 12px; padding: 18px 20px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
         .kpi-info h4 { font-size: 13px; color: #6b7280; font-weight: 500; margin-bottom: 6px; }
@@ -50,17 +55,25 @@
         .kpi-icon { width: 48px; height: 48px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
         .kpi-icon.blue { background: #eff6ff; color: #3b82f6; } .kpi-icon.green { background: #ecfdf5; color: #10b981; } .kpi-icon.red { background: #fef2f2; color: #ef4444; }
 
+        /* Charts Section */
+        .chart-section { background: #fdfdfd; border: 1px solid var(--border-color); border-radius: 12px; padding: 20px; margin-bottom: 25px; display: grid; grid-template-columns: 2fr 1fr; gap: 20px; }
+        @media (max-width: 900px) { .chart-section { grid-template-columns: 1fr; } }
+
+        /* Tabs */
+        .tabs { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 2px solid var(--light-bg); padding-bottom: 10px; flex-wrap: wrap; }
+        .tab-btn { background: transparent; color: #6b7280; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-size: 15px; font-weight: 700; transition: 0.2s; display: flex; align-items: center; gap: 8px; }
+        .tab-btn.active { background: var(--primary); color: white; }
+        .tab-btn:hover:not(.active) { background: #e5e7eb; color: var(--dark); }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeIn 0.4s ease; }
+
+        /* Controls / Table */
         .controls-bar { background: #f8fafc; padding: 20px; border-radius: 12px; border: 1px solid var(--border-color); margin-bottom: 20px; display: flex; flex-direction: column; gap: 15px; }
         .filter-row { display: flex; flex-wrap: wrap; gap: 15px; align-items: flex-end; }
         .filter-group { display: flex; flex-direction: column; gap: 6px; flex: 1; min-width: 160px; }
         .filter-group label { font-size: 13px; font-weight: 700; color: #374151; }
         select, input[type="date"], input[type="text"] { padding: 9px 12px; font-size: 14px; border-radius: 8px; border: 1px solid #d1d5db; outline: none; width: 100%; font-family: inherit;}
         
-        .btn-action { display: inline-flex; align-items: center; gap: 8px; padding: 9px 15px; border-radius: 8px; border: none; font-size: 13px; font-weight: 700; cursor: pointer; color: white; transition: 0.2s;}
-        .btn-export { background: #059669; } .btn-refresh { background: var(--primary); } .btn-logout { background: #ef4444; }
-        .btn-delete { background: #fee2e2; color: #b91c1c; border: 1px solid #fecaca; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: bold; transition: 0.2s;}
-        .btn-delete:hover { background: #ef4444; color: white; }
-
         .table-container { overflow-x: auto; border: 1px solid var(--border-color); border-radius: 10px; background: white; }
         table { width: 100%; border-collapse: collapse; text-align: center; }
         th { background: #1e293b; color: white; padding: 14px 12px; font-size: 13px; white-space: nowrap; }
@@ -69,6 +82,13 @@
         
         .badge { display: inline-flex; align-items: center; gap: 4px; padding: 5px 10px; border-radius: 20px; font-weight: 700; font-size: 12px; }
         .badge-in { background: #dcfce7; color: #15803d; } .badge-out { background: #fee2e2; color: #b91c1c; } .badge-rejected { background: #fef3c7; color: #b45309; }
+        .btn-delete { background: #fee2e2; color: #b91c1c; border: 1px solid #fecaca; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: bold; transition: 0.2s;}
+        .btn-delete:hover { background: #ef4444; color: white; }
+
+        .pass-text { font-family: monospace; font-size: 16px; color: #b91c1c; font-weight: bold; background: #fee2e2; padding: 4px 10px; border-radius: 6px; }
+        .status-pill { font-size: 12px; padding: 3px 8px; border-radius: 12px; font-weight: 600; background: #dcfce7; color: #15803d;}
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
@@ -114,6 +134,7 @@
                 </div>
             </div>
 
+            <!-- مؤشرات الأداء -->
             <div class="kpi-grid">
                 <div class="kpi-card">
                     <div class="kpi-info"><h4>إجمالي الحركات المعروضة</h4><div class="kpi-num" id="kpiTotal">0</div></div>
@@ -124,79 +145,131 @@
                     <div class="kpi-icon green"><i class="fa-solid fa-right-to-bracket"></i></div>
                 </div>
                 <div class="kpi-card">
-                    <div class="kpi-info"><h4>حركات مرفوضة</h4><div class="kpi-num" id="kpiFailed" style="color: var(--danger);">0</div></div>
+                    <div class="kpi-info"><h4>حركات مرفوضة / تنبيهات</h4><div class="kpi-num" id="kpiFailed" style="color: var(--danger);">0</div></div>
                     <div class="kpi-icon red"><i class="fa-solid fa-triangle-exclamation"></i></div>
                 </div>
             </div>
 
-            <div class="controls-bar">
-                <div class="filter-row">
-                    <div class="filter-group" style="flex: 1.5;">
-                        <label>بحث سريع (الاسم، الملاحظة):</label>
-                        <input type="text" id="searchInput" placeholder="اكتب للبحث..." oninput="renderTable()">
-                    </div>
-                    <div class="filter-group">
-                        <label>تصفية الموظفين:</label>
-                        <select id="empFilter" onchange="renderTable()">
-                            <option value="all">عرض الجميع</option>
-                            <option value="Suhail Satar">Suhail Satar</option>
-                            <option value="bayna ahmed">bayna ahmed</option>
-                            <option value="Fatmah yamahi">Fatmah yamahi</option>
-                            <option value="Deema">Deema</option>
-                            <option value="أيمن">أيمن (سائق)</option>
-                            <option value="ربيع">ربيع (سائق)</option>
-                            <option value="سليم">سليم (سائق)</option>
-                            <option value="علاء">علاء (محصل)</option>
-                            <option value="عيشة">عيشة (محصل)</option>
-                        </select>
-                    </div>
-                    <div class="filter-group">
-                        <label>من تاريخ:</label>
-                        <input type="date" id="startDate" onchange="renderTable()">
-                    </div>
-                    <div class="filter-group">
-                        <label>إلى تاريخ:</label>
-                        <input type="date" id="endDate" onchange="renderTable()">
-                    </div>
+            <!-- الرسوم البيانية -->
+            <div class="chart-section" id="chartWrapper">
+                <div>
+                    <h4 style="margin-bottom: 15px; color: #374151; font-size: 15px;"><i class="fa-solid fa-chart-column"></i> إحصائية الحضور حسب الأيام (آخر 7 أيام)</h4>
+                    <div style="height: 220px;"><canvas id="attendanceBarChart"></canvas></div>
+                </div>
+                <div>
+                    <h4 style="margin-bottom: 15px; color: #374151; font-size: 15px;"><i class="fa-solid fa-chart-pie"></i> توزيع البصمات حسب القسم</h4>
+                    <div style="height: 220px;"><canvas id="deptPieChart"></canvas></div>
                 </div>
             </div>
-            
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>الاسم</th>
-                            <th>الدور</th>
-                            <th>الحركة</th>
-                            <th>الوقت والتاريخ</th>
-                            <th>الموقع</th>
-                            <th>إجراءات</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tBody">
-                        <tr><td colspan="6" style="padding: 30px;">جاري تحميل السجلات...</td></tr>
-                    </tbody>
-                </table>
+
+            <!-- التبويبات Tabs -->
+            <div class="tabs">
+                <button class="tab-btn active" onclick="switchTab('attendanceTab', this)"><i class="fa-solid fa-table-list"></i> سجل الحضور الشامل</button>
+                <button class="tab-btn" onclick="switchTab('usersTab', this)"><i class="fa-solid fa-key"></i> أرقام الموظفين السرية</button>
+            </div>
+
+            <!-- تبويب سجل الحضور -->
+            <div id="attendanceTab" class="tab-content active">
+                <div class="controls-bar">
+                    <div class="filter-row">
+                        <div class="filter-group" style="flex: 1.5;">
+                            <label>بحث سريع (الاسم، الملاحظة):</label>
+                            <input type="text" id="searchInput" placeholder="اكتب للبحث..." oninput="renderTable()">
+                        </div>
+                        <div class="filter-group">
+                            <label>تصفية الموظفين:</label>
+                            <select id="empFilter" onchange="renderTable()">
+                                <option value="all">عرض الجميع</option>
+                                <option value="Suhail Satar">Suhail Satar</option>
+                                <option value="bayna ahmed">bayna ahmed</option>
+                                <option value="Fatmah yamahi">Fatmah yamahi</option>
+                                <option value="Deema">Deema</option>
+                                <option value="أيمن">أيمن (سائق)</option>
+                                <option value="ربيع">ربيع (سائق)</option>
+                                <option value="سليم">سليم (سائق)</option>
+                                <option value="علاء">علاء (محصل)</option>
+                                <option value="عيشة">عيشة (محصل)</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label>من تاريخ:</label>
+                            <input type="date" id="startDate" onchange="renderTable()">
+                        </div>
+                        <div class="filter-group">
+                            <label>إلى تاريخ:</label>
+                            <input type="date" id="endDate" onchange="renderTable()">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>الاسم</th>
+                                <th>الدور</th>
+                                <th>الحركة</th>
+                                <th>الوقت والتاريخ</th>
+                                <th>الموقع</th>
+                                <th>إجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tBody">
+                            <tr><td colspan="6" style="padding: 30px;">جاري تحميل السجلات...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- تبويب الأرقام السرية -->
+            <div id="usersTab" class="tab-content">
+                <h3 style="text-align: center; color: var(--primary); margin-bottom: 20px;"><i class="fa-solid fa-shield-halved"></i> قائمة الرموز السرية المعتمدة</h3>
+                <div class="table-container" style="max-width: 750px; margin: 0 auto;">
+                    <table>
+                        <thead>
+                            <tr><th>الاسم</th><th>القسم</th><th>الرمز السري</th><th>الحالة</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td><strong>Suhail Satar</strong></td><td>موظف</td><td><span class="pass-text">suh9988</span></td><td><span class="status-pill">نشط</span></td></tr>
+                            <tr><td><strong>bayna ahmed</strong></td><td>موظف</td><td><span class="pass-text">bay5544</span></td><td><span class="status-pill">نشط</span></td></tr>
+                            <tr><td><strong>Fatmah yamahi</strong></td><td>موظف</td><td><span class="pass-text">fat7766</span></td><td><span class="status-pill">نشط</span></td></tr>
+                            <tr><td><strong>Deema</strong></td><td>موظف</td><td><span class="pass-text">dee3322</span></td><td><span class="status-pill">نشط</span></td></tr>
+                            <tr><td><strong>أيمن</strong></td><td>سائق</td><td><span class="pass-text">aym33</span></td><td><span class="status-pill">نشط</span></td></tr>
+                            <tr><td><strong>ربيع</strong></td><td>سائق</td><td><span class="pass-text">rab44</span></td><td><span class="status-pill">نشط</span></td></tr>
+                            <tr><td><strong>سليم</strong></td><td>سائق</td><td><span class="pass-text">sal55</span></td><td><span class="status-pill">نشط</span></td></tr>
+                            <tr><td><strong>علاء</strong></td><td>محصل</td><td><span class="pass-text">alaa11</span></td><td><span class="status-pill">نشط</span></td></tr>
+                            <tr><td><strong>عيشة</strong></td><td>محصل</td><td><span class="pass-text">aish22</span></td><td><span class="status-pill">نشط</span></td></tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
         </div>
     </div>
 
     <script>
-        // رابط الداتا بيس بدون .json ليستخدم في كود الحذف
         const dbUrl = "https://attendance-system-47995-default-rtdb.firebaseio.com/attendance"; 
         
+        // إعدادات حسابات الإدارة
         const ADMIN_CREDENTIALS = {
             "manager": { pass: "112233", title: "المدير العام" },
             "hr": { pass: "445566", title: "شؤون الموظفين" }
         };
 
         let rawData = [], filteredData = [];
+        let barChartInstance = null, pieChartInstance = null;
 
         window.addEventListener('DOMContentLoaded', () => {
             const loggedInRole = sessionStorage.getItem('adminRole');
             if (loggedInRole && ADMIN_CREDENTIALS[loggedInRole]) showDashboard(loggedInRole);
         });
+
+        function switchTab(tabId, btn) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            btn.classList.add('active');
+        }
 
         function verifyAdmin() {
             const role = document.getElementById("adminRole").value, pass = document.getElementById("adminCode").value.trim();
@@ -229,14 +302,14 @@
                     for (let key in data) { let item = data[key]; item._key = key; rawData.push(item); }
                 }
                 renderTable();
+                updateCharts();
             }).catch(err => { tbody.innerHTML = `<tr><td colspan="6" style="color:red;">تعذر جلب البيانات. تأكد من الإنترنت.</td></tr>`; });
         }
 
-        // كود حذف السجل
         function deleteRecord(recordKey) {
             Swal.fire({
                 title: 'هل أنت متأكد؟',
-                text: "لن تتمكن من التراجع عن هذا الإجراء وسيتم مسح البصمة!",
+                text: "لن تتمكن من التراجع وسيتم مسح البصمة!",
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#ef4444', cancelButtonColor: '#9ca3af',
@@ -247,10 +320,10 @@
                     fetch(`${dbUrl}/${recordKey}.json`, { method: 'DELETE' })
                     .then(res => {
                         if (res.ok) {
-                            Swal.fire({ icon: 'success', title: 'تم الحذف', text: 'تم مسح سجل البصمة بنجاح.', timer: 1500, showConfirmButton: false });
+                            Swal.fire({ icon: 'success', title: 'تم الحذف', text: 'تم مسح السجل بنجاح.', timer: 1500, showConfirmButton: false });
                             loadRecords();
                         } else throw new Error("فشل الحذف");
-                    }).catch(err => Swal.fire('خطأ!', 'حدث خطأ أثناء الاتصال بقاعدة البيانات.', 'error'));
+                    }).catch(err => Swal.fire('خطأ!', 'حدث خطأ بالاتصال.', 'error'));
                 }
             });
         }
@@ -282,7 +355,7 @@
             document.getElementById("kpiTodayIn").innerText = todayIn;
             document.getElementById("kpiFailed").innerText = failed;
 
-            if (filteredData.length === 0) return tbody.innerHTML = `<tr><td colspan="6" style="padding: 30px;">لا توجد سجلات.</td></tr>`;
+            if (filteredData.length === 0) return tbody.innerHTML = `<tr><td colspan="6" style="padding: 30px;">لا توجد سجلات مطابقة للبحث.</td></tr>`;
 
             filteredData.forEach(r => {
                 let isFailed = r.role && r.role.includes('مرفوضة');
@@ -300,6 +373,61 @@
                     <td>${loc}</td>
                     <td><button class="btn-delete" onclick="deleteRecord('${r._key}')" title="حذف السجل"><i class="fa-solid fa-trash-can"></i> حذف</button></td>
                 </tr>`;
+            });
+        }
+
+        function updateCharts() {
+            if (rawData.length === 0) return;
+
+            const daysMap = {};
+            for (let i = 6; i >= 0; i--) {
+                const d = new Date(); d.setDate(d.getDate() - i);
+                daysMap[d.toISOString().split('T')[0]] = { in: 0, out: 0 };
+            }
+            const deptMap = { 'موظف': 0, 'سائق': 0, 'محصل': 0, 'أخرى': 0 };
+
+            rawData.forEach(r => {
+                if (r.serverTime) {
+                    const dStr = new Date(r.serverTime).toISOString().split('T')[0];
+                    if (daysMap[dStr]) {
+                        if (r.attendanceType === 'حضور') daysMap[dStr].in++;
+                        if (r.attendanceType === 'انصراف') daysMap[dStr].out++;
+                    }
+                }
+                let role = r.role || '';
+                if (role.includes('سائق')) deptMap['سائق']++;
+                else if (role.includes('محصل')) deptMap['محصل']++;
+                else if (role.includes('موظف')) deptMap['موظف']++;
+                else deptMap['أخرى']++;
+            });
+
+            const labels = Object.keys(daysMap).map(d => d.slice(5)); 
+            const inData = Object.values(daysMap).map(v => v.in);
+            const outData = Object.values(daysMap).map(v => v.out);
+
+            const ctxBar = document.getElementById('attendanceBarChart').getContext('2d');
+            if (barChartInstance) barChartInstance.destroy();
+            barChartInstance = new Chart(ctxBar, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        { label: 'حضور', data: inData, backgroundColor: '#10b981', borderRadius: 4 },
+                        { label: 'انصراف', data: outData, backgroundColor: '#3b82f6', borderRadius: 4 }
+                    ]
+                },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } }, scales: { y: { beginAtZero: true, ticks: { precision: 0 } } } }
+            });
+
+            const ctxPie = document.getElementById('deptPieChart').getContext('2d');
+            if (pieChartInstance) pieChartInstance.destroy();
+            pieChartInstance = new Chart(ctxPie, {
+                type: 'doughnut',
+                data: {
+                    labels: ['موظفين', 'سائقين', 'محصلين', 'أخرى'],
+                    datasets: [{ data: [deptMap['موظف'], deptMap['سائق'], deptMap['محصل'], deptMap['أخرى']], backgroundColor: ['#3b82f6', '#f59e0b', '#10b981', '#9ca3af'] }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
             });
         }
 
