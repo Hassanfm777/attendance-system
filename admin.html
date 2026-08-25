@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>لوحة التحكم الإدارية</title>
+    
+    <!-- أيقونة تبويب المتصفح -->
+    <link rel="icon" href="logowhite.png" type="image/png">
+    
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -130,7 +134,6 @@
     <script>
         const baseUrl = "https://attendance-system-47995-default-rtdb.firebaseio.com"; 
         
-        // الموظفون الأساسيون (سيظهرون دائماً)
         const BASE_USERS = {
             "Suhail Satar": "suh9988", "bayna ahmed": "bay5544", "Fatmah yamahi": "fat7766", "Deema": "dee3322"
         };
@@ -152,26 +155,22 @@
         function logout() { sessionStorage.removeItem('adminRole'); location.reload(); }
         function loadData() { loadAttendance(); loadUsers(); }
 
-        // --- إدارة الموظفين الهجينة ---
         function loadUsers() {
             const tbody = document.getElementById("usersTbody");
             tbody.innerHTML = "";
             
-            // إضافة الأساسيين أولاً
             for(let name in BASE_USERS) {
                 tbody.innerHTML += `<tr>
                     <td><strong>${name}</strong></td>
                     <td style="font-family:monospace; color:#059669; font-weight:bold;">${BASE_USERS[name]}</td>
-                    <td><span style="background:#e2e8f0; padding:5px; border-radius:5px; font-size:12px; color:#475569;">أساسي (لا يحذف)</span></td>
+                    <td><span style="font-size:12px; color:#94a3b8;"><i class="fa-solid fa-lock"></i> أساسي</span></td>
                 </tr>`;
             }
 
-            // جلب الموظفين المضافين ديناميكياً
             fetch(`${baseUrl}/users.json`).then(res => res.json()).then(data => {
                 if(!data) return;
                 for(let key in data) {
                     if(!data[key] || !data[key].name || data[key].name === 'undefined') {
-                        // إظهار السجلات التالفة لتتمكن من حذفها (التي ظهرت لك بالصورة)
                         tbody.innerHTML += `<tr style="background:#fef2f2;">
                             <td style="color:red; font-weight:bold;">سجل تالف (undefined)</td><td>-</td>
                             <td><button class="btn-delete" onclick="deleteEmployee('${key}')"><i class="fa-solid fa-trash"></i> تنظيف الخطأ</button></td>
@@ -192,19 +191,35 @@
             const pin = document.getElementById("newEmpPin").value.trim();
             
             if(!name || !pin) return Swal.fire('تنبيه', 'يرجى إدخال الاسم والرقم السري', 'warning');
+            
+            Swal.fire({ title: 'جاري الحفظ...', allowOutsideClick: false, didOpen: () => { Swal.showLoading(); }});
 
             fetch(`${baseUrl}/users.json`, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ name: name, pin: pin }) })
             .then(res => {
-                if(res.ok) { Swal.fire('نجاح', 'تم إضافة الموظف بنجاح! سيظهر الآن في صفحة البصمة.', 'success'); document.getElementById("newEmpName").value = ''; document.getElementById("newEmpPin").value = ''; loadUsers(); }
+                if(res.ok) { 
+                    Swal.fire('نجاح', 'تم إضافة الموظف بنجاح! سيظهر الآن في صفحة البصمة.', 'success'); 
+                    document.getElementById("newEmpName").value = ''; 
+                    document.getElementById("newEmpPin").value = ''; 
+                    loadUsers(); 
+                } else {
+                    Swal.fire('خطأ في الصلاحيات', 'يبدو أنك لم تقم بتحديث القواعد في فايربيس!', 'error');
+                }
+            }).catch(err => {
+                Swal.fire('خطأ بالاتصال', 'حدثت مشكلة في الاتصال.', 'error');
             });
         }
 
         function deleteEmployee(key) {
             Swal.fire({ title: 'تأكيد الحذف', icon: 'warning', showCancelButton: true, confirmButtonText: 'نعم', cancelButtonText: 'إلغاء' })
-            .then((result) => { if (result.isConfirmed) fetch(`${baseUrl}/users/${key}.json`, { method: 'DELETE' }).then(() => { Swal.fire('تم الحذف', '', 'success'); loadUsers(); }); });
+            .then((result) => { if (result.isConfirmed) {
+                Swal.fire({ title: 'جاري الحذف...', allowOutsideClick: false, didOpen: () => { Swal.showLoading(); }});
+                fetch(`${baseUrl}/users/${key}.json`, { method: 'DELETE' }).then(res => { 
+                    if(res.ok) { Swal.fire('تم الحذف', '', 'success'); loadUsers(); }
+                    else Swal.fire('خطأ', 'يرجى التأكد من صلاحيات فايربيس', 'error');
+                });
+            } });
         }
 
-        // --- سجل الحضور ---
         function loadAttendance() {
             const tbody = document.getElementById("tBody"); tbody.innerHTML = `<tr><td colspan="6"><i class="fa-solid fa-spinner fa-spin"></i> جاري التحميل...</td></tr>`;
             fetch(`${baseUrl}/attendance.json`).then(res => res.json()).then(data => {
@@ -220,7 +235,7 @@
                     Swal.fire({ title: 'جاري الحذف...', allowOutsideClick: false, didOpen: () => { Swal.showLoading(); }});
                     fetch(`${baseUrl}/attendance/${recordKey}.json`, { method: 'DELETE' })
                     .then(res => { if (res.ok) { Swal.fire('نجاح', 'تم الحذف.', 'success'); loadAttendance(); } else throw new Error(); })
-                    .catch(err => Swal.fire('خطأ!', 'حدث خطأ بالاتصال.', 'error'));
+                    .catch(err => Swal.fire('خطأ!', 'حدث خطأ بالاتصال (أو أن صلاحيات فايربيس لم تُحدّث).', 'error'));
                 }
             });
         }
