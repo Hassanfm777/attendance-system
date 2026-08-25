@@ -137,7 +137,7 @@
         const baseUrl = "https://attendance-system-47995-default-rtdb.firebaseio.com";
         const FACTORY_LAT = 25.1161977; const FACTORY_LNG = 55.2345118;
         
-        // الموظفون الأساسيون (ثابتون ولا يمسحون)
+        // الموظفون الأساسيون (ثابتون)
         const BASE_USERS = {
             "Suhail Satar": "suh9988",
             "bayna ahmed": "bay5544",
@@ -159,19 +159,15 @@
             document.getElementById("filterMonth").value = `${now.getFullYear()}-${m}`;
         });
 
-        // جلب الموظفين (دمج الأساسيين مع المضافين حديثاً)
+        // جلب الموظفين المضافين ديناميكياً
         function fetchUsers() {
             const sel = document.getElementById("userSelect");
             sel.innerHTML = `<option value="" disabled selected>اختر اسمك...</option>`;
             
-            // إضافة الأساسيين أولاً
             sel.innerHTML += `<optgroup label="الموظفون الأساسيون">`;
-            for(let name in BASE_USERS) {
-                sel.innerHTML += `<option value="BASE_${name}">${name}</option>`;
-            }
+            for(let name in BASE_USERS) { sel.innerHTML += `<option value="BASE_${name}">${name}</option>`; }
             sel.innerHTML += `</optgroup>`;
 
-            // جلب الموظفين المضافين من الإدارة
             fetch(`${baseUrl}/users.json`).then(res => res.json()).then(data => {
                 if (data) {
                     dynamicUsers = data;
@@ -236,12 +232,9 @@
 
             let userName = ""; let expectedPin = "";
             if (selVal.startsWith("BASE_")) {
-                userName = selVal.replace("BASE_", "");
-                expectedPin = BASE_USERS[userName];
+                userName = selVal.replace("BASE_", ""); expectedPin = BASE_USERS[userName];
             } else if (selVal.startsWith("DYN_")) {
-                const key = selVal.replace("DYN_", "");
-                userName = dynamicUsers[key].name;
-                expectedPin = dynamicUsers[key].pin;
+                const key = selVal.replace("DYN_", ""); userName = dynamicUsers[key].name; expectedPin = dynamicUsers[key].pin;
             }
 
             if (pass !== expectedPin) return showMsg("الرقم السري غير صحيح!", "error");
