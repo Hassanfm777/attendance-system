@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>نظام الحضور والانصراف | Attendance System</title>
+    <title>تسجيل الحضور والانصراف</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,69 +13,51 @@
     <style>
         :root {
             --primary: #1e3a8a; --primary-light: #3b82f6; --success: #10b981; 
-            --danger: #ef4444; --warning: #f59e0b; --dark: #1f2937; 
-            --bg-color: #f1f5f9; --card-bg: #ffffff; --border-color: #e2e8f0;
+            --danger: #ef4444; --dark: #1f2937; --bg-color: #f1f5f9; 
+            --card-bg: #ffffff; --border-color: #e2e8f0;
         }
 
         * { box-sizing: border-box; font-family: 'Tajawal', sans-serif; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
         body { background: var(--bg-color); color: var(--dark); display: flex; flex-direction: column; align-items: center; min-height: 100vh; padding: 15px 12px 30px; }
         .header-img { width: 100%; max-width: 500px; height: auto; margin-bottom: 12px; mix-blend-mode: multiply; }
-        .footer-img { width: 100%; max-width: 550px; height: auto; margin-top: 30px; opacity: 0.85; mix-blend-mode: multiply; }
-
+        
         .top-bar { width: 100%; max-width: 440px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-        .live-clock-badge { background: white; padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: 700; color: var(--primary); box-shadow: 0 2px 6px rgba(0,0,0,0.04); border: 1px solid var(--border-color); display: flex; align-items: center; gap: 6px; }
-        .lang-btn { background: white; border: 1px solid var(--border-color); color: var(--primary); font-weight: 800; padding: 6px 16px; border-radius: 20px; cursor: pointer; font-size: 13px; box-shadow: 0 2px 6px rgba(0,0,0,0.04); transition: 0.2s; }
-        .lang-btn:hover { background: var(--primary); color: white; }
+        .live-clock-badge { background: white; padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: 700; color: var(--primary); border: 1px solid var(--border-color); display: flex; align-items: center; gap: 6px; }
 
         .card { background: var(--card-bg); width: 100%; max-width: 440px; padding: 24px 20px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.06); border: 1px solid var(--border-color); text-align: center; }
-        .system-title { font-size: 20px; color: var(--primary); font-weight: 800; margin-bottom: 15px; }
-
-        .dept-switcher { display: flex; background: #f1f5f9; padding: 4px; border-radius: 12px; margin-bottom: 20px; gap: 4px; }
-        .dept-tab { flex: 1; padding: 10px 5px; border: none; background: transparent; border-radius: 9px; font-size: 13px; font-weight: 700; color: #64748b; cursor: pointer; transition: 0.25s; display: flex; align-items: center; justify-content: center; gap: 5px; }
-        .dept-tab.active { background: white; color: var(--primary); box-shadow: 0 3px 8px rgba(0,0,0,0.06); }
+        .system-title { font-size: 20px; color: var(--primary); font-weight: 800; margin-bottom: 20px; }
 
         .gps-status { background: #f8fafc; border: 1px dashed var(--border-color); border-radius: 12px; padding: 10px 12px; font-size: 12px; font-weight: 600; color: #64748b; margin-bottom: 18px; display: flex; align-items: center; justify-content: center; gap: 8px; }
-        .gps-status.ok { background: #ecfdf5; border-color: #a7f3d0; color: #065f46; }
-        .gps-status.warn { background: #fef2f2; border-color: #fecaca; color: #991b1b; }
-
+        
         .input-group { position: relative; margin-bottom: 14px; text-align: right; }
-        html[dir="ltr"] .input-group { text-align: left; }
         .input-group label { display: block; font-size: 12px; font-weight: 700; color: #475569; margin-bottom: 5px; }
         .input-wrapper { position: relative; }
-        .input-wrapper i { position: absolute; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 16px; pointer-events: none; }
-        html[dir="rtl"] .input-wrapper i { right: 14px; } html[dir="ltr"] .input-wrapper i { left: 14px; }
+        .input-wrapper i { position: absolute; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 16px; right: 14px; }
         
-        select, input { width: 100%; padding: 12px 14px; font-size: 14px; border: 1.5px solid var(--border-color); border-radius: 12px; background: white; outline: none; color: var(--dark); font-weight: 600; transition: 0.2s; }
-        html[dir="rtl"] select, html[dir="rtl"] input { padding-right: 42px; } html[dir="ltr"] select, html[dir="ltr"] input { padding-left: 42px; }
+        select, input { width: 100%; padding: 12px 14px 12px 14px; padding-right: 42px; font-size: 14px; border: 1.5px solid var(--border-color); border-radius: 12px; background: white; outline: none; font-weight: 600; transition: 0.2s; }
         select:focus, input:focus { border-color: var(--primary-light); box-shadow: 0 0 0 3px rgba(59,130,246,0.15); }
 
         .remember-box { display: flex; align-items: center; gap: 8px; font-size: 12px; color: #64748b; margin-bottom: 18px; cursor: pointer; user-select: none; }
         .remember-box input[type="checkbox"] { width: 16px; height: 16px; cursor: pointer; accent-color: var(--primary); }
 
         .action-buttons { display: flex; gap: 10px; margin-top: 10px; }
-        .btn-submit { flex: 2; padding: 13px 15px; border: none; border-radius: 12px; background: linear-gradient(135deg, #10b981, #059669); color: white; font-size: 15px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 12px rgba(16,185,129,0.25); display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.2s; }
-        .btn-submit:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(16,185,129,0.35); }
+        .btn-submit { flex: 2; padding: 13px 15px; border: none; border-radius: 12px; background: linear-gradient(135deg, #10b981, #059669); color: white; font-size: 15px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.2s; }
         .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; }
-        .btn-records { flex: 1; padding: 13px 10px; border: 1.5px solid var(--primary-light); border-radius: 12px; background: #eff6ff; color: var(--primary); font-size: 13px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; transition: 0.2s; }
-        .btn-records:hover { background: #dbeafe; }
+        .btn-records { flex: 1; padding: 13px 10px; border: 1.5px solid var(--primary-light); border-radius: 12px; background: #eff6ff; color: var(--primary); font-size: 13px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; }
 
-        #msgBox { margin-top: 15px; padding: 12px; border-radius: 10px; font-size: 13px; font-weight: 700; display: none; animation: fadeIn 0.3s ease; }
+        #msgBox { margin-top: 15px; padding: 12px; border-radius: 10px; font-size: 13px; font-weight: 700; display: none; }
         .msg-success { background: #ecfdf5; color: #065f46; border: 1px solid #a7f3d0; }
         .msg-error { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
         .msg-info { background: #eff6ff; color: #1e40af; border: 1px solid #bfdbfe; }
 
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.55); backdrop-filter: blur(3px); justify-content: center; align-items: center; z-index: 1000; padding: 15px; }
-        .modal-content { background: white; width: 100%; max-width: 420px; padding: 22px; border-radius: 18px; max-height: 85vh; overflow-y: auto; box-shadow: 0 20px 40px rgba(0,0,0,0.15); }
+        .modal-content { background: white; width: 100%; max-width: 420px; padding: 22px; border-radius: 18px; max-height: 85vh; overflow-y: auto; }
         .modal-header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 12px; border-bottom: 1.5px solid var(--border-color); margin-bottom: 15px; }
-        .close-btn { background: #f1f5f9; color: #64748b; border: none; border-radius: 50%; width: 32px; height: 32px; cursor: pointer; font-weight: bold; display: flex; align-items: center; justify-content: center; }
-        .record-card { background: #f8fafc; border: 1px solid var(--border-color); border-radius: 12px; padding: 12px 14px; margin-bottom: 10px; text-align: right; display: flex; flex-direction: column; gap: 6px; }
-        html[dir="ltr"] .record-card { text-align: left; }
+        .close-btn { background: #f1f5f9; border: none; border-radius: 50%; width: 32px; height: 32px; cursor: pointer; }
+        .record-card { background: #f8fafc; border: 1px solid var(--border-color); border-radius: 12px; padding: 12px 14px; margin-bottom: 10px; text-align: right; }
         .record-top { display: flex; justify-content: space-between; align-items: center; }
-        .badge-in { background: #dcfce7; color: #15803d; font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 6px; }
-        .badge-out { background: #fee2e2; color: #b91c1c; font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 6px; }
-        .badge-failed { background: #fef3c7; color: #b45309; font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 6px; }
-
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+        .badge-in { background: #dcfce7; color: #15803d; font-size: 11px; padding: 3px 8px; border-radius: 6px; font-weight: bold;}
+        .badge-out { background: #fee2e2; color: #b91c1c; font-size: 11px; padding: 3px 8px; border-radius: 6px; font-weight: bold;}
     </style>
 </head>
 <body>
@@ -87,33 +69,28 @@
             <i class="fa-regular fa-clock"></i>
             <span id="liveTime">00:00:00</span>
         </div>
-        <button class="lang-btn" onclick="toggleLang()">EN</button>
     </div>
 
     <div class="card">
-        <h2 class="system-title" id="txtTitle"><i class="fa-solid fa-fingerprint"></i> تسجيل الدوام اليومي</h2>
-
-        <div class="dept-switcher">
-            <button class="dept-tab active" onclick="setRole('emp', this)" id="tabEmp"><i class="fa-solid fa-briefcase"></i> موظف</button>
-            <button class="dept-tab" onclick="setRole('driver', this)" id="tabDriv"><i class="fa-solid fa-truck"></i> سائق</button>
-            <button class="dept-tab" onclick="setRole('col', this)" id="tabCol"><i class="fa-solid fa-wallet"></i> محصل</button>
-        </div>
+        <h2 class="system-title"><i class="fa-solid fa-fingerprint"></i> تسجيل الدوام اليومي</h2>
 
         <div class="gps-status" id="gpsStatus">
             <i class="fa-solid fa-location-crosshairs fa-spin"></i>
-            <span id="gpsText">جاري تحديد المسافة عن المصنع...</span>
+            <span id="gpsText">جاري تحديد موقعك الجغرافي والمدينة...</span>
         </div>
 
         <div class="input-group">
-            <label id="lblEmpName">اسم الموظف:</label>
+            <label>اسم الموظف:</label>
             <div class="input-wrapper">
                 <i class="fa-solid fa-user"></i>
-                <select id="userSelect"><option value="" disabled selected>اختر اسمك من القائمة...</option></select>
+                <select id="userSelect">
+                    <option value="" disabled selected>جاري تحميل الموظفين...</option>
+                </select>
             </div>
         </div>
 
         <div class="input-group">
-            <label id="lblPunchType">نوع البصمة:</label>
+            <label>نوع البصمة:</label>
             <div class="input-wrapper">
                 <i class="fa-solid fa-arrow-right-to-bracket"></i>
                 <select id="punchType">
@@ -124,7 +101,7 @@
         </div>
 
         <div class="input-group">
-            <label id="lblPass">الرقم السري (PIN):</label>
+            <label>الرقم السري (PIN):</label>
             <div class="input-wrapper">
                 <i class="fa-solid fa-lock"></i>
                 <input type="password" id="userPass" placeholder="أدخل رقمك السري" inputmode="numeric">
@@ -132,7 +109,7 @@
         </div>
 
         <div class="input-group">
-            <label id="lblNote">ملاحظة (اختياري):</label>
+            <label>ملاحظة (اختياري):</label>
             <div class="input-wrapper">
                 <i class="fa-solid fa-message"></i>
                 <input type="text" id="userNote" placeholder="اكتب ملاحظة إن وجدت...">
@@ -141,27 +118,27 @@
 
         <label class="remember-box">
             <input type="checkbox" id="rememberMe">
-            <span id="txtRemember">حفظ اسمي ورقمي السري على هذا الجهاز لسرعة التبصيم</span>
+            <span>حفظ اسمي ورقمي السري على هذا الجهاز</span>
         </label>
 
         <div class="action-buttons">
             <button class="btn-submit" id="btnSubmit" onclick="submitPunch()">
-                <i class="fa-solid fa-circle-check"></i> <span id="txtSubmit">اعتماد البصمة</span>
+                <i class="fa-solid fa-circle-check"></i> اعتماد البصمة
             </button>
             <button class="btn-records" onclick="openRecordsModal()">
-                <i class="fa-solid fa-history"></i> <span id="txtRecords">سجلاتي</span>
+                <i class="fa-solid fa-history"></i> سجلاتي
             </button>
         </div>
 
         <div id="msgBox"></div>
     </div>
 
-    <img src="footer_img.png" alt="Footer" class="footer-img" onerror="this.style.display='none'">
-
+    <!-- نافذة السجلات مع الفلتر -->
     <div id="recordsModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 style="color:var(--primary); font-size:16px;" id="modalTitle"><i class="fa-solid fa-list-check"></i> آخر سجلات البصمة</h3>
+                <h3 style="color:var(--primary); font-size:16px;"><i class="fa-solid fa-list-check"></i> سجلاتي</h3>
+                <input type="month" id="filterMonth" onchange="openRecordsModal()" style="padding: 5px; border-radius: 5px; border: 1px solid #ccc; font-size: 12px;">
                 <button class="close-btn" onclick="closeModal()"><i class="fa-solid fa-xmark"></i></button>
             </div>
             <div id="recordsList">جاري التحميل...</div>
@@ -169,166 +146,201 @@
     </div>
 
     <script>
-        const dbUrl = "https://attendance-system-47995-default-rtdb.firebaseio.com/attendance.json";
-        const FACTORY_LAT = 25.1161977; const FACTORY_LNG = 55.2345118; const ALLOWED_KM = 0.5;
-
-        const DB_USERS = {
-            emp: { titleAr: 'موظف', titleEn: 'Employee', list: { "Suhail Satar": "suh9988", "bayna ahmed": "bay5544", "Fatmah yamahi": "fat7766", "Deema": "dee3322" }},
-            driver: { titleAr: 'سائق', titleEn: 'Driver', list: { "أيمن": "aym33", "ربيع": "rab44", "سليم": "sal55" }},
-            col: { titleAr: 'محصل', titleEn: 'Collector', list: { "علاء": "alaa11", "عيشة": "aish22" }}
-        };
-
-        let currentRole = 'emp'; let lang = 'ar'; let currentPos = null;
+        const baseUrl = "https://attendance-system-47995-default-rtdb.firebaseio.com";
+        const FACTORY_LAT = 25.1161977; 
+        const FACTORY_LNG = 55.2345118;
+        
+        let usersDB = {}; 
+        let currentPos = null;
+        let distKm = 0;
+        let cityString = "مدينة غير معروفة";
 
         setInterval(() => {
-            const now = new Date();
-            document.getElementById("liveTime").innerText = now.toLocaleTimeString(lang === 'ar' ? 'ar-EG' : 'en-US');
+            document.getElementById("liveTime").innerText = new Date().toLocaleTimeString('ar-EG');
         }, 1000);
 
         window.addEventListener('DOMContentLoaded', () => {
-            initGPS(); loadRoleOptions('emp'); loadSavedUser();
+            fetchUsers();
+            initGPS();
+            
+            // تهيئة فلتر السجلات للشهر الحالي
+            const now = new Date();
+            const m = String(now.getMonth() + 1).padStart(2, '0');
+            document.getElementById("filterMonth").value = `${now.getFullYear()}-${m}`;
         });
 
-        function initGPS() {
-            const statusEl = document.getElementById("gpsStatus"); const textEl = document.getElementById("gpsText");
-            if (!navigator.geolocation) { textEl.innerText = lang === 'ar' ? "متصفحك لا يدعم تحديد الموقع GPS" : "GPS not supported"; statusEl.className = "gps-status warn"; return; }
-            navigator.geolocation.watchPosition(pos => {
-                currentPos = pos;
-                const distKm = getDist(pos.coords.latitude, pos.coords.longitude, FACTORY_LAT, FACTORY_LNG);
-                const distMeters = Math.round(distKm * 1000);
-                if (distKm <= ALLOWED_KM) {
-                    statusEl.className = "gps-status ok"; textEl.innerHTML = `<i class="fa-solid fa-circle-check"></i> ${lang==='ar' ? `داخل نطاق المصنع (${distMeters} متر)` : `Inside factory area (${distMeters}m)`}`;
+        // جلب الموظفين من الداتا بيس
+        function fetchUsers() {
+            fetch(`${baseUrl}/users.json`)
+            .then(res => res.json())
+            .then(data => {
+                const sel = document.getElementById("userSelect");
+                sel.innerHTML = `<option value="" disabled selected>اختر اسمك...</option>`;
+                if (data) {
+                    usersDB = data;
+                    for (let key in data) {
+                        sel.innerHTML += `<option value="${key}">${data[key].name}</option>`;
+                    }
+                    loadSavedUser();
                 } else {
-                    statusEl.className = "gps-status warn"; textEl.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> ${lang==='ar' ? `خارج نطاق المصنع (${distMeters} متر)` : `Outside factory area (${distMeters}m)`}`;
+                    sel.innerHTML = `<option value="" disabled selected>لا يوجد موظفين (أضفهم من لوحة الإدارة)</option>`;
                 }
-            }, err => { statusEl.className = "gps-status warn"; textEl.innerHTML = `<i class="fa-solid fa-location-slash"></i> ${lang==='ar' ? "يرجى تفعيل صلاحية الـ GPS للموقع" : "Please enable GPS permission"}`; }, { enableHighAccuracy: true });
+            }).catch(e => {
+                document.getElementById("userSelect").innerHTML = `<option disabled>خطأ في الاتصال!</option>`;
+            });
+        }
+
+        // تحديد الموقع وإيجاد اسم المدينة
+        function initGPS() {
+            const statusEl = document.getElementById("gpsStatus");
+            const textEl = document.getElementById("gpsText");
+
+            if (!navigator.geolocation) {
+                textEl.innerText = "متصفحك لا يدعم الـ GPS";
+                return;
+            }
+
+            navigator.geolocation.getCurrentPosition(async pos => {
+                currentPos = pos;
+                distKm = getDist(pos.coords.latitude, pos.coords.longitude, FACTORY_LAT, FACTORY_LNG);
+                const distM = Math.round(distKm * 1000);
+
+                // جلب اسم المدينة من خدمة مجانية
+                try {
+                    let res = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${pos.coords.latitude}&longitude=${pos.coords.longitude}&localityLanguage=ar`);
+                    let geo = await res.json();
+                    cityString = geo.city || geo.locality || "مدينة غير معروفة";
+                } catch(e) {}
+
+                textEl.innerHTML = `<i class="fa-solid fa-map-location-dot"></i> أنت في: ${cityString} <br> <small style="color:#10b981; font-weight:bold;">يبعد موقعك ${distM} متر عن المصنع</small>`;
+            }, err => {
+                textEl.innerHTML = `<i class="fa-solid fa-location-slash"></i> يرجى تفعيل الـ GPS لتسجيل مسافة الموقع`;
+            }, { enableHighAccuracy: true });
         }
 
         function getDist(lat1, lon1, lat2, lon2) {
-            const R = 6371; const dLat = (lat2 - lat1) * (Math.PI / 180), dLon = (lon2 - lon1) * (Math.PI / 180);
+            const R = 6371; 
+            const dLat = (lat2 - lat1) * (Math.PI / 180), dLon = (lon2 - lon1) * (Math.PI / 180);
             const a = Math.sin(dLat/2)*Math.sin(dLat/2) + Math.cos(lat1*(Math.PI/180))*Math.cos(lat2*(Math.PI/180))*Math.sin(dLon/2)*Math.sin(dLon/2);
             return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         }
 
-        function setRole(roleKey, btn) {
-            currentRole = roleKey; document.querySelectorAll('.dept-tab').forEach(t => t.classList.remove('active'));
-            btn.classList.add('active'); loadRoleOptions(roleKey); clearMsg();
-        }
-
-        function loadRoleOptions(roleKey) {
-            const sel = document.getElementById("userSelect");
-            sel.innerHTML = `<option value="" disabled selected>${lang==='ar'?'اختر اسمك من القائمة...':'Select your name...'}</option>`;
-            const users = DB_USERS[roleKey].list;
-            for (let name in users) sel.innerHTML += `<option value="${name}">${name}</option>`;
-        }
-
         function loadSavedUser() {
-            const r = localStorage.getItem('punch_role'), n = localStorage.getItem('punch_name'), p = localStorage.getItem('punch_pass');
-            if (r && DB_USERS[r]) { const btn = document.getElementById(r === 'emp' ? 'tabEmp' : (r === 'driver' ? 'tabDriv' : 'tabCol')); setRole(r, btn); }
-            if (n) document.getElementById("userSelect").value = n;
-            if (p) { document.getElementById("userPass").value = p; document.getElementById("rememberMe").checked = true; }
+            const savedKey = localStorage.getItem('punch_user_key');
+            const savedPass = localStorage.getItem('punch_pass');
+            if (savedKey && usersDB[savedKey]) {
+                document.getElementById("userSelect").value = savedKey;
+                document.getElementById("userPass").value = savedPass;
+                document.getElementById("rememberMe").checked = true;
+            }
         }
 
         function submitPunch() {
-            const name = document.getElementById("userSelect").value, punchType = document.getElementById("punchType").value;
-            const pass = document.getElementById("userPass").value.trim(), note = document.getElementById("userNote").value.trim();
-            const remember = document.getElementById("rememberMe").checked, btn = document.getElementById("btnSubmit");
+            const userKey = document.getElementById("userSelect").value;
+            const punchType = document.getElementById("punchType").value;
+            const pass = document.getElementById("userPass").value.trim();
+            const note = document.getElementById("userNote").value.trim();
+            const remember = document.getElementById("rememberMe").checked;
+            const btn = document.getElementById("btnSubmit");
 
-            if (!name) return showMsg(lang==='ar' ? "يرجى اختيار اسمك أولاً!" : "Please select your name!", "error");
-            if (!pass || pass !== DB_USERS[currentRole].list[name]) return showMsg(lang==='ar' ? "الرقم السري غير صحيح!" : "Incorrect PIN!", "error");
+            if (!userKey || !usersDB[userKey]) return showMsg("يرجى اختيار اسمك أولاً!", "error");
+            if (pass !== usersDB[userKey].pin) return showMsg("الرقم السري غير صحيح!", "error");
 
-            if (remember) { localStorage.setItem('punch_role', currentRole); localStorage.setItem('punch_name', name); localStorage.setItem('punch_pass', pass);
-            } else { localStorage.removeItem('punch_role'); localStorage.removeItem('punch_name'); localStorage.removeItem('punch_pass'); }
+            const userName = usersDB[userKey].name;
 
-            btn.disabled = true; btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> ${lang==='ar'?'جاري الاعتماد...':'Processing...'}`;
-            showMsg(lang==='ar' ? "جاري التحقق من الموقع وإرسال البصمة..." : "Verifying location...", "info");
+            if (remember) {
+                localStorage.setItem('punch_user_key', userKey);
+                localStorage.setItem('punch_pass', pass);
+            } else {
+                localStorage.clear();
+            }
 
-            if (!navigator.geolocation) return sendRecord(name, punchType, null, false, note, btn);
-            navigator.geolocation.getCurrentPosition(pos => {
-                const isInside = getDist(pos.coords.latitude, pos.coords.longitude, FACTORY_LAT, FACTORY_LNG) <= ALLOWED_KM;
-                if (currentRole === 'driver' && !isInside) sendRecord(name, punchType, pos, false, note ? (note + ' | ❌ محاولة خارج المصنع') : '❌ محاولة خارج المصنع', btn);
-                else sendRecord(name, punchType, pos, true, note, btn);
-            }, err => {
-                btn.disabled = false; btn.innerHTML = `<i class="fa-solid fa-circle-check"></i> ${lang==='ar'?'اعتماد البصمة':'Submit'}`;
-                showMsg(lang==='ar' ? "❌ يرجى السماح بتحديد الموقع (GPS) لاعتماد البصمة!" : "❌ Please allow GPS access!", "error");
-            }, { enableHighAccuracy: true });
-        }
+            btn.disabled = true; 
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> جاري الاعتماد...`;
 
-        function sendRecord(name, type, pos, isSuccess, note, btn) {
-            let roleTitle = DB_USERS[currentRole].titleAr;
-            if (!isSuccess && currentRole === 'driver') roleTitle = 'سائق (محاولة مرفوضة)';
-            const payload = { employeeName: name, attendanceType: type, role: roleTitle, note: note || '', serverTime: { ".sv": "timestamp" }, location: pos ? `https://www.google.com/maps?q=${pos.coords.latitude},${pos.coords.longitude}` : 'موقع غير متوفر' };
+            let mapLink = currentPos ? `https://www.google.com/maps?q=${currentPos.coords.latitude},${currentPos.coords.longitude}` : '';
+            let distanceStr = currentPos ? `${Math.round(distKm * 1000)} متر` : 'الموقع غير متاح';
 
-            fetch(dbUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) })
+            const payload = {
+                employeeName: userName,
+                attendanceType: punchType,
+                role: 'موظف',
+                note: note,
+                serverTime: { ".sv": "timestamp" },
+                location: mapLink,
+                city: cityString,
+                distance: distanceStr
+            };
+
+            fetch(`${baseUrl}/attendance.json`, { 
+                method: 'POST', 
+                headers: { 'Content-Type': 'application/json' }, 
+                body: JSON.stringify(payload) 
+            })
             .then(res => {
-                btn.disabled = false; btn.innerHTML = `<i class="fa-solid fa-circle-check"></i> ${lang==='ar'?'اعتماد البصمة':'Submit'}`;
+                btn.disabled = false; btn.innerHTML = `<i class="fa-solid fa-circle-check"></i> اعتماد البصمة`;
                 if (res.ok) {
-                    if (isSuccess) showMsg(lang==='ar' ? `✅ تم تسجيل ${type} بنجاح للأستاذ (${name})` : `✅ ${type} registered successfully for (${name})`, "success");
-                    else showMsg(lang==='ar' ? "❌ عذراً! لا يمكن التبصيم لأنك خارج نطاق المصنع." : "❌ Failed! You are outside factory area.", "error");
-                } else showMsg(lang==='ar' ? "حدث خطأ في الخادم، حاول ثانية." : "Server error, try again.", "error");
-            }).catch(() => {
-                btn.disabled = false; btn.innerHTML = `<i class="fa-solid fa-circle-check"></i> ${lang==='ar'?'اعتماد البصمة':'Submit'}`;
-                showMsg(lang==='ar' ? "تعذر الاتصال بقاعدة البيانات. تحقق من الإنترنت." : "Connection failed.", "error");
+                    showMsg(`✅ تم تسجيل ${punchType} بنجاح للأستاذ (${userName})`, "success");
+                    document.getElementById("userNote").value = ''; // تفريغ الملاحظة
+                } else throw new Error();
+            })
+            .catch(() => {
+                btn.disabled = false; btn.innerHTML = `<i class="fa-solid fa-circle-check"></i> اعتماد البصمة`;
+                showMsg("حدث خطأ بالاتصال، يرجى المحاولة ثانية.", "error");
             });
         }
 
-        function showMsg(text, type) { const el = document.getElementById("msgBox"); el.style.display = "block"; el.className = `msg-${type}`; el.innerHTML = text; }
-        function clearMsg() { document.getElementById("msgBox").style.display = "none"; }
-
         function openRecordsModal() {
-            const name = document.getElementById("userSelect").value, pass = document.getElementById("userPass").value.trim();
-            if (!name) return showMsg(lang==='ar' ? "اختر اسمك أولاً لعرض سجلاتك!" : "Select your name first!", "error");
-            if (pass !== DB_USERS[currentRole].list[name]) return showMsg(lang==='ar' ? "أدخل رقمك السري لعرض سجلاتك!" : "Enter your PIN to view records!", "error");
+            const userKey = document.getElementById("userSelect").value;
+            const pass = document.getElementById("userPass").value.trim();
+            const filterMonth = document.getElementById("filterMonth").value; // e.g. "2023-10"
 
+            if (!userKey) return showMsg("اختر اسمك أولاً لعرض سجلاتك!", "error");
+            if (pass !== usersDB[userKey].pin) return showMsg("أدخل رقمك السري الصحيح لعرض السجلات!", "error");
+
+            const userName = usersDB[userKey].name;
             document.getElementById("recordsModal").style.display = "flex";
             const list = document.getElementById("recordsList");
-            list.innerHTML = `<div style="text-align:center; padding:20px;"><i class="fa-solid fa-spinner fa-spin"></i> ${lang==='ar'?'جاري جلب السجلات...':'Loading...'}</div>`;
+            list.innerHTML = `<div style="text-align:center; padding:20px;"><i class="fa-solid fa-spinner fa-spin"></i> جاري جلب السجلات...</div>`;
 
-            fetch(dbUrl).then(res => res.json()).then(data => {
-                if (!data) return list.innerHTML = `<div style="text-align:center; color:#94a3b8; padding:20px;">${lang==='ar'?'لا توجد سجلات سابقة':'No records found'}</div>`;
-                const myRecords = []; for (let key in data) if (data[key].employeeName === name) myRecords.push(data[key]);
-                if (myRecords.length === 0) return list.innerHTML = `<div style="text-align:center; color:#94a3b8; padding:20px;">${lang==='ar'?'لا توجد سجلات مسجلة لهذا الاسم':'No records found'}</div>`;
+            fetch(`${baseUrl}/attendance.json`)
+            .then(res => res.json())
+            .then(data => {
+                let myRecords = [];
+                for (let key in data) {
+                    if (data[key].employeeName === userName) {
+                        // فلترة حسب الشهر المختار
+                        if(filterMonth && data[key].serverTime) {
+                            const recMonth = new Date(data[key].serverTime).toISOString().slice(0, 7); // yyyy-mm
+                            if(recMonth === filterMonth) myRecords.push(data[key]);
+                        } else {
+                            myRecords.push(data[key]);
+                        }
+                    }
+                }
 
-                myRecords.sort((a,b) => (b.serverTime||0) - (a.serverTime||0)); list.innerHTML = "";
-                myRecords.slice(0, 15).forEach(r => {
+                if (myRecords.length === 0) return list.innerHTML = `<div style="text-align:center; color:#94a3b8; padding:20px;">لا توجد سجلات في هذا الشهر</div>`;
+
+                myRecords.sort((a,b) => (b.serverTime||0) - (a.serverTime||0)); 
+                list.innerHTML = "";
+                myRecords.forEach(r => {
                     const d = new Date(r.serverTime);
-                    const isFailed = r.role && r.role.includes('مرفوضة');
-                    const badgeHtml = isFailed ? `<span class="badge-failed">مرفوض</span>` : (r.attendanceType === 'حضور' ? `<span class="badge-in">حضور</span>` : `<span class="badge-out">انصراف</span>`);
-                    list.innerHTML += `<div class="record-card">
-                        <div class="record-top"><span style="font-weight:700; font-size:13px; color:#1e293b;">${d.getFullYear()}/${d.getMonth()+1}/${d.getDate()} - ${d.toLocaleTimeString(lang==='ar'?'ar-EG':'en-US')}</span>${badgeHtml}</div>
-                        ${r.note ? `<div style="font-size:12px; color:#64748b;"><i class="fa-regular fa-comment"></i> ${r.note}</div>` : ''}
+                    const badgeHtml = r.attendanceType === 'حضور' ? `<span class="badge-in">حضور</span>` : `<span class="badge-out">انصراف</span>`;
+                    list.innerHTML += `
+                    <div class="record-card">
+                        <div class="record-top">
+                            <span style="font-weight:700; font-size:13px; color:#1e293b;">${d.getFullYear()}/${d.getMonth()+1}/${d.getDate()} - ${d.toLocaleTimeString('ar-EG')}</span>
+                            ${badgeHtml}
+                        </div>
+                        ${r.note ? `<div style="font-size:12px; color:#64748b; margin-top:5px;"><i class="fa-regular fa-comment"></i> ${r.note}</div>` : ''}
                     </div>`;
                 });
+            }).catch(e => {
+                list.innerHTML = `<div style="text-align:center; color:red;">خطأ في تحميل السجلات</div>`;
             });
         }
         function closeModal() { document.getElementById("recordsModal").style.display = "none"; }
-
-        function toggleLang() {
-            lang = lang === 'ar' ? 'en' : 'ar';
-            document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
-            document.documentElement.lang = lang;
-            document.querySelector('.lang-btn').innerText = lang === 'ar' ? 'EN' : 'عربي';
-
-            document.getElementById("txtTitle").innerHTML = lang === 'ar' ? '<i class="fa-solid fa-fingerprint"></i> تسجيل الدوام اليومي' : '<i class="fa-solid fa-fingerprint"></i> Daily Attendance';
-            document.getElementById("tabEmp").innerHTML = `<i class="fa-solid fa-briefcase"></i> ${lang==='ar'?'موظف':'Employee'}`;
-            document.getElementById("tabDriv").innerHTML = `<i class="fa-solid fa-truck"></i> ${lang==='ar'?'سائق':'Driver'}`;
-            document.getElementById("tabCol").innerHTML = `<i class="fa-solid fa-wallet"></i> ${lang==='ar'?'محصل':'Collector'}`;
-            
-            document.getElementById("lblEmpName").innerText = lang === 'ar' ? 'اسم الموظف:' : 'Employee Name:';
-            document.getElementById("lblPunchType").innerText = lang === 'ar' ? 'نوع البصمة:' : 'Punch Type:';
-            document.getElementById("lblPass").innerText = lang === 'ar' ? 'الرقم السري (PIN):' : 'Password (PIN):';
-            document.getElementById("lblNote").innerText = lang === 'ar' ? 'ملاحظة (اختياري):' : 'Note (Optional):';
-            document.getElementById("txtRemember").innerText = lang === 'ar' ? 'حفظ اسمي ورقمي السري على هذا الجهاز لسرعة التبصيم' : 'Remember my name and PIN on this device';
-            
-            document.getElementById("txtSubmit").innerText = lang === 'ar' ? 'اعتماد البصمة' : 'Submit Punch';
-            document.getElementById("txtRecords").innerText = lang === 'ar' ? 'سجلاتي' : 'My Records';
-            document.getElementById("modalTitle").innerHTML = `<i class="fa-solid fa-list-check"></i> ${lang==='ar'?'آخر سجلات البصمة':'Recent Records'}`;
-
-            document.getElementById("userPass").placeholder = lang === 'ar' ? 'أدخل رقمك السري' : 'Enter your PIN';
-            document.getElementById("userNote").placeholder = lang === 'ar' ? 'اكتب ملاحظة إن وجدت...' : 'Write note if any...';
-
-            loadRoleOptions(currentRole); initGPS();
-        }
+        function showMsg(text, type) { const el = document.getElementById("msgBox"); el.style.display = "block"; el.className = `msg-${type}`; el.innerHTML = text; }
     </script>
 </body>
 </html>
