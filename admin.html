@@ -5,14 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>الإدارة | تقارير الدوام</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #ecf0f1; padding: 20px; margin: 0; }
-        .panel { background: white; max-width: 1200px; margin: 20px auto; padding: 30px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #ecf0f1; padding: 20px; margin: 0; display: flex; flex-direction: column; align-items: center;}
+        
+        .header-img { width: 100%; max-width: 800px; height: auto; margin-bottom: 20px; mix-blend-mode: multiply; }
+        .footer-img { width: 100%; max-width: 800px; height: auto; margin-top: 40px; mix-blend-mode: multiply; opacity: 0.9; }
+
+        .panel { background: white; width: 100%; max-width: 1200px; margin: 0 auto; padding: 30px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
         h2 { text-align: center; color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 15px; margin-bottom: 20px;}
         .login-sec { text-align: center; margin-top: 50px; }
         input[type="password"] { padding: 12px; width: 250px; text-align: center; font-size: 16px; border: 1px solid #ccc; border-radius: 5px; }
         button { background: #27ae60; color: white; padding: 12px 25px; border: none; border-radius: 5px; font-size: 16px; cursor: pointer; font-weight: bold; }
         
-        /* تنسيق التبويبات (النوافذ) */
         .tabs { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 2px solid #ecf0f1; padding-bottom: 10px; justify-content: center; flex-wrap: wrap;}
         .tab-btn { background: #ecf0f1; color: #7f8c8d; border: none; padding: 10px 25px; border-radius: 5px; cursor: pointer; font-size: 16px; transition: 0.3s; font-weight: bold;}
         .tab-btn.active { background: #3498db; color: white; }
@@ -28,6 +31,7 @@
         th, td { padding: 12px; border: 1px solid #ddd; text-align: center; font-size: 14px;}
         th { background: #34495e; color: white; }
         tr:nth-child(even) { background: #f9f9f9; }
+        .row-failed { background-color: #ffeaea !important; }
         .badge-in { background: #2ecc71; color: white; padding: 5px 10px; border-radius: 5px; font-weight: bold; font-size:12px;}
         .badge-out { background: #e74c3c; color: white; padding: 5px 10px; border-radius: 5px; font-weight: bold; font-size:12px;}
         a { color: #2980b9; text-decoration: none; font-weight: bold; }
@@ -36,6 +40,8 @@
     </style>
 </head>
 <body>
+
+    <img src="header.png" alt="Stars Poly Header" class="header-img">
 
     <div class="panel" id="loginPanel">
         <h2>دخول الإدارة</h2>
@@ -49,13 +55,11 @@
 
     <div class="panel" id="dataPanel" style="display: none;">
         
-        <!-- أزرار التنقل بين النوافذ -->
         <div class="tabs">
             <button class="tab-btn active" onclick="switchTab('attendanceTab', this)">📋 سجل الحضور الشامل</button>
             <button class="tab-btn" onclick="switchTab('usersTab', this)">🔐 أرقام الموظفين السرية</button>
         </div>
 
-        <!-- النافذة الأولى: سجل الحضور -->
         <div id="attendanceTab" class="tab-content active">
             <div class="controls-bar">
                 <div class="filter-group">
@@ -94,36 +98,29 @@
             </div>
         </div>
 
-        <!-- النافذة الثانية: الأرقام السرية -->
         <div id="usersTab" class="tab-content">
             <h3 style="text-align: center; color: #2c3e50;">قائمة الأرقام السرية المعتمدة</h3>
             <div style="overflow-x:auto; max-width: 600px; margin: 0 auto;">
                 <table>
-                    <thead>
-                        <tr>
-                            <th>الاسم</th>
-                            <th>القسم</th>
-                            <th>الرقم السري</th>
-                        </tr>
-                    </thead>
+                    <thead><tr><th>الاسم</th><th>القسم</th><th>الرقم السري</th></tr></thead>
                     <tbody>
-                        <!-- الموظفين -->
                         <tr><td><strong>Suhail Satar</strong></td><td>موظف</td><td><span class="pass-text">suh9988</span></td></tr>
                         <tr><td><strong>bayna ahmed</strong></td><td>موظف</td><td><span class="pass-text">bay5544</span></td></tr>
                         <tr><td><strong>Fatmah yamahi</strong></td><td>موظف</td><td><span class="pass-text">fat7766</span></td></tr>
                         <tr><td><strong>Deema</strong></td><td>موظف</td><td><span class="pass-text">dee3322</span></td></tr>
-                        <!-- المحصلين -->
+                        <tr><td><strong>أيمن</strong></td><td>سائق</td><td><span class="pass-text">aym33</span></td></tr>
+                        <tr><td><strong>ربيع</strong></td><td>سائق</td><td><span class="pass-text">rab44</span></td></tr>
+                        <tr><td><strong>سليم</strong></td><td>سائق</td><td><span class="pass-text">sal55</span></td></tr>
                         <tr><td><strong>علاء</strong></td><td>محصل</td><td><span class="pass-text">alaa11</span></td></tr>
                         <tr><td><strong>عيشة</strong></td><td>محصل</td><td><span class="pass-text">aish22</span></td></tr>
                     </tbody>
                 </table>
             </div>
-            <p style="text-align: center; color: #7f8c8d; font-size: 14px; margin-top: 15px;">
-                * السائقين (أيمن، ربيع، سليم) لا يمتلكون أرقاماً سرية، يتم دخولهم بمجرد تواجدهم في نطاق المصنع.
-            </p>
         </div>
 
     </div>
+
+    <img src="footer_img.png" alt="Stars Poly Footer" class="footer-img">
 
     <script>
         const dbUrl = "https://attendance-system-47995-default-rtdb.firebaseio.com/attendance.json";
@@ -180,7 +177,11 @@
                 let loc = r.location && r.location.includes("http") ? `<a href="${r.location}" target="_blank">📍 خريطة</a>` : "مرفوض";
                 let type = r.attendanceType === 'حضور' ? `<span class="badge-in">حضور</span>` : `<span class="badge-out">انصراف</span>`;
                 let note = r.note ? r.note : 'لا يوجد';
-                tbody.innerHTML += `<tr><td><strong>${r.employeeName||''}</strong></td><td>${r.role||'غير محدد'}</td><td>${type}</td><td dir="ltr">${formatTime(r.serverTime)}</td><td class="note-td">${note}</td><td>${loc}</td></tr>`;
+                
+                let rowClass = r.role && r.role.includes('مرفوضة') ? 'row-failed' : '';
+                let roleDisp = r.role && r.role.includes('مرفوضة') ? `<span style="color:red; font-weight:bold;">${r.role}</span>` : (r.role||'غير محدد');
+
+                tbody.innerHTML += `<tr class="${rowClass}"><td><strong>${r.employeeName||''}</strong></td><td>${roleDisp}</td><td>${type}</td><td dir="ltr">${formatTime(r.serverTime)}</td><td class="note-td" style="${rowClass ? 'color:red; font-weight:bold;' : ''}">${note}</td><td>${loc}</td></tr>`;
             });
         }
 
@@ -189,8 +190,9 @@
             let csv = "\uFEFFالاسم,القسم,البصمة,الوقت,ملاحظة,الموقع\n";
             filteredData.forEach(r => {
                 let n = (r.employeeName||"").replace(/,/g," ");
+                let role = (r.role||"").replace(/,/g," ");
                 let note = (r.note||"لا يوجد").replace(/,/g," ");
-                csv += `${n},${r.role||""},${r.attendanceType||""},${formatTimeExcel(r.serverTime)},${note},${(r.location||"").replace(/,/g," ")}\n`;
+                csv += `${n},${role},${r.attendanceType||""},${formatTimeExcel(r.serverTime)},${note},${(r.location||"").replace(/,/g," ")}\n`;
             });
             const link = document.createElement("a"); link.href = URL.createObjectURL(new Blob([csv], {type:'text/csv;charset=utf-8;'}));
             link.download = "تقرير_الدوام.csv"; link.click();
