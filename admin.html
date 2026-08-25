@@ -5,335 +5,70 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>لوحة التحكم الإدارية | تقارير وبصمة الدوام</title>
     
-    <!-- خط تجوال العربي وأيقونات FontAwesome ومكتبة الرسوم البيانية -->
+    <!-- خط تجوال والأيقونات -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- التنبيهات الذكية (SweetAlert) -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <style>
         :root {
-            --primary: #1e3a8a;
-            --primary-light: #3b82f6;
-            --success: #10b981;
-            --danger: #ef4444;
-            --warning: #f59e0b;
-            --dark: #1f2937;
-            --light-bg: #f3f4f6;
-            --card-bg: #ffffff;
-            --border-color: #e5e7eb;
+            --primary: #1e3a8a; --primary-light: #3b82f6; --success: #10b981;
+            --danger: #ef4444; --dark: #1f2937; --light-bg: #f3f4f6;
+            --card-bg: #ffffff; --border-color: #e5e7eb;
         }
 
         * { box-sizing: border-box; font-family: 'Tajawal', sans-serif; margin: 0; padding: 0; }
-        
-        body { 
-            background: var(--light-bg); 
-            color: var(--dark); 
-            padding: 20px 15px; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center;
-            min-height: 100vh;
-        }
-
+        body { background: var(--light-bg); color: var(--dark); padding: 20px 15px; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
         .header-img { width: 100%; max-width: 900px; height: auto; margin-bottom: 20px; border-radius: 8px; mix-blend-mode: multiply; }
-        .footer-img { width: 100%; max-width: 900px; height: auto; margin-top: 40px; opacity: 0.9; mix-blend-mode: multiply; }
-
+        
         .container { width: 100%; max-width: 1300px; margin: 0 auto; }
 
-        /* Login Card */
-        .login-card {
-            background: var(--card-bg);
-            max-width: 420px;
-            margin: 60px auto;
-            padding: 35px 30px;
-            border-radius: 16px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.06);
-            text-align: center;
-            border: 1px solid var(--border-color);
-        }
+        .login-card { background: var(--card-bg); max-width: 420px; margin: 60px auto; padding: 35px 30px; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.06); text-align: center; border: 1px solid var(--border-color); }
         .login-card h2 { color: var(--primary); margin-bottom: 10px; font-size: 24px; }
-        .login-card p { color: #6b7280; font-size: 14px; margin-bottom: 25px; }
-        .login-input-group { position: relative; margin-bottom: 20px; }
-        .login-input-group i { position: absolute; right: 15px; top: 15px; color: #9ca3af; }
-        .login-input-group input {
-            width: 100%;
-            padding: 12px 45px 12px 15px;
-            border: 2px solid var(--border-color);
-            border-radius: 10px;
-            font-size: 16px;
-            outline: none;
-            transition: 0.3s;
-            text-align: center;
-        }
-        .login-input-group input:focus { border-color: var(--primary-light); box-shadow: 0 0 0 4px rgba(59,130,246,0.15); }
-        .btn-login {
-            width: 100%;
-            background: linear-gradient(135deg, var(--primary), var(--primary-light));
-            color: white;
-            padding: 12px;
-            border: none;
-            border-radius: 10px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.3s;
-        }
+        .login-input-group { position: relative; margin-bottom: 20px; text-align: right; }
+        .login-input-group label { display: block; font-weight: 700; font-size: 14px; margin-bottom: 8px; color: #4b5563; }
+        .login-input-group i { position: absolute; left: 15px; top: 40px; color: #9ca3af; }
+        .login-input-group input, .login-input-group select { width: 100%; padding: 12px 15px 12px 40px; border: 2px solid var(--border-color); border-radius: 10px; font-size: 15px; outline: none; transition: 0.3s; font-weight: 600; }
+        .login-input-group input:focus, .login-input-group select:focus { border-color: var(--primary-light); }
+        .btn-login { width: 100%; background: linear-gradient(135deg, var(--primary), var(--primary-light)); color: white; padding: 14px; border: none; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.3s; }
         .btn-login:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(30,58,138,0.25); }
 
-        /* Dashboard Main Panel */
-        .panel { 
-            background: var(--card-bg); 
-            width: 100%; 
-            padding: 25px 30px; 
-            border-radius: 16px; 
-            box-shadow: 0 4px 20px rgba(0,0,0,0.04); 
-            border: 1px solid var(--border-color);
-        }
-
-        .dashboard-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 15px;
-            padding-bottom: 20px;
-            border-bottom: 2px solid var(--light-bg);
-            margin-bottom: 25px;
-        }
-        .dashboard-header h2 { color: var(--primary); font-size: 22px; display: flex; align-items: center; gap: 10px; }
+        .panel { background: var(--card-bg); width: 100%; padding: 25px 30px; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.04); border: 1px solid var(--border-color); }
+        .dashboard-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; padding-bottom: 20px; border-bottom: 2px solid var(--light-bg); margin-bottom: 25px; }
+        .dashboard-header h2 { color: var(--primary); font-size: 22px; }
         .header-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+        .admin-badge { background: #eff6ff; color: #1e40af; padding: 6px 12px; border-radius: 20px; font-size: 13px; font-weight: bold; border: 1px solid #bfdbfe; }
 
-        /* KPI Cards Grid */
-        .kpi-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 15px;
-            margin-bottom: 25px;
-        }
-        .kpi-card {
-            background: #ffffff;
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 18px 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
-            transition: 0.3s;
-        }
-        .kpi-card:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.06); }
+        .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; margin-bottom: 25px; }
+        .kpi-card { background: #fff; border: 1px solid var(--border-color); border-radius: 12px; padding: 18px 20px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
         .kpi-info h4 { font-size: 13px; color: #6b7280; font-weight: 500; margin-bottom: 6px; }
         .kpi-info .kpi-num { font-size: 24px; font-weight: 800; color: var(--dark); }
-        .kpi-icon {
-            width: 48px;
-            height: 48px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-        }
-        .kpi-icon.blue { background: #eff6ff; color: #3b82f6; }
-        .kpi-icon.green { background: #ecfdf5; color: #10b981; }
-        .kpi-icon.red { background: #fef2f2; color: #ef4444; }
-        .kpi-icon.purple { background: #faf5ff; color: #a855f7; }
+        .kpi-icon { width: 48px; height: 48px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+        .kpi-icon.blue { background: #eff6ff; color: #3b82f6; } .kpi-icon.green { background: #ecfdf5; color: #10b981; } .kpi-icon.red { background: #fef2f2; color: #ef4444; }
 
-        /* Chart section */
-        .chart-section {
-            background: #fdfdfd;
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 25px;
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 20px;
-        }
-        @media (max-width: 900px) { .chart-section { grid-template-columns: 1fr; } }
-
-        /* Tabs */
-        .tabs { 
-            display: flex; 
-            gap: 10px; 
-            margin-bottom: 20px; 
-            border-bottom: 2px solid var(--light-bg); 
-            padding-bottom: 10px; 
-            flex-wrap: wrap;
-        }
-        .tab-btn { 
-            background: transparent; 
-            color: #6b7280; 
-            border: none; 
-            padding: 10px 20px; 
-            border-radius: 8px; 
-            cursor: pointer; 
-            font-size: 15px; 
-            transition: 0.2s; 
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .tab-btn.active { background: var(--primary); color: white; }
-        .tab-btn:hover:not(.active) { background: #e5e7eb; color: var(--dark); }
-        .tab-content { display: none; }
-        .tab-content.active { display: block; animation: fadeIn 0.4s ease-in-out; }
-
-        /* Controls / Filter Bar */
-        .controls-bar { 
-            background: #f8fafc; 
-            padding: 20px; 
-            border-radius: 12px; 
-            border: 1px solid var(--border-color); 
-            margin-bottom: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-        .quick-dates {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            align-items: center;
-        }
-        .quick-btn {
-            background: white;
-            border: 1px solid var(--border-color);
-            padding: 6px 14px;
-            border-radius: 6px;
-            font-size: 13px;
-            cursor: pointer;
-            font-weight: 600;
-            color: #4b5563;
-            transition: 0.2s;
-        }
-        .quick-btn:hover, .quick-btn.active { background: var(--primary-light); color: white; border-color: var(--primary-light); }
-
-        .filter-row {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            align-items: flex-end;
-        }
+        .controls-bar { background: #f8fafc; padding: 20px; border-radius: 12px; border: 1px solid var(--border-color); margin-bottom: 20px; display: flex; flex-direction: column; gap: 15px; }
+        .filter-row { display: flex; flex-wrap: wrap; gap: 15px; align-items: flex-end; }
         .filter-group { display: flex; flex-direction: column; gap: 6px; flex: 1; min-width: 160px; }
         .filter-group label { font-size: 13px; font-weight: 700; color: #374151; }
+        select, input[type="date"], input[type="text"] { padding: 9px 12px; font-size: 14px; border-radius: 8px; border: 1px solid #d1d5db; outline: none; width: 100%; font-family: inherit;}
         
-        select, input[type="date"], input[type="text"] { 
-            padding: 9px 12px; 
-            font-size: 14px; 
-            border-radius: 8px; 
-            border: 1px solid #d1d5db; 
-            outline: none;
-            background: white;
-            width: 100%;
-        }
-        select:focus, input:focus { border-color: var(--primary-light); box-shadow: 0 0 0 3px rgba(59,130,246,0.15); }
+        .btn-action { display: inline-flex; align-items: center; gap: 8px; padding: 9px 15px; border-radius: 8px; border: none; font-size: 13px; font-weight: 700; cursor: pointer; color: white; transition: 0.2s;}
+        .btn-export { background: #059669; } .btn-refresh { background: var(--primary); } .btn-logout { background: #ef4444; }
+        .btn-delete { background: #fee2e2; color: #b91c1c; border: 1px solid #fecaca; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: bold; transition: 0.2s;}
+        .btn-delete:hover { background: #ef4444; color: white; }
 
-        .btn-action {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 9px 18px;
-            border-radius: 8px;
-            border: none;
-            font-size: 14px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: 0.2s;
-            color: white;
-            white-space: nowrap;
-        }
-        .btn-export { background: #059669; }
-        .btn-export:hover { background: #047857; }
-        .btn-print { background: #4b5563; }
-        .btn-print:hover { background: #374151; }
-        .btn-refresh { background: var(--primary); }
-        .btn-refresh:hover { background: #1e40af; }
-        .btn-logout { background: #ef4444; font-size: 13px; padding: 7px 12px; }
-
-        /* Table */
-        .table-container {
-            overflow-x: auto;
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            background: white;
-        }
+        .table-container { overflow-x: auto; border: 1px solid var(--border-color); border-radius: 10px; background: white; }
         table { width: 100%; border-collapse: collapse; text-align: center; }
-        th { 
-            background: #1e293b; 
-            color: white; 
-            font-weight: 700; 
-            padding: 14px 12px; 
-            font-size: 14px; 
-            white-space: nowrap;
-        }
-        td { 
-            padding: 12px 10px; 
-            border-bottom: 1px solid #f1f5f9; 
-            font-size: 14px; 
-            color: #334155;
-        }
+        th { background: #1e293b; color: white; padding: 14px 12px; font-size: 13px; white-space: nowrap; }
+        td { padding: 12px 10px; border-bottom: 1px solid #f1f5f9; font-size: 14px; color: #334155; }
         tr:hover { background-color: #f8fafc; }
-        .row-failed { background-color: #fef2f2 !important; }
-
-        .badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-weight: 700;
-            font-size: 12px;
-        }
-        .badge-in { background: #dcfce7; color: #15803d; }
-        .badge-out { background: #fee2e2; color: #b91c1c; }
-        .badge-rejected { background: #fef3c7; color: #b45309; }
-
-        .map-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            color: #2563eb;
-            background: #eff6ff;
-            padding: 4px 10px;
-            border-radius: 6px;
-            text-decoration: none;
-            font-size: 13px;
-            font-weight: 600;
-        }
-        .map-link:hover { background: #dbeafe; }
-
-        .pass-text { 
-            font-family: monospace; 
-            font-size: 16px; 
-            color: #b91c1c; 
-            font-weight: bold; 
-            background: #fee2e2; 
-            padding: 4px 10px; 
-            border-radius: 6px;
-        }
-
-        .status-pill {
-            font-size: 12px;
-            padding: 3px 8px;
-            border-radius: 12px;
-            font-weight: 600;
-            background: #e2e8f0;
-        }
-
-        /* Print styles */
-        @media print {
-            body { background: white; padding: 0; }
-            .header-actions, .tabs, .controls-bar, .quick-dates, .kpi-grid, .chart-section, .btn-logout, .login-card { display: none !important; }
-            .panel { border: none; box-shadow: none; padding: 0; }
-            th { background: #333 !important; color: white !important; -webkit-print-color-adjust: exact; }
-            .badge-in { border: 1px solid #10b981; color: #10b981; }
-            .badge-out { border: 1px solid #ef4444; color: #ef4444; }
-        }
-
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .badge { display: inline-flex; align-items: center; gap: 4px; padding: 5px 10px; border-radius: 20px; font-weight: 700; font-size: 12px; }
+        .badge-in { background: #dcfce7; color: #15803d; } .badge-out { background: #fee2e2; color: #b91c1c; } .badge-rejected { background: #fef3c7; color: #b45309; }
     </style>
 </head>
 <body>
@@ -342,526 +77,241 @@
 
     <div class="container">
         
-        <!-- Login Card -->
+        <!-- صفحة الدخول للإدارة -->
         <div class="login-card" id="loginPanel">
-            <div style="font-size: 45px; color: var(--primary); margin-bottom: 10px;">
-                <i class="fa-solid fa-user-shield"></i>
-            </div>
+            <div style="font-size: 45px; color: var(--primary); margin-bottom: 10px;"><i class="fa-solid fa-user-shield"></i></div>
             <h2>بوابة الإدارة</h2>
-            <p>يرجى إدخال رمز المرور لعرض تقارير الحضور والموظفين</p>
+            <p style="color:#6b7280; font-size:14px; margin-bottom:20px;">الرجاء اختيار الحساب وإدخال كلمة المرور</p>
             
             <div class="login-input-group">
-                <i class="fa-solid fa-lock"></i>
-                <input type="password" id="adminCode" placeholder="كلمة المرور" onkeypress="if(event.key==='Enter') verifyAdmin()">
+                <label>نوع الحساب الإداري</label>
+                <select id="adminRole">
+                    <option value="manager">المدير العام</option>
+                    <option value="hr">شؤون الموظفين</option>
+                </select>
+                <i class="fa-solid fa-users-gear"></i>
             </div>
+
+            <div class="login-input-group">
+                <label>كلمة المرور</label>
+                <input type="password" id="adminCode" placeholder="أدخل رمز الدخول" onkeypress="if(event.key==='Enter') verifyAdmin()">
+                <i class="fa-solid fa-lock"></i>
+            </div>
+
             <button class="btn-login" onclick="verifyAdmin()">تسجيل الدخول <i class="fa-solid fa-arrow-left"></i></button>
-            <p id="err" style="color:var(--danger); margin-top: 12px; font-weight: bold;"></p>
         </div>
 
-        <!-- Dashboard Data Panel -->
+        <!-- لوحة التحكم والجداول -->
         <div class="panel" id="dataPanel" style="display: none;">
             
-            <!-- Header -->
             <div class="dashboard-header">
                 <h2><i class="fa-solid fa-chart-line"></i> لوحة التحكم وتقارير الحضور</h2>
                 <div class="header-actions">
-                    <span id="lastUpdated" style="font-size: 13px; color: #6b7280;"></span>
-                    <button class="btn-action btn-refresh" onclick="loadRecords()" title="تحديث البيانات">
-                        <i class="fa-solid fa-arrows-rotate"></i> تحديث
-                    </button>
-                    <button class="btn-action btn-print" onclick="window.print()">
-                        <i class="fa-solid fa-print"></i> طباعة التقرير
-                    </button>
-                    <button class="btn-action btn-export" onclick="exportCSV()">
-                        <i class="fa-solid fa-file-excel"></i> تصدير Excel
-                    </button>
-                    <button class="btn-action btn-logout" onclick="logout()">
-                        <i class="fa-solid fa-right-from-bracket"></i> خروج
-                    </button>
+                    <span id="activeAdminLabel" class="admin-badge"></span>
+                    <button class="btn-action btn-refresh" onclick="loadRecords()"><i class="fa-solid fa-arrows-rotate"></i> تحديث</button>
+                    <button class="btn-action btn-export" onclick="exportCSV()"><i class="fa-solid fa-file-excel"></i> تصدير Excel</button>
+                    <button class="btn-action btn-logout" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> خروج</button>
                 </div>
             </div>
 
-            <!-- KPI Summary Cards -->
             <div class="kpi-grid">
                 <div class="kpi-card">
-                    <div class="kpi-info">
-                        <h4>إجمالي الحركات المعروضة</h4>
-                        <div class="kpi-num" id="kpiTotal">0</div>
-                    </div>
+                    <div class="kpi-info"><h4>إجمالي الحركات المعروضة</h4><div class="kpi-num" id="kpiTotal">0</div></div>
                     <div class="kpi-icon blue"><i class="fa-solid fa-list-check"></i></div>
                 </div>
-
                 <div class="kpi-card">
-                    <div class="kpi-info">
-                        <h4>تسجيلات الحضور اليوم</h4>
-                        <div class="kpi-num" id="kpiTodayIn" style="color: var(--success);">0</div>
-                    </div>
+                    <div class="kpi-info"><h4>حضور اليوم</h4><div class="kpi-num" id="kpiTodayIn" style="color: var(--success);">0</div></div>
                     <div class="kpi-icon green"><i class="fa-solid fa-right-to-bracket"></i></div>
                 </div>
-
                 <div class="kpi-card">
-                    <div class="kpi-info">
-                        <h4>تسجيلات الانصراف اليوم</h4>
-                        <div class="kpi-num" id="kpiTodayOut" style="color: var(--primary-light);">0</div>
-                    </div>
-                    <div class="kpi-icon purple"><i class="fa-solid fa-right-from-bracket"></i></div>
-                </div>
-
-                <div class="kpi-card">
-                    <div class="kpi-info">
-                        <h4>حركات مرفوضة / تنبيهات</h4>
-                        <div class="kpi-num" id="kpiFailed" style="color: var(--danger);">0</div>
-                    </div>
+                    <div class="kpi-info"><h4>حركات مرفوضة</h4><div class="kpi-num" id="kpiFailed" style="color: var(--danger);">0</div></div>
                     <div class="kpi-icon red"><i class="fa-solid fa-triangle-exclamation"></i></div>
                 </div>
             </div>
 
-            <!-- Quick Chart Analytics -->
-            <div class="chart-section" id="chartWrapper">
-                <div>
-                    <h4 style="margin-bottom: 15px; color: #374151; font-size: 15px;"><i class="fa-solid fa-chart-column"></i> إحصائية الحضور حسب الأيام (آخر 7 أيام)</h4>
-                    <div style="height: 220px;">
-                        <canvas id="attendanceBarChart"></canvas>
+            <div class="controls-bar">
+                <div class="filter-row">
+                    <div class="filter-group" style="flex: 1.5;">
+                        <label>بحث سريع (الاسم، الملاحظة):</label>
+                        <input type="text" id="searchInput" placeholder="اكتب للبحث..." oninput="renderTable()">
                     </div>
-                </div>
-                <div>
-                    <h4 style="margin-bottom: 15px; color: #374151; font-size: 15px;"><i class="fa-solid fa-chart-pie"></i> توزيع البصمات حسب القسم</h4>
-                    <div style="height: 220px;">
-                        <canvas id="deptPieChart"></canvas>
+                    <div class="filter-group">
+                        <label>تصفية الموظفين:</label>
+                        <select id="empFilter" onchange="renderTable()">
+                            <option value="all">عرض الجميع</option>
+                            <option value="Suhail Satar">Suhail Satar</option>
+                            <option value="bayna ahmed">bayna ahmed</option>
+                            <option value="Fatmah yamahi">Fatmah yamahi</option>
+                            <option value="Deema">Deema</option>
+                            <option value="أيمن">أيمن (سائق)</option>
+                            <option value="ربيع">ربيع (سائق)</option>
+                            <option value="سليم">سليم (سائق)</option>
+                            <option value="علاء">علاء (محصل)</option>
+                            <option value="عيشة">عيشة (محصل)</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>من تاريخ:</label>
+                        <input type="date" id="startDate" onchange="renderTable()">
+                    </div>
+                    <div class="filter-group">
+                        <label>إلى تاريخ:</label>
+                        <input type="date" id="endDate" onchange="renderTable()">
                     </div>
                 </div>
             </div>
-
-            <!-- Tabs Nav -->
-            <div class="tabs">
-                <button class="tab-btn active" onclick="switchTab('attendanceTab', this)">
-                    <i class="fa-solid fa-table-list"></i> سجل الحضور الشامل
-                </button>
-                <button class="tab-btn" onclick="switchTab('usersTab', this)">
-                    <i class="fa-solid fa-key"></i> أرقام الموظفين السرية
-                </button>
-            </div>
-
-            <!-- Attendance Tab Content -->
-            <div id="attendanceTab" class="tab-content active">
-                
-                <!-- Filters -->
-                <div class="controls-bar">
-                    <!-- Quick Date Pills -->
-                    <div class="quick-dates">
-                        <span style="font-size: 13px; font-weight: bold; color: #6b7280;">فترات سريعة:</span>
-                        <button class="quick-btn" onclick="setQuickDate('today', this)">اليوم</button>
-                        <button class="quick-btn" onclick="setQuickDate('yesterday', this)">الأمس</button>
-                        <button class="quick-btn" onclick="setQuickDate('thisWeek', this)">هذا الأسبوع</button>
-                        <button class="quick-btn" onclick="setQuickDate('thisMonth', this)">هذا الشهر</button>
-                        <button class="quick-btn active" onclick="setQuickDate('all', this)">كل الفترات</button>
-                    </div>
-
-                    <div class="filter-row">
-                        <div class="filter-group" style="flex: 1.5;">
-                            <label><i class="fa-solid fa-magnifying-glass"></i> بحث سريع:</label>
-                            <input type="text" id="searchInput" placeholder="ابحث بالاسم، القسم، أو الملاحظة..." oninput="renderTable()">
-                        </div>
-
-                        <div class="filter-group">
-                            <label>الموظف:</label>
-                            <select id="empFilter" onchange="renderTable()">
-                                <option value="all">عرض الجميع</option>
-                                <optgroup label="الموظفين">
-                                    <option value="Suhail Satar">Suhail Satar</option>
-                                    <option value="bayna ahmed">bayna ahmed</option>
-                                    <option value="Fatmah yamahi">Fatmah yamahi</option>
-                                    <option value="Deema">Deema</option>
-                                </optgroup>
-                                <optgroup label="السائقين">
-                                    <option value="أيمن">أيمن</option>
-                                    <option value="ربيع">ربيع</option>
-                                    <option value="سليم">سليم</option>
-                                </optgroup>
-                                <optgroup label="المحصلين">
-                                    <option value="علاء">علاء</option>
-                                    <option value="عيشة">عيشة</option>
-                                </optgroup>
-                            </select>
-                        </div>
-
-                        <div class="filter-group">
-                            <label>نوع البصمة:</label>
-                            <select id="typeFilter" onchange="renderTable()">
-                                <option value="all">كل الحركات</option>
-                                <option value="حضور">حضور فقط</option>
-                                <option value="انصراف">انصراف فقط</option>
-                                <option value="failed">العمليات المرفوضة فقط</option>
-                            </select>
-                        </div>
-
-                        <div class="filter-group">
-                            <label>من تاريخ:</label>
-                            <input type="date" id="startDate" onchange="renderTable()">
-                        </div>
-
-                        <div class="filter-group">
-                            <label>إلى تاريخ:</label>
-                            <input type="date" id="endDate" onchange="renderTable()">
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Table -->
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>اسم الموظف</th>
-                                <th>القسم / الدور</th>
-                                <th>نوع الحركة</th>
-                                <th>التاريخ والوقت</th>
-                                <th>الملاحظة</th>
-                                <th>الموقع الجغرافي</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tBody">
-                            <tr><td colspan="7" style="padding: 30px; color: #9ca3af;">جاري تحميل السجلات...</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- Passwords Tab Content -->
-            <div id="usersTab" class="tab-content">
-                <h3 style="text-align: center; color: var(--primary); margin-bottom: 20px;">
-                    <i class="fa-solid fa-shield-halved"></i> قائمة الرموز السرية المعتمدة للموظفين
-                </h3>
-                <div class="table-container" style="max-width: 750px; margin: 0 auto;">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>الاسم</th>
-                                <th>القسم</th>
-                                <th>الرمز السري</th>
-                                <th>الحالة</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr><td><strong>Suhail Satar</strong></td><td>موظف</td><td><span class="pass-text">suh9988</span></td><td><span class="status-pill" style="color:#059669;">نشط</span></td></tr>
-                            <tr><td><strong>bayna ahmed</strong></td><td>موظف</td><td><span class="pass-text">bay5544</span></td><td><span class="status-pill" style="color:#059669;">نشط</span></td></tr>
-                            <tr><td><strong>Fatmah yamahi</strong></td><td>موظف</td><td><span class="pass-text">fat7766</span></td><td><span class="status-pill" style="color:#059669;">نشط</span></td></tr>
-                            <tr><td><strong>Deema</strong></td><td>موظف</td><td><span class="pass-text">dee3322</span></td><td><span class="status-pill" style="color:#059669;">نشط</span></td></tr>
-                            <tr><td><strong>أيمن</strong></td><td>سائق</td><td><span class="pass-text">aym33</span></td><td><span class="status-pill" style="color:#059669;">نشط</span></td></tr>
-                            <tr><td><strong>ربيع</strong></td><td>سائق</td><td><span class="pass-text">rab44</span></td><td><span class="status-pill" style="color:#059669;">نشط</span></td></tr>
-                            <tr><td><strong>سليم</strong></td><td>سائق</td><td><span class="pass-text">sal55</span></td><td><span class="status-pill" style="color:#059669;">نشط</span></td></tr>
-                            <tr><td><strong>علاء</strong></td><td>محصل</td><td><span class="pass-text">alaa11</span></td><td><span class="status-pill" style="color:#059669;">نشط</span></td></tr>
-                            <tr><td><strong>عيشة</strong></td><td>محصل</td><td><span class="pass-text">aish22</span></td><td><span class="status-pill" style="color:#059669;">نشط</span></td></tr>
-                        </tbody>
-                    </table>
-                </div>
+            
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>الاسم</th>
+                            <th>الدور</th>
+                            <th>الحركة</th>
+                            <th>الوقت والتاريخ</th>
+                            <th>الموقع</th>
+                            <th>إجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tBody">
+                        <tr><td colspan="6" style="padding: 30px;">جاري تحميل السجلات...</td></tr>
+                    </tbody>
+                </table>
             </div>
 
         </div>
     </div>
 
-    <img src="footer_img.png" alt="Footer" class="footer-img" onerror="this.style.display='none'">
-
     <script>
-        const dbUrl = "https://attendance-system-47995-default-rtdb.firebaseio.com/attendance.json";
-        let rawData = [], filteredData = [];
-        let barChartInstance = null, pieChartInstance = null;
+        // رابط الداتا بيس بدون .json ليستخدم في كود الحذف
+        const dbUrl = "https://attendance-system-47995-default-rtdb.firebaseio.com/attendance"; 
+        
+        const ADMIN_CREDENTIALS = {
+            "manager": { pass: "112233", title: "المدير العام" },
+            "hr": { pass: "445566", title: "شؤون الموظفين" }
+        };
 
-        // التحقق من وجود جلسة دخول سابقة
+        let rawData = [], filteredData = [];
+
         window.addEventListener('DOMContentLoaded', () => {
-            if (sessionStorage.getItem('isAdminLoggedIn') === 'true') {
-                showDashboard();
-            }
+            const loggedInRole = sessionStorage.getItem('adminRole');
+            if (loggedInRole && ADMIN_CREDENTIALS[loggedInRole]) showDashboard(loggedInRole);
         });
 
         function verifyAdmin() {
-            const pass = document.getElementById("adminCode").value.trim();
-            if (pass === "112233") {
-                sessionStorage.setItem('isAdminLoggedIn', 'true');
-                showDashboard();
+            const role = document.getElementById("adminRole").value, pass = document.getElementById("adminCode").value.trim();
+            if (ADMIN_CREDENTIALS[role].pass === pass) {
+                sessionStorage.setItem('adminRole', role); showDashboard(role);
             } else {
-                document.getElementById("err").innerText = "⚠️ كلمة المرور غير صحيحة، حاول مجدداً!";
+                Swal.fire({ icon: 'error', title: 'خطأ', text: 'كلمة المرور غير صحيحة!', confirmButtonText: 'حسناً', confirmButtonColor: '#ef4444' });
             }
         }
 
-        function showDashboard() {
+        function showDashboard(role) {
             document.getElementById("loginPanel").style.display = "none";
             document.getElementById("dataPanel").style.display = "block";
+            document.getElementById("activeAdminLabel").innerHTML = `<i class="fa-solid fa-user-check"></i> مرحباً، ${ADMIN_CREDENTIALS[role].title}`;
+            
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById("startDate").value = today; document.getElementById("endDate").value = today;
             loadRecords();
         }
 
-        function logout() {
-            sessionStorage.removeItem('isAdminLoggedIn');
-            location.reload();
-        }
-
-        function switchTab(tabId, btn) {
-            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById(tabId).classList.add('active');
-            btn.classList.add('active');
-        }
+        function logout() { sessionStorage.removeItem('adminRole'); location.reload(); }
 
         function loadRecords() {
             const tbody = document.getElementById("tBody");
-            tbody.innerHTML = `<tr><td colspan="7" style="padding: 25px;"><i class="fa-solid fa-spinner fa-spin"></i> جاري تحديث البيانات...</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="6" style="padding: 25px;"><i class="fa-solid fa-spinner fa-spin"></i> جاري تحديث البيانات...</td></tr>`;
 
-            fetch(dbUrl)
-                .then(res => res.json())
-                .then(data => {
-                    rawData = [];
-                    if (data && !data.error) {
-                        for (let key in data) {
-                            let item = data[key];
-                            item._key = key;
-                            rawData.push(item);
-                        }
-                    }
-                    document.getElementById("lastUpdated").innerText = "آخر تحديث: " + new Date().toLocaleTimeString('ar-EG');
-                    renderTable();
-                    updateCharts();
-                })
-                .catch(err => {
-                    tbody.innerHTML = `<tr><td colspan="7" style="color:red; padding:20px;">تعذر جلب البيانات. تأكد من اتصال الإنترنت أو صلاحيات Firebase.</td></tr>`;
-                });
+            fetch(`${dbUrl}.json`).then(res => res.json()).then(data => {
+                rawData = [];
+                if (data && !data.error) {
+                    for (let key in data) { let item = data[key]; item._key = key; rawData.push(item); }
+                }
+                renderTable();
+            }).catch(err => { tbody.innerHTML = `<tr><td colspan="6" style="color:red;">تعذر جلب البيانات. تأكد من الإنترنت.</td></tr>`; });
         }
 
-        // إعداد الفترات الزمنية السريعة
-        function setQuickDate(type, btn) {
-            document.querySelectorAll('.quick-btn').forEach(b => b.classList.remove('active'));
-            if(btn) btn.classList.add('active');
-
-            const now = new Date();
-            const sInput = document.getElementById("startDate");
-            const eInput = document.getElementById("endDate");
-
-            if (type === 'today') {
-                const todayStr = now.toISOString().split('T')[0];
-                sInput.value = todayStr;
-                eInput.value = todayStr;
-            } else if (type === 'yesterday') {
-                const yest = new Date(now);
-                yest.setDate(now.getDate() - 1);
-                const yestStr = yest.toISOString().split('T')[0];
-                sInput.value = yestStr;
-                eInput.value = yestStr;
-            } else if (type === 'thisWeek') {
-                const startOfWeek = new Date(now);
-                startOfWeek.setDate(now.getDate() - 7);
-                sInput.value = startOfWeek.toISOString().split('T')[0];
-                eInput.value = now.toISOString().split('T')[0];
-            } else if (type === 'thisMonth') {
-                const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-                sInput.value = startOfMonth.toISOString().split('T')[0];
-                eInput.value = now.toISOString().split('T')[0];
-            } else {
-                sInput.value = "";
-                eInput.value = "";
-            }
-            renderTable();
-        }
-
-        function formatTime(st) {
-            if (!st) return "--";
-            let d = new Date(st);
-            let yr = d.getFullYear(), mo = String(d.getMonth()+1).padStart(2,'0'), day = String(d.getDate()).padStart(2,'0');
-            let hr = d.getHours(), min = String(d.getMinutes()).padStart(2,'0');
-            let ampm = hr >= 12 ? 'م' : 'ص';
-            hr = hr % 12; hr = hr ? hr : 12;
-            return `<div>${yr}/${mo}/${day}</div><div style="color:#d97706; font-weight:bold; font-size:13px;"><i class="fa-regular fa-clock"></i> ${hr}:${min} ${ampm}</div>`;
-        }
-
-        function formatTimeExcel(st) {
-            if (!st) return "";
-            let d = new Date(st);
-            return `${d.getFullYear()}/${d.getMonth()+1}/${d.getDate()} ${d.getHours()}:${String(d.getMinutes()).padStart(2,'0')}`;
+        // كود حذف السجل
+        function deleteRecord(recordKey) {
+            Swal.fire({
+                title: 'هل أنت متأكد؟',
+                text: "لن تتمكن من التراجع عن هذا الإجراء وسيتم مسح البصمة!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ef4444', cancelButtonColor: '#9ca3af',
+                confirmButtonText: 'نعم، احذف السجل!', cancelButtonText: 'إلغاء'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({ title: 'جاري الحذف...', allowOutsideClick: false, didOpen: () => { Swal.showLoading(); }});
+                    fetch(`${dbUrl}/${recordKey}.json`, { method: 'DELETE' })
+                    .then(res => {
+                        if (res.ok) {
+                            Swal.fire({ icon: 'success', title: 'تم الحذف', text: 'تم مسح سجل البصمة بنجاح.', timer: 1500, showConfirmButton: false });
+                            loadRecords();
+                        } else throw new Error("فشل الحذف");
+                    }).catch(err => Swal.fire('خطأ!', 'حدث خطأ أثناء الاتصال بقاعدة البيانات.', 'error'));
+                }
+            });
         }
 
         function renderTable() {
             const tbody = document.getElementById("tBody");
-            const emp = document.getElementById("empFilter").value;
-            const typeFilter = document.getElementById("typeFilter").value;
-            const searchTxt = document.getElementById("searchInput").value.trim().toLowerCase();
-            const sDate = document.getElementById("startDate").value;
-            const eDate = document.getElementById("endDate").value;
+            const emp = document.getElementById("empFilter").value, searchTxt = document.getElementById("searchInput").value.trim().toLowerCase();
+            const sDate = document.getElementById("startDate").value, eDate = document.getElementById("endDate").value;
 
-            tbody.innerHTML = "";
-            filteredData = [];
-
+            tbody.innerHTML = ""; filteredData = [];
             const todayStr = new Date().toISOString().split('T')[0];
-            let todayInCount = 0, todayOutCount = 0, failedCount = 0;
+            let todayIn = 0, failed = 0;
 
             filteredData = rawData.filter(r => {
                 let dStr = r.serverTime ? new Date(r.serverTime).toISOString().split('T')[0] : "";
-                
-                // حساب إحصائيات اليوم الحالي
-                if (dStr === todayStr) {
-                    if (r.attendanceType === 'حضور') todayInCount++;
-                    if (r.attendanceType === 'انصراف') todayOutCount++;
-                }
-                if (r.role && r.role.includes('مرفوضة')) failedCount++;
+                if (dStr === todayStr && r.attendanceType === 'حضور') todayIn++;
+                if (r.role && r.role.includes('مرفوضة')) failed++;
 
-                // الفلاتر
                 let matchEmp = (emp === "all" || r.employeeName === emp);
                 let matchDate = (!sDate || dStr >= sDate) && (!eDate || dStr <= eDate);
                 let matchSearch = true;
-                if (searchTxt) {
-                    let fullText = `${r.employeeName || ''} ${r.role || ''} ${r.note || ''}`.toLowerCase();
-                    matchSearch = fullText.includes(searchTxt);
-                }
-                let matchType = true;
-                if (typeFilter === 'حضور') matchType = (r.attendanceType === 'حضور');
-                else if (typeFilter === 'انصراف') matchType = (r.attendanceType === 'انصراف');
-                else if (typeFilter === 'failed') matchType = (r.role && r.role.includes('مرفوضة'));
-
-                return matchEmp && matchDate && matchSearch && matchType;
+                if (searchTxt) matchSearch = `${r.employeeName || ''} ${r.note || ''}`.toLowerCase().includes(searchTxt);
+                return matchEmp && matchDate && matchSearch;
             });
 
-            // ترتيب تنازلي حسب الوقت الأحدث
             filteredData.sort((a,b) => (b.serverTime || 0) - (a.serverTime || 0));
 
-            // تحديث بطاقات الأرقام
             document.getElementById("kpiTotal").innerText = filteredData.length;
-            document.getElementById("kpiTodayIn").innerText = todayInCount;
-            document.getElementById("kpiTodayOut").innerText = todayOutCount;
-            document.getElementById("kpiFailed").innerText = failedCount;
+            document.getElementById("kpiTodayIn").innerText = todayIn;
+            document.getElementById("kpiFailed").innerText = failed;
 
-            if (filteredData.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="7" style="padding: 30px; color: #6b7280;"><i class="fa-solid fa-folder-open fa-2x"></i><br><br>لا توجد سجلات تطابق الفلترة المحددة</td></tr>`;
-                return;
-            }
+            if (filteredData.length === 0) return tbody.innerHTML = `<tr><td colspan="6" style="padding: 30px;">لا توجد سجلات.</td></tr>`;
 
-            filteredData.forEach((r, idx) => {
-                let isFailed = r.role && r.role.includes('مرفوضة');
-                let rowClass = isFailed ? 'row-failed' : '';
-                
-                let typeBadge = '';
-                if (isFailed) {
-                    typeBadge = `<span class="badge badge-rejected"><i class="fa-solid fa-circle-xmark"></i> مرفوض</span>`;
-                } else if (r.attendanceType === 'حضور') {
-                    typeBadge = `<span class="badge badge-in"><i class="fa-solid fa-circle-check"></i> حضور</span>`;
-                } else {
-                    typeBadge = `<span class="badge badge-out"><i class="fa-solid fa-circle-minus"></i> انصراف</span>`;
-                }
-
-                let loc = (r.location && r.location.includes("http")) 
-                    ? `<a href="${r.location}" target="_blank" class="map-link"><i class="fa-solid fa-location-dot"></i> الخريطة</a>` 
-                    : '<span style="color:#9ca3af; font-size:12px;">غير متوفر</span>';
-
-                let note = r.note ? r.note : '<span style="color:#9ca3af;">—</span>';
-                let roleDisp = isFailed ? `<span style="color:var(--danger); font-weight:bold;">${r.role}</span>` : (r.role || 'موظف');
-
-                tbody.innerHTML += `
-                    <tr class="${rowClass}">
-                        <td style="color:#9ca3af; font-size:12px;">${idx + 1}</td>
-                        <td><strong>${r.employeeName || '—'}</strong></td>
-                        <td>${roleDisp}</td>
-                        <td>${typeBadge}</td>
-                        <td dir="ltr">${formatTime(r.serverTime)}</td>
-                        <td style="max-width: 220px; font-size: 13px;">${note}</td>
-                        <td>${loc}</td>
-                    </tr>
-                `;
-            });
-        }
-
-        // رسم المخططات البيانية
-        function updateCharts() {
-            if (rawData.length === 0) return;
-
-            // 1. تجميع آخر 7 أيام
-            const daysMap = {};
-            for (let i = 6; i >= 0; i--) {
-                const d = new Date();
-                d.setDate(d.getDate() - i);
-                const k = d.toISOString().split('T')[0];
-                daysMap[k] = { in: 0, out: 0 };
-            }
-
-            // 2. تجميع حسب الأقسام
-            const deptMap = { 'موظف': 0, 'سائق': 0, 'محصل': 0, 'أخرى': 0 };
-
-            rawData.forEach(r => {
-                if (r.serverTime) {
-                    const dStr = new Date(r.serverTime).toISOString().split('T')[0];
-                    if (daysMap[dStr]) {
-                        if (r.attendanceType === 'حضور') daysMap[dStr].in++;
-                        if (r.attendanceType === 'انصراف') daysMap[dStr].out++;
-                    }
-                }
-                let role = r.role || '';
-                if (role.includes('سائق')) deptMap['سائق']++;
-                else if (role.includes('محصل')) deptMap['محصل']++;
-                else if (role.includes('موظف')) deptMap['موظف']++;
-                else deptMap['أخرى']++;
-            });
-
-            const labels = Object.keys(daysMap).map(d => d.slice(5)); // شهر-يوم
-            const inData = Object.values(daysMap).map(v => v.in);
-            const outData = Object.values(daysMap).map(v => v.out);
-
-            // Bar Chart
-            const ctxBar = document.getElementById('attendanceBarChart').getContext('2d');
-            if (barChartInstance) barChartInstance.destroy();
-            barChartInstance = new Chart(ctxBar, {
-                type: 'bar',
-                data: {
-                    labels: labels,
-                    datasets: [
-                        { label: 'حضور', data: inData, backgroundColor: '#10b981', borderRadius: 4 },
-                        { label: 'انصراف', data: outData, backgroundColor: '#3b82f6', borderRadius: 4 }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { position: 'bottom' } },
-                    scales: { y: { beginAtZero: true, ticks: { precision: 0 } } }
-                }
-            });
-
-            // Pie Chart
-            const ctxPie = document.getElementById('deptPieChart').getContext('2d');
-            if (pieChartInstance) pieChartInstance.destroy();
-            pieChartInstance = new Chart(ctxPie, {
-                type: 'doughnut',
-                data: {
-                    labels: ['موظفين', 'سائقين', 'محصلين', 'أخرى'],
-                    datasets: [{
-                        data: [deptMap['موظف'], deptMap['سائق'], deptMap['محصل'], deptMap['أخرى']],
-                        backgroundColor: ['#3b82f6', '#f59e0b', '#10b981', '#9ca3af']
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { position: 'bottom' } }
-                }
-            });
-        }
-
-        // تصدير ملف Excel المتوافق مع العربية
-        function exportCSV() {
-            if (filteredData.length === 0) {
-                alert("لا توجد بيانات لتصديرها حالياً!");
-                return;
-            }
-            let csv = "\uFEFFالاسم,القسم,نوع الحركة,التاريخ والوقت,الملاحظات,رابط الموقع\n";
             filteredData.forEach(r => {
-                let n = (r.employeeName || "").replace(/,/g, " ");
-                let role = (r.role || "").replace(/,/g, " ");
-                let note = (r.note || "لا يوجد").replace(/,/g, " ");
-                let time = formatTimeExcel(r.serverTime);
-                let loc = (r.location || "").replace(/,/g, " ");
-                csv += `"${n}","${role}","${r.attendanceType || ''}","${time}","${note}","${loc}"\n`;
-            });
+                let isFailed = r.role && r.role.includes('مرفوضة');
+                let typeBadge = isFailed ? `<span class="badge badge-rejected">مرفوض</span>` : (r.attendanceType === 'حضور' ? `<span class="badge badge-in">حضور</span>` : `<span class="badge badge-out">انصراف</span>`);
+                let loc = (r.location && r.location.includes("http")) ? `<a href="${r.location}" target="_blank" style="color:#2563eb;">📍 خريطة</a>` : '—';
+                
+                let d = new Date(r.serverTime);
+                let timeFmt = `${d.getFullYear()}/${d.getMonth()+1}/${d.getDate()} <br><strong style="color:#d97706;">${d.toLocaleTimeString('ar-EG')}</strong>`;
 
-            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-            const link = document.createElement("a");
-            link.href = URL.createObjectURL(blob);
-            link.download = `تقرير_الدوام_${new Date().toISOString().split('T')[0]}.csv`;
-            link.click();
+                tbody.innerHTML += `<tr>
+                    <td><strong>${r.employeeName || '—'}</strong><br><small style="color:#64748b;">${r.note||''}</small></td>
+                    <td>${r.role || '—'}</td>
+                    <td>${typeBadge}</td>
+                    <td dir="ltr">${timeFmt}</td>
+                    <td>${loc}</td>
+                    <td><button class="btn-delete" onclick="deleteRecord('${r._key}')" title="حذف السجل"><i class="fa-solid fa-trash-can"></i> حذف</button></td>
+                </tr>`;
+            });
+        }
+
+        function exportCSV() {
+            let csv = "\uFEFFالاسم,القسم,نوع الحركة,الوقت,الملاحظات\n";
+            filteredData.forEach(r => {
+                let d = new Date(r.serverTime);
+                let time = `${d.getFullYear()}/${d.getMonth()+1}/${d.getDate()} ${d.getHours()}:${d.getMinutes()}`;
+                csv += `"${r.employeeName||''}","${r.role||''}","${r.attendanceType||''}","${time}","${r.note||''}"\n`;
+            });
+            const link = document.createElement("a"); link.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8;' }));
+            link.download = `تقرير_الدوام.csv`; link.click();
         }
     </script>
 </body>
