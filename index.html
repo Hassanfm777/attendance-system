@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>نظام الحضور والانصراف | Attendance System</title>
     
-    <!-- خط تجوال وأيقونات FontAwesome الحديثة -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
@@ -13,307 +12,63 @@
 
     <style>
         :root {
-            --primary: #1e3a8a;
-            --primary-light: #3b82f6;
-            --success: #10b981;
-            --danger: #ef4444;
-            --warning: #f59e0b;
-            --dark: #1f2937;
-            --bg-color: #f1f5f9;
-            --card-bg: #ffffff;
-            --border-color: #e2e8f0;
+            --primary: #1e3a8a; --primary-light: #3b82f6; --success: #10b981; 
+            --danger: #ef4444; --warning: #f59e0b; --dark: #1f2937; 
+            --bg-color: #f1f5f9; --card-bg: #ffffff; --border-color: #e2e8f0;
         }
 
         * { box-sizing: border-box; font-family: 'Tajawal', sans-serif; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-        
-        body { 
-            background: var(--bg-color); 
-            color: var(--dark); 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            min-height: 100vh; 
-            padding: 15px 12px 30px; 
-        }
-
+        body { background: var(--bg-color); color: var(--dark); display: flex; flex-direction: column; align-items: center; min-height: 100vh; padding: 15px 12px 30px; }
         .header-img { width: 100%; max-width: 500px; height: auto; margin-bottom: 12px; mix-blend-mode: multiply; }
         .footer-img { width: 100%; max-width: 550px; height: auto; margin-top: 30px; opacity: 0.85; mix-blend-mode: multiply; }
 
-        /* Top Bar */
-        .top-bar {
-            width: 100%;
-            max-width: 440px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-        }
-        .live-clock-badge {
-            background: white;
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 13px;
-            font-weight: 700;
-            color: var(--primary);
-            box-shadow: 0 2px 6px rgba(0,0,0,0.04);
-            border: 1px solid var(--border-color);
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .lang-btn {
-            background: white;
-            border: 1px solid var(--border-color);
-            color: var(--primary);
-            font-weight: 800;
-            padding: 6px 16px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 13px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.04);
-            transition: 0.2s;
-        }
+        .top-bar { width: 100%; max-width: 440px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .live-clock-badge { background: white; padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: 700; color: var(--primary); box-shadow: 0 2px 6px rgba(0,0,0,0.04); border: 1px solid var(--border-color); display: flex; align-items: center; gap: 6px; }
+        .lang-btn { background: white; border: 1px solid var(--border-color); color: var(--primary); font-weight: 800; padding: 6px 16px; border-radius: 20px; cursor: pointer; font-size: 13px; box-shadow: 0 2px 6px rgba(0,0,0,0.04); transition: 0.2s; }
         .lang-btn:hover { background: var(--primary); color: white; }
 
-        /* Main Card */
-        .card { 
-            background: var(--card-bg); 
-            width: 100%; 
-            max-width: 440px; 
-            padding: 24px 20px; 
-            border-radius: 20px; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.06); 
-            border: 1px solid var(--border-color);
-            text-align: center; 
-        }
-
+        .card { background: var(--card-bg); width: 100%; max-width: 440px; padding: 24px 20px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.06); border: 1px solid var(--border-color); text-align: center; }
         .system-title { font-size: 20px; color: var(--primary); font-weight: 800; margin-bottom: 15px; }
 
-        /* Department Switcher */
-        .dept-switcher {
-            display: flex;
-            background: #f1f5f9;
-            padding: 4px;
-            border-radius: 12px;
-            margin-bottom: 20px;
-            gap: 4px;
-        }
-        .dept-tab {
-            flex: 1;
-            padding: 10px 5px;
-            border: none;
-            background: transparent;
-            border-radius: 9px;
-            font-size: 13px;
-            font-weight: 700;
-            color: #64748b;
-            cursor: pointer;
-            transition: 0.25s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 5px;
-        }
-        .dept-tab.active {
-            background: white;
-            color: var(--primary);
-            box-shadow: 0 3px 8px rgba(0,0,0,0.06);
-        }
+        .dept-switcher { display: flex; background: #f1f5f9; padding: 4px; border-radius: 12px; margin-bottom: 20px; gap: 4px; }
+        .dept-tab { flex: 1; padding: 10px 5px; border: none; background: transparent; border-radius: 9px; font-size: 13px; font-weight: 700; color: #64748b; cursor: pointer; transition: 0.25s; display: flex; align-items: center; justify-content: center; gap: 5px; }
+        .dept-tab.active { background: white; color: var(--primary); box-shadow: 0 3px 8px rgba(0,0,0,0.06); }
 
-        /* GPS Status Banner */
-        .gps-status {
-            background: #f8fafc;
-            border: 1px dashed var(--border-color);
-            border-radius: 12px;
-            padding: 10px 12px;
-            font-size: 12px;
-            font-weight: 600;
-            color: #64748b;
-            margin-bottom: 18px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
+        .gps-status { background: #f8fafc; border: 1px dashed var(--border-color); border-radius: 12px; padding: 10px 12px; font-size: 12px; font-weight: 600; color: #64748b; margin-bottom: 18px; display: flex; align-items: center; justify-content: center; gap: 8px; }
         .gps-status.ok { background: #ecfdf5; border-color: #a7f3d0; color: #065f46; }
         .gps-status.warn { background: #fef2f2; border-color: #fecaca; color: #991b1b; }
 
-        /* Input Fields */
-        .input-group { 
-            position: relative; 
-            margin-bottom: 14px; 
-            text-align: right;
-        }
+        .input-group { position: relative; margin-bottom: 14px; text-align: right; }
         html[dir="ltr"] .input-group { text-align: left; }
-        .input-group label {
-            display: block;
-            font-size: 12px;
-            font-weight: 700;
-            color: #475569;
-            margin-bottom: 5px;
-        }
+        .input-group label { display: block; font-size: 12px; font-weight: 700; color: #475569; margin-bottom: 5px; }
         .input-wrapper { position: relative; }
-        .input-wrapper i {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #94a3b8;
-            font-size: 16px;
-            pointer-events: none;
-        }
-        html[dir="rtl"] .input-wrapper i { right: 14px; }
-        html[dir="ltr"] .input-wrapper i { left: 14px; }
+        .input-wrapper i { position: absolute; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 16px; pointer-events: none; }
+        html[dir="rtl"] .input-wrapper i { right: 14px; } html[dir="ltr"] .input-wrapper i { left: 14px; }
+        
+        select, input { width: 100%; padding: 12px 14px; font-size: 14px; border: 1.5px solid var(--border-color); border-radius: 12px; background: white; outline: none; color: var(--dark); font-weight: 600; transition: 0.2s; }
+        html[dir="rtl"] select, html[dir="rtl"] input { padding-right: 42px; } html[dir="ltr"] select, html[dir="ltr"] input { padding-left: 42px; }
+        select:focus, input:focus { border-color: var(--primary-light); box-shadow: 0 0 0 3px rgba(59,130,246,0.15); }
 
-        select, input { 
-            width: 100%; 
-            padding: 12px 14px; 
-            font-size: 14px; 
-            border: 1.5px solid var(--border-color); 
-            border-radius: 12px; 
-            background: white; 
-            outline: none; 
-            color: var(--dark);
-            font-weight: 600;
-            transition: 0.2s;
-        }
-        html[dir="rtl"] select, html[dir="rtl"] input { padding-right: 42px; }
-        html[dir="ltr"] select, html[dir="ltr"] input { padding-left: 42px; }
-        select:focus, input:focus { 
-            border-color: var(--primary-light); 
-            box-shadow: 0 0 0 3px rgba(59,130,246,0.15); 
-        }
+        .remember-box { display: flex; align-items: center; gap: 8px; font-size: 12px; color: #64748b; margin-bottom: 18px; cursor: pointer; user-select: none; }
+        .remember-box input[type="checkbox"] { width: 16px; height: 16px; cursor: pointer; accent-color: var(--primary); }
 
-        /* Remember device toggle */
-        .remember-box {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 12px;
-            color: #64748b;
-            margin-bottom: 18px;
-            cursor: pointer;
-            user-select: none;
-        }
-        .remember-box input[type="checkbox"] {
-            width: 16px;
-            height: 16px;
-            cursor: pointer;
-            accent-color: var(--primary);
-        }
-
-        /* Action Buttons */
-        .action-buttons { 
-            display: flex; 
-            gap: 10px; 
-            margin-top: 10px; 
-        }
-        .btn-submit { 
-            flex: 2; 
-            padding: 13px 15px; 
-            border: none; 
-            border-radius: 12px; 
-            background: linear-gradient(135deg, #10b981, #059669); 
-            color: white; 
-            font-size: 15px; 
-            font-weight: 700; 
-            cursor: pointer; 
-            box-shadow: 0 4px 12px rgba(16,185,129,0.25);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            transition: 0.2s;
-        }
+        .action-buttons { display: flex; gap: 10px; margin-top: 10px; }
+        .btn-submit { flex: 2; padding: 13px 15px; border: none; border-radius: 12px; background: linear-gradient(135deg, #10b981, #059669); color: white; font-size: 15px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 12px rgba(16,185,129,0.25); display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.2s; }
         .btn-submit:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(16,185,129,0.35); }
         .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; }
-
-        .btn-records { 
-            flex: 1; 
-            padding: 13px 10px; 
-            border: 1.5px solid var(--primary-light); 
-            border-radius: 12px; 
-            background: #eff6ff; 
-            color: var(--primary); 
-            font-size: 13px; 
-            font-weight: 700; 
-            cursor: pointer; 
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            transition: 0.2s;
-        }
+        .btn-records { flex: 1; padding: 13px 10px; border: 1.5px solid var(--primary-light); border-radius: 12px; background: #eff6ff; color: var(--primary); font-size: 13px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; transition: 0.2s; }
         .btn-records:hover { background: #dbeafe; }
 
-        /* Notification & Results */
-        #msgBox { 
-            margin-top: 15px; 
-            padding: 12px;
-            border-radius: 10px;
-            font-size: 13px; 
-            font-weight: 700;
-            display: none;
-            animation: fadeIn 0.3s ease;
-        }
+        #msgBox { margin-top: 15px; padding: 12px; border-radius: 10px; font-size: 13px; font-weight: 700; display: none; animation: fadeIn 0.3s ease; }
         .msg-success { background: #ecfdf5; color: #065f46; border: 1px solid #a7f3d0; }
         .msg-error { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
         .msg-info { background: #eff6ff; color: #1e40af; border: 1px solid #bfdbfe; }
 
-        /* Modal for Records */
-        .modal { 
-            display: none; 
-            position: fixed; 
-            top: 0; left: 0; 
-            width: 100%; height: 100%; 
-            background: rgba(15, 23, 42, 0.55); 
-            backdrop-filter: blur(3px);
-            justify-content: center; 
-            align-items: center; 
-            z-index: 1000; 
-            padding: 15px;
-        }
-        .modal-content { 
-            background: white; 
-            width: 100%; 
-            max-width: 420px; 
-            padding: 22px; 
-            border-radius: 18px; 
-            max-height: 85vh; 
-            overflow-y: auto; 
-            box-shadow: 0 20px 40px rgba(0,0,0,0.15); 
-        }
-        .modal-header { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            padding-bottom: 12px; 
-            border-bottom: 1.5px solid var(--border-color); 
-            margin-bottom: 15px; 
-        }
-        .close-btn { 
-            background: #f1f5f9; 
-            color: #64748b; 
-            border: none; 
-            border-radius: 50%; 
-            width: 32px; 
-            height: 32px; 
-            cursor: pointer; 
-            font-weight: bold; 
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .record-card {
-            background: #f8fafc;
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 12px 14px;
-            margin-bottom: 10px;
-            text-align: right;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.55); backdrop-filter: blur(3px); justify-content: center; align-items: center; z-index: 1000; padding: 15px; }
+        .modal-content { background: white; width: 100%; max-width: 420px; padding: 22px; border-radius: 18px; max-height: 85vh; overflow-y: auto; box-shadow: 0 20px 40px rgba(0,0,0,0.15); }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 12px; border-bottom: 1.5px solid var(--border-color); margin-bottom: 15px; }
+        .close-btn { background: #f1f5f9; color: #64748b; border: none; border-radius: 50%; width: 32px; height: 32px; cursor: pointer; font-weight: bold; display: flex; align-items: center; justify-content: center; }
+        .record-card { background: #f8fafc; border: 1px solid var(--border-color); border-radius: 12px; padding: 12px 14px; margin-bottom: 10px; text-align: right; display: flex; flex-direction: column; gap: 6px; }
         html[dir="ltr"] .record-card { text-align: left; }
         .record-top { display: flex; justify-content: space-between; align-items: center; }
         .badge-in { background: #dcfce7; color: #15803d; font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 6px; }
@@ -325,7 +80,6 @@
 </head>
 <body>
 
-    <!-- الهيدر الرسمي للمصنع -->
     <img src="header.png" alt="Header" class="header-img" onerror="this.style.display='none'">
 
     <div class="top-bar">
@@ -339,33 +93,22 @@
     <div class="card">
         <h2 class="system-title" id="txtTitle"><i class="fa-solid fa-fingerprint"></i> تسجيل الدوام اليومي</h2>
 
-        <!-- التبديل بين الفئات (موظف / سائق / محصل) -->
         <div class="dept-switcher">
-            <button class="dept-tab active" onclick="setRole('emp', this)" id="tabEmp">
-                <i class="fa-solid fa-briefcase"></i> موظف
-            </button>
-            <button class="dept-tab" onclick="setRole('driver', this)" id="tabDriv">
-                <i class="fa-solid fa-truck"></i> سائق
-            </button>
-            <button class="dept-tab" onclick="setRole('col', this)" id="tabCol">
-                <i class="fa-solid fa-wallet"></i> محصل
-            </button>
+            <button class="dept-tab active" onclick="setRole('emp', this)" id="tabEmp"><i class="fa-solid fa-briefcase"></i> موظف</button>
+            <button class="dept-tab" onclick="setRole('driver', this)" id="tabDriv"><i class="fa-solid fa-truck"></i> سائق</button>
+            <button class="dept-tab" onclick="setRole('col', this)" id="tabCol"><i class="fa-solid fa-wallet"></i> محصل</button>
         </div>
 
-        <!-- مؤشر الـ GPS الذكي -->
         <div class="gps-status" id="gpsStatus">
             <i class="fa-solid fa-location-crosshairs fa-spin"></i>
             <span id="gpsText">جاري تحديد المسافة عن المصنع...</span>
         </div>
 
-        <!-- حقول النموذج الموحدة -->
         <div class="input-group">
             <label id="lblEmpName">اسم الموظف:</label>
             <div class="input-wrapper">
                 <i class="fa-solid fa-user"></i>
-                <select id="userSelect">
-                    <option value="" disabled selected>اختر اسمك من القائمة...</option>
-                </select>
+                <select id="userSelect"><option value="" disabled selected>اختر اسمك من القائمة...</option></select>
             </div>
         </div>
 
@@ -396,13 +139,11 @@
             </div>
         </div>
 
-        <!-- خيار حفظ البيانات على هذا الجهاز -->
         <label class="remember-box">
             <input type="checkbox" id="rememberMe">
             <span id="txtRemember">حفظ اسمي ورقمي السري على هذا الجهاز لسرعة التبصيم</span>
         </label>
 
-        <!-- أزرار الإجراءات -->
         <div class="action-buttons">
             <button class="btn-submit" id="btnSubmit" onclick="submitPunch()">
                 <i class="fa-solid fa-circle-check"></i> <span id="txtSubmit">اعتماد البصمة</span>
@@ -412,20 +153,15 @@
             </button>
         </div>
 
-        <!-- صندوق التنبيهات والنتائج -->
         <div id="msgBox"></div>
     </div>
 
-    <!-- الفوتر الرسمي -->
     <img src="footer_img.png" alt="Footer" class="footer-img" onerror="this.style.display='none'">
 
-    <!-- Modal عرض السجلات السابقة -->
     <div id="recordsModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 style="color:var(--primary); font-size:16px;" id="modalTitle">
-                    <i class="fa-solid fa-list-check"></i> آخر سجلات البصمة
-                </h3>
+                <h3 style="color:var(--primary); font-size:16px;" id="modalTitle"><i class="fa-solid fa-list-check"></i> آخر سجلات البصمة</h3>
                 <button class="close-btn" onclick="closeModal()"><i class="fa-solid fa-xmark"></i></button>
             </div>
             <div id="recordsList">جاري التحميل...</div>
@@ -434,328 +170,139 @@
 
     <script>
         const dbUrl = "https://attendance-system-47995-default-rtdb.firebaseio.com/attendance.json";
-        
-        // إحداثيات المصنع والمسافة المسموحة (0.5 كم = 500 متر)
-        const FACTORY_LAT = 25.1161977; 
-        const FACTORY_LNG = 55.2345118; 
-        const ALLOWED_KM = 0.5;
+        const FACTORY_LAT = 25.1161977; const FACTORY_LNG = 55.2345118; const ALLOWED_KM = 0.5;
 
-        // قاعدة بيانات المستخدمين
         const DB_USERS = {
-            emp: {
-                titleAr: 'موظف', titleEn: 'Employee',
-                list: {
-                    "Suhail Satar": "suh9988",
-                    "bayna ahmed": "bay5544",
-                    "Fatmah yamahi": "fat7766",
-                    "Deema": "dee3322"
-                }
-            },
-            driver: {
-                titleAr: 'سائق', titleEn: 'Driver',
-                list: {
-                    "أيمن": "aym33",
-                    "ربيع": "rab44",
-                    "سليم": "sal55"
-                }
-            },
-            col: {
-                titleAr: 'محصل', titleEn: 'Collector',
-                list: {
-                    "علاء": "alaa11",
-                    "عيشة": "aish22"
-                }
-            }
+            emp: { titleAr: 'موظف', titleEn: 'Employee', list: { "Suhail Satar": "suh9988", "bayna ahmed": "bay5544", "Fatmah yamahi": "fat7766", "Deema": "dee3322" }},
+            driver: { titleAr: 'سائق', titleEn: 'Driver', list: { "أيمن": "aym33", "ربيع": "rab44", "سليم": "sal55" }},
+            col: { titleAr: 'محصل', titleEn: 'Collector', list: { "علاء": "alaa11", "عيشة": "aish22" }}
         };
 
-        let currentRole = 'emp';
-        let lang = 'ar';
-        let currentPos = null;
-        let distanceToFactory = null;
+        let currentRole = 'emp'; let lang = 'ar'; let currentPos = null;
 
-        // الساعة الرقمية المباشرة
         setInterval(() => {
             const now = new Date();
             document.getElementById("liveTime").innerText = now.toLocaleTimeString(lang === 'ar' ? 'ar-EG' : 'en-US');
         }, 1000);
 
-        // بدء التشغيل
         window.addEventListener('DOMContentLoaded', () => {
-            initGPS();
-            loadRoleOptions('emp');
-            loadSavedUser();
+            initGPS(); loadRoleOptions('emp'); loadSavedUser();
         });
 
-        // تفعيل فحص الـ GPS وحساب المسافة
         function initGPS() {
-            const statusEl = document.getElementById("gpsStatus");
-            const textEl = document.getElementById("gpsText");
-
-            if (!navigator.geolocation) {
-                textEl.innerText = lang === 'ar' ? "متصفحك لا يدعم تحديد الموقع GPS" : "GPS not supported";
-                statusEl.className = "gps-status warn";
-                return;
-            }
-
+            const statusEl = document.getElementById("gpsStatus"); const textEl = document.getElementById("gpsText");
+            if (!navigator.geolocation) { textEl.innerText = lang === 'ar' ? "متصفحك لا يدعم تحديد الموقع GPS" : "GPS not supported"; statusEl.className = "gps-status warn"; return; }
             navigator.geolocation.watchPosition(pos => {
                 currentPos = pos;
                 const distKm = getDist(pos.coords.latitude, pos.coords.longitude, FACTORY_LAT, FACTORY_LNG);
-                distanceToFactory = distKm;
                 const distMeters = Math.round(distKm * 1000);
-
                 if (distKm <= ALLOWED_KM) {
-                    statusEl.className = "gps-status ok";
-                    textEl.innerHTML = `<i class="fa-solid fa-circle-check"></i> ${lang==='ar' ? `داخل نطاق المصنع (${distMeters} متر)` : `Inside factory area (${distMeters}m)`}`;
+                    statusEl.className = "gps-status ok"; textEl.innerHTML = `<i class="fa-solid fa-circle-check"></i> ${lang==='ar' ? `داخل نطاق المصنع (${distMeters} متر)` : `Inside factory area (${distMeters}m)`}`;
                 } else {
-                    statusEl.className = "gps-status warn";
-                    textEl.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> ${lang==='ar' ? `خارج نطاق المصنع (${distMeters} متر)` : `Outside factory area (${distMeters}m)`}`;
+                    statusEl.className = "gps-status warn"; textEl.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> ${lang==='ar' ? `خارج نطاق المصنع (${distMeters} متر)` : `Outside factory area (${distMeters}m)`}`;
                 }
-            }, err => {
-                statusEl.className = "gps-status warn";
-                textEl.innerHTML = `<i class="fa-solid fa-location-slash"></i> ${lang==='ar' ? "يرجى تفعيل صلاحية الـ GPS للموقع" : "Please enable GPS permission"}`;
-            }, { enableHighAccuracy: true });
+            }, err => { statusEl.className = "gps-status warn"; textEl.innerHTML = `<i class="fa-solid fa-location-slash"></i> ${lang==='ar' ? "يرجى تفعيل صلاحية الـ GPS للموقع" : "Please enable GPS permission"}`; }, { enableHighAccuracy: true });
         }
 
         function getDist(lat1, lon1, lat2, lon2) {
-            const R = 6371; 
-            const dLat = (lat2 - lat1) * (Math.PI / 180), dLon = (lon2 - lon1) * (Math.PI / 180);
+            const R = 6371; const dLat = (lat2 - lat1) * (Math.PI / 180), dLon = (lon2 - lon1) * (Math.PI / 180);
             const a = Math.sin(dLat/2)*Math.sin(dLat/2) + Math.cos(lat1*(Math.PI/180))*Math.cos(lat2*(Math.PI/180))*Math.sin(dLon/2)*Math.sin(dLon/2);
             return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         }
 
-        // تغيير القسم المختار (موظف / سائق / محصل)
         function setRole(roleKey, btn) {
-            currentRole = roleKey;
-            document.querySelectorAll('.dept-tab').forEach(t => t.classList.remove('active'));
-            btn.classList.add('active');
-            loadRoleOptions(roleKey);
-            clearMsg();
+            currentRole = roleKey; document.querySelectorAll('.dept-tab').forEach(t => t.classList.remove('active'));
+            btn.classList.add('active'); loadRoleOptions(roleKey); clearMsg();
         }
 
         function loadRoleOptions(roleKey) {
             const sel = document.getElementById("userSelect");
             sel.innerHTML = `<option value="" disabled selected>${lang==='ar'?'اختر اسمك من القائمة...':'Select your name...'}</option>`;
             const users = DB_USERS[roleKey].list;
-            for (let name in users) {
-                sel.innerHTML += `<option value="${name}">${name}</option>`;
-            }
+            for (let name in users) sel.innerHTML += `<option value="${name}">${name}</option>`;
         }
 
-        // حفظ واسترجاع بيانات المستخدم على الهاتف
         function loadSavedUser() {
-            const savedRole = localStorage.getItem('punch_role');
-            const savedName = localStorage.getItem('punch_name');
-            const savedPass = localStorage.getItem('punch_pass');
-
-            if (savedRole && DB_USERS[savedRole]) {
-                const btn = document.getElementById(savedRole === 'emp' ? 'tabEmp' : (savedRole === 'driver' ? 'tabDriv' : 'tabCol'));
-                setRole(savedRole, btn);
-            }
-            if (savedName) {
-                document.getElementById("userSelect").value = savedName;
-            }
-            if (savedPass) {
-                document.getElementById("userPass").value = savedPass;
-                document.getElementById("rememberMe").checked = true;
-            }
+            const r = localStorage.getItem('punch_role'), n = localStorage.getItem('punch_name'), p = localStorage.getItem('punch_pass');
+            if (r && DB_USERS[r]) { const btn = document.getElementById(r === 'emp' ? 'tabEmp' : (r === 'driver' ? 'tabDriv' : 'tabCol')); setRole(r, btn); }
+            if (n) document.getElementById("userSelect").value = n;
+            if (p) { document.getElementById("userPass").value = p; document.getElementById("rememberMe").checked = true; }
         }
 
-        function playBeep() {
-            try {
-                const ctx = new (window.AudioContext || window.webkitAudioContext)();
-                const osc = ctx.createOscillator();
-                const gain = ctx.createGain();
-                osc.type = "sine";
-                osc.frequency.setValueAtTime(587.33, ctx.currentTime); // D5
-                gain.gain.setValueAtTime(0.1, ctx.currentTime);
-                osc.connect(gain);
-                gain.connect(ctx.destination);
-                osc.start();
-                osc.stop(ctx.currentTime + 0.2);
-            } catch(e){}
-        }
-
-        // اعتماد البصمة
         function submitPunch() {
-            const name = document.getElementById("userSelect").value;
-            const punchType = document.getElementById("punchType").value;
-            const pass = document.getElementById("userPass").value.trim();
-            const note = document.getElementById("userNote").value.trim();
-            const remember = document.getElementById("rememberMe").checked;
-            const btn = document.getElementById("btnSubmit");
+            const name = document.getElementById("userSelect").value, punchType = document.getElementById("punchType").value;
+            const pass = document.getElementById("userPass").value.trim(), note = document.getElementById("userNote").value.trim();
+            const remember = document.getElementById("rememberMe").checked, btn = document.getElementById("btnSubmit");
 
-            if (!name) {
-                showMsg(lang==='ar' ? "يرجى اختيار اسمك أولاً!" : "Please select your name!", "error");
-                return;
-            }
+            if (!name) return showMsg(lang==='ar' ? "يرجى اختيار اسمك أولاً!" : "Please select your name!", "error");
+            if (!pass || pass !== DB_USERS[currentRole].list[name]) return showMsg(lang==='ar' ? "الرقم السري غير صحيح!" : "Incorrect PIN!", "error");
 
-            const expectedPass = DB_USERS[currentRole].list[name];
-            if (!pass || pass !== expectedPass) {
-                showMsg(lang==='ar' ? "الرقم السري غير صحيح!" : "Incorrect PIN!", "error");
-                return;
-            }
+            if (remember) { localStorage.setItem('punch_role', currentRole); localStorage.setItem('punch_name', name); localStorage.setItem('punch_pass', pass);
+            } else { localStorage.removeItem('punch_role'); localStorage.removeItem('punch_name'); localStorage.removeItem('punch_pass'); }
 
-            // حفظ البيانات محلياً إذا تم اختيار تذكرني
-            if (remember) {
-                localStorage.setItem('punch_role', currentRole);
-                localStorage.setItem('punch_name', name);
-                localStorage.setItem('punch_pass', pass);
-            } else {
-                localStorage.removeItem('punch_role');
-                localStorage.removeItem('punch_name');
-                localStorage.removeItem('punch_pass');
-            }
-
-            // التحقق من الموقع
-            btn.disabled = true;
-            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> ${lang==='ar'?'جاري الاعتماد...':'Processing...'}`;
+            btn.disabled = true; btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> ${lang==='ar'?'جاري الاعتماد...':'Processing...'}`;
             showMsg(lang==='ar' ? "جاري التحقق من الموقع وإرسال البصمة..." : "Verifying location...", "info");
 
-            if (!navigator.geolocation) {
-                sendRecord(name, punchType, null, false, note, btn);
-                return;
-            }
-
+            if (!navigator.geolocation) return sendRecord(name, punchType, null, false, note, btn);
             navigator.geolocation.getCurrentPosition(pos => {
-                const dist = getDist(pos.coords.latitude, pos.coords.longitude, FACTORY_LAT, FACTORY_LNG);
-                const isInside = dist <= ALLOWED_KM;
-
-                // شرط الموقع للسائقين وبقية الأقسام
-                if (currentRole === 'driver' && !isInside) {
-                    const failedNote = note ? (note + ' | ❌ محاولة خارج المصنع') : '❌ محاولة خارج المصنع';
-                    sendRecord(name, punchType, pos, false, failedNote, btn);
-                } else {
-                    sendRecord(name, punchType, pos, true, note, btn);
-                }
+                const isInside = getDist(pos.coords.latitude, pos.coords.longitude, FACTORY_LAT, FACTORY_LNG) <= ALLOWED_KM;
+                if (currentRole === 'driver' && !isInside) sendRecord(name, punchType, pos, false, note ? (note + ' | ❌ محاولة خارج المصنع') : '❌ محاولة خارج المصنع', btn);
+                else sendRecord(name, punchType, pos, true, note, btn);
             }, err => {
-                btn.disabled = false;
-                btn.innerHTML = `<i class="fa-solid fa-circle-check"></i> ${lang==='ar'?'اعتماد البصمة':'Submit'}`;
+                btn.disabled = false; btn.innerHTML = `<i class="fa-solid fa-circle-check"></i> ${lang==='ar'?'اعتماد البصمة':'Submit'}`;
                 showMsg(lang==='ar' ? "❌ يرجى السماح بتحديد الموقع (GPS) لاعتماد البصمة!" : "❌ Please allow GPS access!", "error");
             }, { enableHighAccuracy: true });
         }
 
         function sendRecord(name, type, pos, isSuccess, note, btn) {
             let roleTitle = DB_USERS[currentRole].titleAr;
-            if (!isSuccess && currentRole === 'driver') {
-                roleTitle = 'سائق (محاولة مرفوضة)';
-            }
+            if (!isSuccess && currentRole === 'driver') roleTitle = 'سائق (محاولة مرفوضة)';
+            const payload = { employeeName: name, attendanceType: type, role: roleTitle, note: note || '', serverTime: { ".sv": "timestamp" }, location: pos ? `https://www.google.com/maps?q=${pos.coords.latitude},${pos.coords.longitude}` : 'موقع غير متوفر' };
 
-            const payload = {
-                employeeName: name,
-                attendanceType: type,
-                role: roleTitle,
-                note: note || '',
-                serverTime: { ".sv": "timestamp" },
-                location: pos ? `https://www.google.com/maps?q=${pos.coords.latitude},${pos.coords.longitude}` : 'موقع غير متوفر'
-            };
-
-            fetch(dbUrl, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            })
+            fetch(dbUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) })
             .then(res => {
-                btn.disabled = false;
-                btn.innerHTML = `<i class="fa-solid fa-circle-check"></i> ${lang==='ar'?'اعتماد البصمة':'Submit'}`;
-                
+                btn.disabled = false; btn.innerHTML = `<i class="fa-solid fa-circle-check"></i> ${lang==='ar'?'اعتماد البصمة':'Submit'}`;
                 if (res.ok) {
-                    if (isSuccess) {
-                        playBeep();
-                        showMsg(lang==='ar' ? `✅ تم تسجيل ${type} بنجاح للأستاذ (${name})` : `✅ ${type} registered successfully for (${name})`, "success");
-                    } else {
-                        showMsg(lang==='ar' ? "❌ عذراً! لا يمكن التبصيم لأنك خارج نطاق المصنع." : "❌ Failed! You are outside factory area.", "error");
-                    }
-                } else {
-                    showMsg(lang==='ar' ? "حدث خطأ في الخادم، حاول ثانية." : "Server error, try again.", "error");
-                }
-            })
-            .catch(() => {
-                btn.disabled = false;
-                btn.innerHTML = `<i class="fa-solid fa-circle-check"></i> ${lang==='ar'?'اعتماد البصمة':'Submit'}`;
+                    if (isSuccess) showMsg(lang==='ar' ? `✅ تم تسجيل ${type} بنجاح للأستاذ (${name})` : `✅ ${type} registered successfully for (${name})`, "success");
+                    else showMsg(lang==='ar' ? "❌ عذراً! لا يمكن التبصيم لأنك خارج نطاق المصنع." : "❌ Failed! You are outside factory area.", "error");
+                } else showMsg(lang==='ar' ? "حدث خطأ في الخادم، حاول ثانية." : "Server error, try again.", "error");
+            }).catch(() => {
+                btn.disabled = false; btn.innerHTML = `<i class="fa-solid fa-circle-check"></i> ${lang==='ar'?'اعتماد البصمة':'Submit'}`;
                 showMsg(lang==='ar' ? "تعذر الاتصال بقاعدة البيانات. تحقق من الإنترنت." : "Connection failed.", "error");
             });
         }
 
-        function showMsg(text, type) {
-            const el = document.getElementById("msgBox");
-            el.style.display = "block";
-            el.className = `msg-${type}`;
-            el.innerHTML = text;
-        }
+        function showMsg(text, type) { const el = document.getElementById("msgBox"); el.style.display = "block"; el.className = `msg-${type}`; el.innerHTML = text; }
+        function clearMsg() { document.getElementById("msgBox").style.display = "none"; }
 
-        function clearMsg() {
-            document.getElementById("msgBox").style.display = "none";
-        }
-
-        // عرض سجلات الموظف
         function openRecordsModal() {
-            const name = document.getElementById("userSelect").value;
-            const pass = document.getElementById("userPass").value.trim();
-
-            if (!name) {
-                showMsg(lang==='ar' ? "اختر اسمك أولاً لعرض سجلاتك!" : "Select your name first!", "error");
-                return;
-            }
-
-            const expectedPass = DB_USERS[currentRole].list[name];
-            if (pass !== expectedPass) {
-                showMsg(lang==='ar' ? "أدخل رقمك السري لعرض سجلاتك!" : "Enter your PIN to view records!", "error");
-                return;
-            }
+            const name = document.getElementById("userSelect").value, pass = document.getElementById("userPass").value.trim();
+            if (!name) return showMsg(lang==='ar' ? "اختر اسمك أولاً لعرض سجلاتك!" : "Select your name first!", "error");
+            if (pass !== DB_USERS[currentRole].list[name]) return showMsg(lang==='ar' ? "أدخل رقمك السري لعرض سجلاتك!" : "Enter your PIN to view records!", "error");
 
             document.getElementById("recordsModal").style.display = "flex";
             const list = document.getElementById("recordsList");
             list.innerHTML = `<div style="text-align:center; padding:20px;"><i class="fa-solid fa-spinner fa-spin"></i> ${lang==='ar'?'جاري جلب السجلات...':'Loading...'}</div>`;
 
-            fetch(dbUrl)
-                .then(res => res.json())
-                .then(data => {
-                    if (!data) {
-                        list.innerHTML = `<div style="text-align:center; color:#94a3b8; padding:20px;">${lang==='ar'?'لا توجد سجلات سابقة':'No records found'}</div>`;
-                        return;
-                    }
-                    const myRecords = [];
-                    for (let key in data) {
-                        if (data[key].employeeName === name) myRecords.push(data[key]);
-                    }
+            fetch(dbUrl).then(res => res.json()).then(data => {
+                if (!data) return list.innerHTML = `<div style="text-align:center; color:#94a3b8; padding:20px;">${lang==='ar'?'لا توجد سجلات سابقة':'No records found'}</div>`;
+                const myRecords = []; for (let key in data) if (data[key].employeeName === name) myRecords.push(data[key]);
+                if (myRecords.length === 0) return list.innerHTML = `<div style="text-align:center; color:#94a3b8; padding:20px;">${lang==='ar'?'لا توجد سجلات مسجلة لهذا الاسم':'No records found'}</div>`;
 
-                    if (myRecords.length === 0) {
-                        list.innerHTML = `<div style="text-align:center; color:#94a3b8; padding:20px;">${lang==='ar'?'لا توجد سجلات مسجلة لهذا الاسم':'No records found'}</div>`;
-                        return;
-                    }
-
-                    myRecords.sort((a,b) => (b.serverTime||0) - (a.serverTime||0));
-                    list.innerHTML = "";
-
-                    myRecords.slice(0, 15).forEach(r => {
-                        const d = new Date(r.serverTime);
-                        const dateStr = `${d.getFullYear()}/${d.getMonth()+1}/${d.getDate()}`;
-                        const timeStr = d.toLocaleTimeString(lang==='ar'?'ar-EG':'en-US');
-                        const isFailed = r.role && r.role.includes('مرفوضة');
-
-                        let badgeHtml = '';
-                        if (isFailed) badgeHtml = `<span class="badge-failed">مرفوض</span>`;
-                        else if (r.attendanceType === 'حضور') badgeHtml = `<span class="badge-in">حضور</span>`;
-                        else badgeHtml = `<span class="badge-out">انصراف</span>`;
-
-                        list.innerHTML += `
-                            <div class="record-card">
-                                <div class="record-top">
-                                    <span style="font-weight:700; font-size:13px; color:#1e293b;">${dateStr} - ${timeStr}</span>
-                                    ${badgeHtml}
-                                </div>
-                                ${r.note ? `<div style="font-size:12px; color:#64748b;"><i class="fa-regular fa-comment"></i> ${r.note}</div>` : ''}
-                            </div>
-                        `;
-                    });
+                myRecords.sort((a,b) => (b.serverTime||0) - (a.serverTime||0)); list.innerHTML = "";
+                myRecords.slice(0, 15).forEach(r => {
+                    const d = new Date(r.serverTime);
+                    const isFailed = r.role && r.role.includes('مرفوضة');
+                    const badgeHtml = isFailed ? `<span class="badge-failed">مرفوض</span>` : (r.attendanceType === 'حضور' ? `<span class="badge-in">حضور</span>` : `<span class="badge-out">انصراف</span>`);
+                    list.innerHTML += `<div class="record-card">
+                        <div class="record-top"><span style="font-weight:700; font-size:13px; color:#1e293b;">${d.getFullYear()}/${d.getMonth()+1}/${d.getDate()} - ${d.toLocaleTimeString(lang==='ar'?'ar-EG':'en-US')}</span>${badgeHtml}</div>
+                        ${r.note ? `<div style="font-size:12px; color:#64748b;"><i class="fa-regular fa-comment"></i> ${r.note}</div>` : ''}
+                    </div>`;
                 });
+            });
         }
+        function closeModal() { document.getElementById("recordsModal").style.display = "none"; }
 
-        function closeModal() {
-            document.getElementById("recordsModal").style.display = "none";
-        }
-
-        // التبديل بين اللغات
         function toggleLang() {
             lang = lang === 'ar' ? 'en' : 'ar';
             document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
@@ -780,8 +327,7 @@
             document.getElementById("userPass").placeholder = lang === 'ar' ? 'أدخل رقمك السري' : 'Enter your PIN';
             document.getElementById("userNote").placeholder = lang === 'ar' ? 'اكتب ملاحظة إن وجدت...' : 'Write note if any...';
 
-            loadRoleOptions(currentRole);
-            initGPS();
+            loadRoleOptions(currentRole); initGPS();
         }
     </script>
 </body>
