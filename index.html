@@ -3,138 +3,326 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>بوابة تسجيل حضور الموظفين</title>
+    <title>نظام الحضور والانصراف | Attendance</title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .login-box { background: white; padding: 40px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 400px; text-align: center; }
-        h2 { color: #2c3e50; margin-bottom: 5px; }
-        p.subtitle { color: #7f8c8d; margin-bottom: 25px; font-size: 14px; }
-        .input-group { position: relative; margin-bottom: 20px; }
-        .input-group .icon { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #95a5a6; pointer-events: none; }
-        select, input { width: 100%; padding: 15px; padding-left: 45px; font-size: 16px; border: 2px solid #ecf0f1; border-radius: 10px; outline: none; background: #fafbfc; box-sizing: border-box; cursor: pointer; }
-        select:focus, input:focus { border-color: #3498db; }
-        button { width: 100%; padding: 15px; background: #3498db; color: white; border: none; border-radius: 10px; font-size: 18px; font-weight: bold; cursor: pointer; transition: 0.3s; }
-        button:hover { background: #2980b9; }
-        button:disabled { background: #bdc3c7; cursor: not-allowed; }
-        #msg { margin-top: 20px; font-weight: bold; line-height: 1.5; min-height: 45px; }
+        :root { --bg: #e0e5ec; --text: #2d3436; --primary: #3498db; --danger: #e74c3c; --success: #2ecc71; --shadow-light: #ffffff; --shadow-dark: #a3b1c6; }
+        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; transition: all 0.3s ease; }
+        body { background-color: var(--bg); color: var(--text); display: flex; flex-direction: column; align-items: center; min-height: 100vh; margin: 0; padding: 20px; }
+        
+        .top-bar { width: 100%; max-width: 450px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .logo-placeholder { width: 60px; height: 60px; border-radius: 50%; background: var(--bg); box-shadow: 5px 5px 10px var(--shadow-dark), -5px -5px 10px var(--shadow-light); display: flex; justify-content: center; align-items: center; font-weight: bold; font-size: 10px; color: var(--primary); }
+        .lang-btn { width: 50px; height: 50px; border-radius: 50%; border: none; background: var(--bg); box-shadow: 5px 5px 10px var(--shadow-dark), -5px -5px 10px var(--shadow-light); color: var(--primary); font-weight: bold; cursor: pointer; }
+        .lang-btn:active { box-shadow: inset 5px 5px 10px var(--shadow-dark), inset -5px -5px 10px var(--shadow-light); }
+
+        .card { background: var(--bg); width: 100%; max-width: 450px; padding: 30px; border-radius: 20px; box-shadow: 9px 9px 16px var(--shadow-dark), -9px -9px 16px var(--shadow-light); text-align: center; }
+        h2 { margin-top: 0; color: var(--primary); font-size: 22px; margin-bottom: 25px; }
+        
+        .view-section { display: none; }
+        .view-section.active { display: block; animation: fadeIn 0.4s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .big-btn { width: 100%; padding: 15px; margin-bottom: 20px; border: none; border-radius: 15px; background: var(--bg); box-shadow: 6px 6px 12px var(--shadow-dark), -6px -6px 12px var(--shadow-light); font-size: 17px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; color: var(--text);}
+        .big-btn .material-icons { font-size: 28px; color: var(--primary); }
+        .big-btn:active { box-shadow: inset 4px 4px 8px var(--shadow-dark), inset -4px -4px 8px var(--shadow-light); }
+        
+        .input-group { position: relative; margin-bottom: 15px; }
+        .input-group .material-icons { position: absolute; top: 50%; transform: translateY(-50%); color: #7f8c8d; pointer-events: none; }
+        html[dir="rtl"] .input-group .material-icons { right: 15px; }
+        html[dir="ltr"] .input-group .material-icons { left: 15px; }
+        
+        select, input { width: 100%; padding: 15px; font-size: 15px; border: none; border-radius: 15px; background: var(--bg); box-shadow: inset 5px 5px 10px var(--shadow-dark), inset -5px -5px 10px var(--shadow-light); outline: none; appearance: none; -webkit-appearance: none; color: var(--text); }
+        html[dir="rtl"] select, html[dir="rtl"] input { padding-right: 50px; padding-left: 15px; }
+        html[dir="ltr"] select, html[dir="ltr"] input { padding-left: 50px; padding-right: 15px; }
+        
+        .action-buttons { display: flex; gap: 10px; margin-top: 15px; }
+        .submit-btn { flex: 2; padding: 15px; border: none; border-radius: 15px; background: var(--bg); box-shadow: 6px 6px 12px var(--shadow-dark), -6px -6px 12px var(--shadow-light); color: var(--success); font-size: 15px; font-weight: bold; cursor: pointer; }
+        .records-btn { flex: 1; padding: 15px; border: none; border-radius: 15px; background: var(--bg); box-shadow: 6px 6px 12px var(--shadow-dark), -6px -6px 12px var(--shadow-light); color: var(--primary); font-size: 13px; font-weight: bold; cursor: pointer; }
+        .submit-btn:active, .records-btn:active { box-shadow: inset 4px 4px 8px var(--shadow-dark), inset -4px -4px 8px var(--shadow-light); }
+        
+        .back-btn { background: none; border: none; color: #7f8c8d; cursor: pointer; font-size: 14px; margin-top: 15px; text-decoration: underline; font-weight: bold; }
+        #msg { margin-top: 15px; font-weight: bold; font-size: 13px; min-height: 40px; }
+
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center; z-index: 100; }
+        .modal-content { background: var(--bg); width: 90%; max-width: 400px; padding: 20px; border-radius: 20px; max-height: 80vh; overflow-y: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #ccc; padding-bottom: 10px; margin-bottom: 15px; }
+        .close-btn { background: var(--danger); color: white; border: none; border-radius: 5px; padding: 5px 10px; cursor: pointer; font-weight: bold; }
+        .record-item { background: white; padding: 10px; margin-bottom: 10px; border-radius: 10px; font-size: 14px; display: flex; flex-direction: column; gap: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);}
+        .record-header { display: flex; justify-content: space-between; }
+        .badge-in { color: var(--success); font-weight: bold;}
+        .badge-out { color: var(--danger); font-weight: bold;}
+        .note-text { color: #7f8c8d; font-size: 12px; }
     </style>
 </head>
 <body>
-    <div class="login-box">
-        <h2>نظام البصمة والموقع</h2>
-        <p class="subtitle">يجب تفعيل الموقع (GPS) لاعتماد البصمة</p>
 
-        <!-- اختيار الاسم -->
-        <div class="input-group">
-            <span class="material-icons icon">person</span>
-            <select id="userName" required>
-                <option value="" disabled selected>اختر اسمك...</option>
-                <option value="Suhail Satar">Suhail Satar</option>
-                <option value="bayna ahmed">bayna ahmed</option>
-                <option value="Fatmah yamahi">Fatmah yamahi</option>
-                <option value="Deema">Deema</option>
-            </select>
+    <div class="top-bar">
+        <div class="logo-placeholder">LOGO</div>
+        <button class="lang-btn" onclick="toggleLang()">EN</button>
+    </div>
+
+    <div class="card">
+        <h2 id="title">نظام الحضور والانصراف</h2>
+
+        <!-- القائمة الرئيسية -->
+        <div id="main-menu" class="view-section active">
+            <button class="big-btn" onclick="showView('employees-menu')">
+                <span class="material-icons">business_center</span> <span id="btnEmp">بوابة الموظفين</span>
+            </button>
+            <button class="big-btn" onclick="showView('drivers-menu')">
+                <span class="material-icons">local_shipping</span> <span id="btnDriv">بوابة السائقين</span>
+            </button>
+            <button class="big-btn" onclick="showView('collectors-menu')">
+                <span class="material-icons">account_balance_wallet</span> <span id="btnCol">بوابة المحصلين</span>
+            </button>
         </div>
 
-        <!-- اختيار حضور أو انصراف -->
-        <div class="input-group">
-            <span class="material-icons icon">fingerprint</span>
-            <select id="attendanceType" required>
-                <option value="" disabled selected>نوع البصمة (حضور / انصراف)...</option>
-                <option value="حضور">تسجيل دخول (حضور)</option>
-                <option value="انصراف">تسجيل خروج (انصراف)</option>
-            </select>
+        <!-- 1. بوابة الموظفين -->
+        <div id="employees-menu" class="view-section">
+            <div class="input-group">
+                <span class="material-icons">person</span>
+                <select id="eName">
+                    <option value="" disabled selected data-ar="اختر اسمك..." data-en="Select Name...">اختر اسمك...</option>
+                    <option value="Suhail Satar">Suhail Satar</option>
+                    <option value="bayna ahmed">bayna ahmed</option>
+                    <option value="Fatmah yamahi">Fatmah yamahi</option>
+                    <option value="Deema">Deema</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <span class="material-icons">fingerprint</span>
+                <select id="eType">
+                    <option value="" disabled selected data-ar="نوع البصمة..." data-en="Punch Type...">نوع البصمة...</option>
+                    <option value="حضور" data-ar="دخول (حضور)" data-en="Check In">دخول (حضور)</option>
+                    <option value="انصراف" data-ar="خروج (انصراف)" data-en="Check Out">خروج (انصراف)</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <span class="material-icons">lock</span>
+                <input type="password" id="ePass" placeholder="الرقم السري" data-ar="الرقم السري" data-en="Password">
+            </div>
+            <div class="input-group">
+                <span class="material-icons">note</span>
+                <input type="text" id="eNote" placeholder="ملاحظة (اختياري)" data-ar="ملاحظة (اختياري)" data-en="Note (Optional)">
+            </div>
+            
+            <div class="action-buttons">
+                <button class="submit-btn" id="eSubmit" onclick="punchEmp()">اعتماد البصمة</button>
+                <button class="records-btn" onclick="fetchMyRecords('eName', 'ePass', 'emps')">سجلاتي</button>
+            </div>
+            <p id="eMsg"></p>
+            <button class="back-btn" onclick="showView('main-menu')">الرجوع للقائمة</button>
         </div>
 
-        <!-- الرقم السري -->
-        <div class="input-group">
-            <span class="material-icons icon">lock</span>
-            <input type="password" id="userPass" placeholder="الرقم السري" required>
+        <!-- 2. بوابة السائقين (بدون رقم سري، تتبع للمصنع) -->
+        <div id="drivers-menu" class="view-section">
+            <div class="input-group">
+                <span class="material-icons">person</span>
+                <select id="dName">
+                    <option value="" disabled selected data-ar="اختر اسمك..." data-en="Select Name...">اختر اسمك...</option>
+                    <option value="أيمن">أيمن / Ayman</option>
+                    <option value="ربيع">ربيع / Rabie</option>
+                    <option value="سليم">سليم / Saleem</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <span class="material-icons">fingerprint</span>
+                <select id="dType">
+                    <option value="" disabled selected data-ar="نوع البصمة..." data-en="Punch Type...">نوع البصمة...</option>
+                    <option value="حضور" data-ar="دخول (حضور)" data-en="Check In">دخول (حضور)</option>
+                    <option value="انصراف" data-ar="خروج (انصراف)" data-en="Check Out">خروج (انصراف)</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <span class="material-icons">note</span>
+                <input type="text" id="dNote" placeholder="ملاحظة (اختياري)" data-ar="ملاحظة (اختياري)" data-en="Note (Optional)">
+            </div>
+            
+            <div class="action-buttons">
+                <button class="submit-btn" id="dSubmit" onclick="punchDriver()">اعتماد البصمة</button>
+                <button class="records-btn" onclick="fetchMyRecords('dName', null, 'drivers')">سجلاتي</button>
+            </div>
+            <p id="dMsg"></p>
+            <button class="back-btn" onclick="showView('main-menu')">الرجوع للقائمة</button>
         </div>
 
-        <button id="submitBtn" onclick="processLogin()">اعتماد البصمة</button>
-        <p id="msg"></p>
+        <!-- 3. بوابة المحصلين -->
+        <div id="collectors-menu" class="view-section">
+            <div class="input-group">
+                <span class="material-icons">person</span>
+                <select id="cName">
+                    <option value="" disabled selected data-ar="اختر اسمك..." data-en="Select Name...">اختر اسمك...</option>
+                    <option value="علاء">علاء / Alaa</option>
+                    <option value="عيشة">عيشة / Aisha</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <span class="material-icons">fingerprint</span>
+                <select id="cType">
+                    <option value="" disabled selected data-ar="نوع البصمة..." data-en="Punch Type...">نوع البصمة...</option>
+                    <option value="حضور" data-ar="دخول (حضور)" data-en="Check In">دخول (حضور)</option>
+                    <option value="انصراف" data-ar="خروج (انصراف)" data-en="Check Out">خروج (انصراف)</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <span class="material-icons">lock</span>
+                <input type="password" id="cPass" placeholder="الرقم السري" data-ar="الرقم السري" data-en="Password">
+            </div>
+            <div class="input-group">
+                <span class="material-icons">note</span>
+                <input type="text" id="cNote" placeholder="ملاحظة (اختياري)" data-ar="ملاحظة (اختياري)" data-en="Note (Optional)">
+            </div>
+            
+            <div class="action-buttons">
+                <button class="submit-btn" id="cSubmit" onclick="punchCol()">اعتماد البصمة</button>
+                <button class="records-btn" onclick="fetchMyRecords('cName', 'cPass', 'cols')">سجلاتي</button>
+            </div>
+            <p id="cMsg"></p>
+            <button class="back-btn" onclick="showView('main-menu')">الرجوع للقائمة</button>
+        </div>
+    </div>
+
+    <!-- نافذة السجلات -->
+    <div id="recordsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 style="margin:0; color:var(--primary);" id="modalTitle">سجلاتي</h3>
+                <button class="close-btn" onclick="closeModal()">X</button>
+            </div>
+            <div id="recordsList">جاري التحميل...</div>
+        </div>
     </div>
 
     <script>
-        const employees = {
-            "Suhail Satar": "suh9988",
-            "bayna ahmed": "bay5544",
-            "Fatmah yamahi": "fat7766",
-            "Deema": "dee3322"
-        };
         const dbUrl = "https://attendance-system-47995-default-rtdb.firebaseio.com/attendance.json";
+        const FACTORY_LAT = 25.1161977; const FACTORY_LNG = 55.2345118; const ALLOWED_KM = 0.5;
+        
+        // الأرقام السرية
+        const emps = { "Suhail Satar": "suh9988", "bayna ahmed": "bay5544", "Fatmah yamahi": "fat7766", "Deema": "dee3322" };
+        const cols = { "علاء": "alaa11", "عيشة": "aish22" }; // أرقام سرية للمحصلين
 
-        function processLogin() {
-            const name = document.getElementById("userName").value;
-            const type = document.getElementById("attendanceType").value;
-            const pass = document.getElementById("userPass").value.trim();
-            const msg = document.getElementById("msg");
-            const btn = document.getElementById("submitBtn");
+        let lang = "ar";
 
-            // الشروط الصارمة: لا يمر إذا كان هناك نقص
-            if (!name) { msg.style.color = "red"; msg.innerText = "يرجى اختيار الاسم!"; return; }
-            if (!type) { msg.style.color = "red"; msg.innerText = "يرجى اختيار نوع البصمة (حضور أو انصراف)!"; return; }
-            if (employees[name] !== pass) { msg.style.color = "red"; msg.innerText = "الرقم السري غير صحيح!"; return; }
+        function toggleLang() {
+            lang = lang === "ar" ? "en" : "ar";
+            document.documentElement.dir = lang === "ar" ? "rtl" : "ltr";
+            document.querySelector('.lang-btn').innerText = lang === "ar" ? "EN" : "عربي";
+            
+            document.getElementById("title").innerText = lang === "ar" ? "نظام الحضور والانصراف" : "Attendance System";
+            document.getElementById("btnEmp").innerText = lang === "ar" ? "بوابة الموظفين" : "Employees Portal";
+            document.getElementById("btnDriv").innerText = lang === "ar" ? "بوابة السائقين" : "Drivers Portal";
+            document.getElementById("btnCol").innerText = lang === "ar" ? "بوابة المحصلين" : "Collectors Portal";
+            
+            document.querySelectorAll('.submit-btn').forEach(b => b.innerText = lang === "ar" ? "اعتماد البصمة" : "Submit");
+            document.querySelectorAll('.records-btn').forEach(b => b.innerText = lang === "ar" ? "سجلاتي" : "My Records");
+            document.querySelectorAll('.back-btn').forEach(b => b.innerText = lang === "ar" ? "الرجوع للقائمة" : "Back to Menu");
+            document.getElementById("modalTitle").innerText = lang === "ar" ? "سجلاتي" : "My Records";
+            
+            document.querySelectorAll('option[data-ar]').forEach(o => o.innerText = o.getAttribute('data-'+lang));
+            ['ePass', 'cPass', 'eNote', 'dNote', 'cNote'].forEach(id => {
+                const el = document.getElementById(id);
+                el.placeholder = el.getAttribute('data-'+lang);
+            });
+        }
 
-            btn.disabled = true;
-            btn.innerText = "جاري التقاط الموقع...";
-            msg.style.color = "#f39c12";
-            msg.innerText = "اسمح للمتصفح بتحديد موقعك (Allow Location)...";
+        function showView(id) {
+            document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            document.getElementById("eMsg").innerText = ""; document.getElementById("dMsg").innerText = ""; document.getElementById("cMsg").innerText = "";
+        }
 
-            // إجبار الموظف على إعطاء الموقع
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(
-                    pos => sendData(name, type, pos),
-                    err => {
-                        // في حال رفض إعطاء الموقع، يتم طرده وإيقاف التسجيل
-                        btn.disabled = false;
-                        btn.innerText = "اعتماد البصمة";
-                        msg.style.color = "red";
-                        msg.innerHTML = "❌ لا يمكنك تسجيل الحضور بدون السماح بالوصول إلى الموقع. يرجى تفعيل (GPS) والمحاولة مجدداً.";
-                    },
-                    { enableHighAccuracy: true } // لطلب دقة عالية للموقع
-                );
-            } else {
-                btn.disabled = false;
-                btn.innerText = "اعتماد البصمة";
-                msg.style.color = "red";
-                msg.innerText = "متصفحك لا يدعم تحديد الموقع، يرجى تحديثه.";
+        function getDist(lat1, lon1, lat2, lon2) {
+            const R = 6371; 
+            const dLat = (lat2 - lat1) * (Math.PI / 180), dLon = (lon2 - lon1) * (Math.PI / 180);
+            const a = Math.sin(dLat/2)*Math.sin(dLat/2) + Math.cos(lat1*(Math.PI/180))*Math.cos(lat2*(Math.PI/180))*Math.sin(dLon/2)*Math.sin(dLon/2);
+            return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        }
+
+        // بصمة السائقين
+        function punchDriver() {
+            const name = document.getElementById("dName").value, type = document.getElementById("dType").value, note = document.getElementById("dNote").value;
+            const msg = document.getElementById("dMsg"), btn = document.getElementById("dSubmit");
+            if(!name || !type) { msg.innerText = lang==="ar"?"اختر الاسم والنوع!":"Select Name and Type!"; msg.style.color="red"; return; }
+            
+            btn.disabled = true; msg.innerText = lang==="ar"?"جاري تحديد الموقع...":"Locating..."; msg.style.color="#f39c12";
+            if(navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(pos => {
+                    if(getDist(pos.coords.latitude, pos.coords.longitude, FACTORY_LAT, FACTORY_LNG) <= ALLOWED_KM) {
+                        sendData(name, type, pos, 'سائق', note, msg, btn);
+                    } else { btn.disabled=false; msg.innerText=lang==="ar"?"❌ أنت خارج المصنع!":"❌ Out of factory range!"; msg.style.color="red"; }
+                }, err => { btn.disabled=false; msg.innerText=lang==="ar"?"❌ اسمح بالموقع!":"❌ Allow GPS!"; msg.style.color="red"; }, {enableHighAccuracy:true});
             }
         }
 
-        // دالة إرسال البيانات (لا تعمل إلا إذا اجتاز كل الشروط السابقة)
-        function sendData(name, type, pos) {
-            const msg = document.getElementById("msg");
-            const btn = document.getElementById("submitBtn");
+        // بصمة الموظفين
+        function punchEmp() {
+            const name = document.getElementById("eName").value, type = document.getElementById("eType").value, pass = document.getElementById("ePass").value.trim(), note = document.getElementById("eNote").value;
+            const msg = document.getElementById("eMsg"), btn = document.getElementById("eSubmit");
+            if(!name || !type) { msg.innerText = lang==="ar"?"اختر الاسم والنوع!":"Select Name and Type!"; msg.style.color="red"; return; }
+            if(emps[name] !== pass) { msg.innerText = lang==="ar"?"الرقم السري خطأ!":"Wrong Password!"; msg.style.color="red"; return; }
             
-            const loc = `https://www.google.com/maps?q=${pos.coords.latitude},${pos.coords.longitude}`;
-            const now = new Date();
+            btn.disabled = true; msg.innerText = lang==="ar"?"جاري تحديد الموقع...":"Locating..."; msg.style.color="#f39c12";
+            if(navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(pos => sendData(name, type, pos, 'موظف', note, msg, btn), 
+                err => { btn.disabled=false; msg.innerText=lang==="ar"?"❌ اسمح بالموقع!":"❌ Allow GPS!"; msg.style.color="red"; }, {enableHighAccuracy:true});
+            }
+        }
 
-            const data = {
-                employeeName: name,
-                attendanceType: type,
-                deviceTime: now.toLocaleString('ar-AE'),
-                isoDate: now.toISOString().split('T')[0], // لتسهيل الفلترة في الإدارة
-                serverTime: { ".sv": "timestamp" },
-                location: loc,
-                deviceInfo: navigator.userAgent
-            };
+        // بصمة المحصلين
+        function punchCol() {
+            const name = document.getElementById("cName").value, type = document.getElementById("cType").value, pass = document.getElementById("cPass").value.trim(), note = document.getElementById("cNote").value;
+            const msg = document.getElementById("cMsg"), btn = document.getElementById("cSubmit");
+            if(!name || !type) { msg.innerText = lang==="ar"?"اختر الاسم والنوع!":"Select Name and Type!"; msg.style.color="red"; return; }
+            if(cols[name] !== pass) { msg.innerText = lang==="ar"?"الرقم السري خطأ!":"Wrong Password!"; msg.style.color="red"; return; }
+            
+            btn.disabled = true; msg.innerText = lang==="ar"?"جاري تحديد الموقع...":"Locating..."; msg.style.color="#f39c12";
+            if(navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(pos => sendData(name, type, pos, 'محصل', note, msg, btn), 
+                err => { btn.disabled=false; msg.innerText=lang==="ar"?"❌ اسمح بالموقع!":"❌ Allow GPS!"; msg.style.color="red"; }, {enableHighAccuracy:true});
+            }
+        }
 
-            fetch(dbUrl, { method: 'POST', body: JSON.stringify(data) })
-            .then(res => {
-                if(res.ok) {
-                    msg.style.color = "green";
-                    msg.innerHTML = `✅ تم اعتماد بصمة الـ(${type}) بنجاح يا ${name}`;
-                    btn.innerText = "مكتمل";
-                } else throw new Error();
-            })
-            .catch(() => {
-                btn.disabled = false; btn.innerText = "اعتماد البصمة";
-                msg.style.color = "red"; msg.innerText = "خطأ في الاتصال، أعد المحاولة.";
+        function sendData(name, type, pos, role, note, msgEl, btnEl) {
+            const data = { employeeName: name, attendanceType: type, role: role, note: note || '', serverTime: { ".sv": "timestamp" }, location: `https://www.google.com/maps?q=${pos.coords.latitude},${pos.coords.longitude}` };
+            fetch(dbUrl, { method: 'POST', body: JSON.stringify(data) }).then(res => {
+                if(res.ok) { msgEl.innerText = lang==="ar"?`✅ تمت البصمة ${name}`:`✅ Success ${name}`; msgEl.style.color="green"; btnEl.innerText="✔️"; }
+            }).catch(() => { btnEl.disabled=false; msgEl.innerText=lang==="ar"?"خطأ اتصال":"Network Error"; msgEl.style.color="red"; });
+        }
+
+        function fetchMyRecords(nameId, passId = null, roleObjStr) {
+            const name = document.getElementById(nameId).value;
+            const msg = document.getElementById(nameId === 'dName' ? 'dMsg' : (nameId === 'eName' ? 'eMsg' : 'cMsg'));
+            
+            if(!name) { msg.innerText = lang==="ar"?"اختر اسمك أولاً!":"Select your name first!"; msg.style.color="red"; return; }
+            if(passId) {
+                const pass = document.getElementById(passId).value.trim();
+                const dictObj = roleObjStr === 'emps' ? emps : cols;
+                if(dictObj[name] !== pass) { msg.innerText = lang==="ar"?"أدخل الرقم السري الصحيح لرؤية سجلاتك!":"Enter correct password to see records!"; msg.style.color="red"; return; }
+            }
+
+            document.getElementById("recordsModal").style.display = "flex";
+            const list = document.getElementById("recordsList");
+            list.innerHTML = lang==="ar"?"جاري التحميل...":"Loading...";
+
+            fetch(dbUrl).then(res => res.json()).then(data => {
+                if(!data) { list.innerHTML = lang==="ar"?"لا توجد سجلات":"No records found"; return; }
+                let myRecords = [];
+                for(let key in data) { if(data[key].employeeName === name) myRecords.push(data[key]); }
+                
+                if(myRecords.length === 0) { list.innerHTML = lang==="ar"?"لا توجد سجلات":"No records found"; return; }
+                myRecords.sort((a,b) => (b.serverTime||0) - (a.serverTime||0)); 
+                
+                list.innerHTML = "";
+                myRecords.slice(0, 10).forEach(r => {
+                    let d = new Date(r.serverTime);
+                    let timeStr = `${d.getFullYear()}/${d.getMonth()+1}/${d.getDate()} - ${d.getHours()}:${String(d.getMinutes()).padStart(2,'0')}`;
+                    let typeClass = r.attendanceType === 'حضور' ? 'badge-in' : 'badge-out';
+                    let noteHtml = r.note ? `<div class="note-text">ملاحظة: ${r.note}</div>` : '';
+                    list.innerHTML += `<div class="record-item"><div class="record-header"><span>${timeStr}</span> <span class="${typeClass}">${r.attendanceType}</span></div>${noteHtml}</div>`;
+                });
             });
         }
+        function closeModal() { document.getElementById("recordsModal").style.display = "none"; }
     </script>
 </body>
 </html>
