@@ -2,191 +2,518 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام الحضور والانصراف | Attendance</title>
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>نظام الحضور والانصراف | Attendance System</title>
+    
+    <!-- خط تجوال وأيقونات FontAwesome الحديثة -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
     <style>
-        :root { --bg: #e0e5ec; --text: #2d3436; --primary: #3498db; --danger: #e74c3c; --success: #2ecc71; --shadow-light: #ffffff; --shadow-dark: #a3b1c6; }
-        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; transition: all 0.3s ease; }
-        body { background-color: var(--bg); color: var(--text); display: flex; flex-direction: column; align-items: center; min-height: 100vh; margin: 0; padding: 20px; }
-        
-        /* تنسيق الهيدر والفوتر الجديد */
-        .header-img { width: 100%; max-width: 600px; height: auto; margin-bottom: 10px; mix-blend-mode: multiply; }
-        .footer-img { width: 100%; max-width: 700px; height: auto; margin-top: 40px; margin-bottom: 20px; mix-blend-mode: multiply; opacity: 0.9; }
+        :root {
+            --primary: #1e3a8a;
+            --primary-light: #3b82f6;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --dark: #1f2937;
+            --bg-color: #f1f5f9;
+            --card-bg: #ffffff;
+            --border-color: #e2e8f0;
+        }
 
-        .top-bar { width: 100%; max-width: 450px; display: flex; justify-content: flex-end; margin-bottom: 15px; }
-        .lang-btn { width: 50px; height: 50px; border-radius: 50%; border: none; background: var(--bg); box-shadow: 5px 5px 10px var(--shadow-dark), -5px -5px 10px var(--shadow-light); color: var(--primary); font-weight: bold; cursor: pointer; }
-        .lang-btn:active { box-shadow: inset 5px 5px 10px var(--shadow-dark), inset -5px -5px 10px var(--shadow-light); }
+        * { box-sizing: border-box; font-family: 'Tajawal', sans-serif; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+        
+        body { 
+            background: var(--bg-color); 
+            color: var(--dark); 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            min-height: 100vh; 
+            padding: 15px 12px 30px; 
+        }
 
-        .card { background: var(--bg); width: 100%; max-width: 450px; padding: 30px; border-radius: 20px; box-shadow: 9px 9px 16px var(--shadow-dark), -9px -9px 16px var(--shadow-light); text-align: center; }
-        h2 { margin-top: 0; color: var(--primary); font-size: 22px; margin-bottom: 25px; }
-        
-        .view-section { display: none; }
-        .view-section.active { display: block; animation: fadeIn 0.4s ease-in-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .header-img { width: 100%; max-width: 500px; height: auto; margin-bottom: 12px; mix-blend-mode: multiply; }
+        .footer-img { width: 100%; max-width: 550px; height: auto; margin-top: 30px; opacity: 0.85; mix-blend-mode: multiply; }
 
-        .big-btn { width: 100%; padding: 15px; margin-bottom: 20px; border: none; border-radius: 15px; background: var(--bg); box-shadow: 6px 6px 12px var(--shadow-dark), -6px -6px 12px var(--shadow-light); font-size: 17px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; color: var(--text);}
-        .big-btn .material-icons { font-size: 28px; color: var(--primary); }
-        .big-btn:active { box-shadow: inset 4px 4px 8px var(--shadow-dark), inset -4px -4px 8px var(--shadow-light); }
-        
-        .input-group { position: relative; margin-bottom: 15px; }
-        .input-group .material-icons { position: absolute; top: 50%; transform: translateY(-50%); color: #7f8c8d; pointer-events: none; }
-        html[dir="rtl"] .input-group .material-icons { right: 15px; }
-        html[dir="ltr"] .input-group .material-icons { left: 15px; }
-        
-        select, input { width: 100%; padding: 15px; font-size: 15px; border: none; border-radius: 15px; background: var(--bg); box-shadow: inset 5px 5px 10px var(--shadow-dark), inset -5px -5px 10px var(--shadow-light); outline: none; appearance: none; -webkit-appearance: none; color: var(--text); }
-        html[dir="rtl"] select, html[dir="rtl"] input { padding-right: 50px; padding-left: 15px; }
-        html[dir="ltr"] select, html[dir="ltr"] input { padding-left: 50px; padding-right: 15px; }
-        
-        .action-buttons { display: flex; gap: 10px; margin-top: 15px; }
-        .submit-btn { flex: 2; padding: 15px; border: none; border-radius: 15px; background: var(--bg); box-shadow: 6px 6px 12px var(--shadow-dark), -6px -6px 12px var(--shadow-light); color: var(--success); font-size: 15px; font-weight: bold; cursor: pointer; }
-        .records-btn { flex: 1; padding: 15px; border: none; border-radius: 15px; background: var(--bg); box-shadow: 6px 6px 12px var(--shadow-dark), -6px -6px 12px var(--shadow-light); color: var(--primary); font-size: 13px; font-weight: bold; cursor: pointer; }
-        .submit-btn:active, .records-btn:active { box-shadow: inset 4px 4px 8px var(--shadow-dark), inset -4px -4px 8px var(--shadow-light); }
-        
-        .back-btn { background: none; border: none; color: #7f8c8d; cursor: pointer; font-size: 14px; margin-top: 15px; text-decoration: underline; font-weight: bold; }
-        #msg { margin-top: 15px; font-weight: bold; font-size: 13px; min-height: 40px; }
+        /* Top Bar */
+        .top-bar {
+            width: 100%;
+            max-width: 440px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .live-clock-badge {
+            background: white;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--primary);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+            border: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .lang-btn {
+            background: white;
+            border: 1px solid var(--border-color);
+            color: var(--primary);
+            font-weight: 800;
+            padding: 6px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 13px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+            transition: 0.2s;
+        }
+        .lang-btn:hover { background: var(--primary); color: white; }
 
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center; z-index: 100; }
-        .modal-content { background: var(--bg); width: 90%; max-width: 400px; padding: 20px; border-radius: 20px; max-height: 80vh; overflow-y: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
-        .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #ccc; padding-bottom: 10px; margin-bottom: 15px; }
-        .close-btn { background: var(--danger); color: white; border: none; border-radius: 5px; padding: 5px 10px; cursor: pointer; font-weight: bold; }
-        .record-item { background: white; padding: 10px; margin-bottom: 10px; border-radius: 10px; font-size: 14px; display: flex; flex-direction: column; gap: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);}
-        .record-header { display: flex; justify-content: space-between; }
-        .badge-in { color: var(--success); font-weight: bold;}
-        .badge-out { color: var(--danger); font-weight: bold;}
-        .note-text { color: #7f8c8d; font-size: 12px; }
+        /* Main Card */
+        .card { 
+            background: var(--card-bg); 
+            width: 100%; 
+            max-width: 440px; 
+            padding: 24px 20px; 
+            border-radius: 20px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.06); 
+            border: 1px solid var(--border-color);
+            text-align: center; 
+        }
+
+        .system-title { font-size: 20px; color: var(--primary); font-weight: 800; margin-bottom: 15px; }
+
+        /* Department Switcher */
+        .dept-switcher {
+            display: flex;
+            background: #f1f5f9;
+            padding: 4px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            gap: 4px;
+        }
+        .dept-tab {
+            flex: 1;
+            padding: 10px 5px;
+            border: none;
+            background: transparent;
+            border-radius: 9px;
+            font-size: 13px;
+            font-weight: 700;
+            color: #64748b;
+            cursor: pointer;
+            transition: 0.25s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+        .dept-tab.active {
+            background: white;
+            color: var(--primary);
+            box-shadow: 0 3px 8px rgba(0,0,0,0.06);
+        }
+
+        /* GPS Status Banner */
+        .gps-status {
+            background: #f8fafc;
+            border: 1px dashed var(--border-color);
+            border-radius: 12px;
+            padding: 10px 12px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #64748b;
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .gps-status.ok { background: #ecfdf5; border-color: #a7f3d0; color: #065f46; }
+        .gps-status.warn { background: #fef2f2; border-color: #fecaca; color: #991b1b; }
+
+        /* Input Fields */
+        .input-group { 
+            position: relative; 
+            margin-bottom: 14px; 
+            text-align: right;
+        }
+        html[dir="ltr"] .input-group { text-align: left; }
+        .input-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 700;
+            color: #475569;
+            margin-bottom: 5px;
+        }
+        .input-wrapper { position: relative; }
+        .input-wrapper i {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+            font-size: 16px;
+            pointer-events: none;
+        }
+        html[dir="rtl"] .input-wrapper i { right: 14px; }
+        html[dir="ltr"] .input-wrapper i { left: 14px; }
+
+        select, input { 
+            width: 100%; 
+            padding: 12px 14px; 
+            font-size: 14px; 
+            border: 1.5px solid var(--border-color); 
+            border-radius: 12px; 
+            background: white; 
+            outline: none; 
+            color: var(--dark);
+            font-weight: 600;
+            transition: 0.2s;
+        }
+        html[dir="rtl"] select, html[dir="rtl"] input { padding-right: 42px; }
+        html[dir="ltr"] select, html[dir="ltr"] input { padding-left: 42px; }
+        select:focus, input:focus { 
+            border-color: var(--primary-light); 
+            box-shadow: 0 0 0 3px rgba(59,130,246,0.15); 
+        }
+
+        /* Remember device toggle */
+        .remember-box {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            color: #64748b;
+            margin-bottom: 18px;
+            cursor: pointer;
+            user-select: none;
+        }
+        .remember-box input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+            accent-color: var(--primary);
+        }
+
+        /* Action Buttons */
+        .action-buttons { 
+            display: flex; 
+            gap: 10px; 
+            margin-top: 10px; 
+        }
+        .btn-submit { 
+            flex: 2; 
+            padding: 13px 15px; 
+            border: none; 
+            border-radius: 12px; 
+            background: linear-gradient(135deg, #10b981, #059669); 
+            color: white; 
+            font-size: 15px; 
+            font-weight: 700; 
+            cursor: pointer; 
+            box-shadow: 0 4px 12px rgba(16,185,129,0.25);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: 0.2s;
+        }
+        .btn-submit:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(16,185,129,0.35); }
+        .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; }
+
+        .btn-records { 
+            flex: 1; 
+            padding: 13px 10px; 
+            border: 1.5px solid var(--primary-light); 
+            border-radius: 12px; 
+            background: #eff6ff; 
+            color: var(--primary); 
+            font-size: 13px; 
+            font-weight: 700; 
+            cursor: pointer; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: 0.2s;
+        }
+        .btn-records:hover { background: #dbeafe; }
+
+        /* Notification & Results */
+        #msgBox { 
+            margin-top: 15px; 
+            padding: 12px;
+            border-radius: 10px;
+            font-size: 13px; 
+            font-weight: 700;
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+        .msg-success { background: #ecfdf5; color: #065f46; border: 1px solid #a7f3d0; }
+        .msg-error { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
+        .msg-info { background: #eff6ff; color: #1e40af; border: 1px solid #bfdbfe; }
+
+        /* Modal for Records */
+        .modal { 
+            display: none; 
+            position: fixed; 
+            top: 0; left: 0; 
+            width: 100%; height: 100%; 
+            background: rgba(15, 23, 42, 0.55); 
+            backdrop-filter: blur(3px);
+            justify-content: center; 
+            align-items: center; 
+            z-index: 1000; 
+            padding: 15px;
+        }
+        .modal-content { 
+            background: white; 
+            width: 100%; 
+            max-width: 420px; 
+            padding: 22px; 
+            border-radius: 18px; 
+            max-height: 85vh; 
+            overflow-y: auto; 
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15); 
+        }
+        .modal-header { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            padding-bottom: 12px; 
+            border-bottom: 1.5px solid var(--border-color); 
+            margin-bottom: 15px; 
+        }
+        .close-btn { 
+            background: #f1f5f9; 
+            color: #64748b; 
+            border: none; 
+            border-radius: 50%; 
+            width: 32px; 
+            height: 32px; 
+            cursor: pointer; 
+            font-weight: bold; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .record-card {
+            background: #f8fafc;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 12px 14px;
+            margin-bottom: 10px;
+            text-align: right;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        html[dir="ltr"] .record-card { text-align: left; }
+        .record-top { display: flex; justify-content: space-between; align-items: center; }
+        .badge-in { background: #dcfce7; color: #15803d; font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 6px; }
+        .badge-out { background: #fee2e2; color: #b91c1c; font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 6px; }
+        .badge-failed { background: #fef3c7; color: #b45309; font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 6px; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
     <!-- الهيدر الرسمي للمصنع -->
-    <img src="header.png" alt="Stars Poly Header" class="header-img">
+    <img src="header.png" alt="Header" class="header-img" onerror="this.style.display='none'">
 
     <div class="top-bar">
+        <div class="live-clock-badge">
+            <i class="fa-regular fa-clock"></i>
+            <span id="liveTime">00:00:00</span>
+        </div>
         <button class="lang-btn" onclick="toggleLang()">EN</button>
     </div>
 
     <div class="card">
-        <h2 id="title">نظام الحضور والانصراف</h2>
+        <h2 class="system-title" id="txtTitle"><i class="fa-solid fa-fingerprint"></i> تسجيل الدوام اليومي</h2>
 
-        <div id="main-menu" class="view-section active">
-            <button class="big-btn" onclick="showView('employees-menu')"><span class="material-icons">business_center</span> <span id="btnEmp">بوابة الموظفين</span></button>
-            <button class="big-btn" onclick="showView('drivers-menu')"><span class="material-icons">local_shipping</span> <span id="btnDriv">بوابة السائقين</span></button>
-            <button class="big-btn" onclick="showView('collectors-menu')"><span class="material-icons">account_balance_wallet</span> <span id="btnCol">بوابة المحصلين</span></button>
+        <!-- التبديل بين الفئات (موظف / سائق / محصل) -->
+        <div class="dept-switcher">
+            <button class="dept-tab active" onclick="setRole('emp', this)" id="tabEmp">
+                <i class="fa-solid fa-briefcase"></i> موظف
+            </button>
+            <button class="dept-tab" onclick="setRole('driver', this)" id="tabDriv">
+                <i class="fa-solid fa-truck"></i> سائق
+            </button>
+            <button class="dept-tab" onclick="setRole('col', this)" id="tabCol">
+                <i class="fa-solid fa-wallet"></i> محصل
+            </button>
         </div>
 
-        <!-- 1. بوابة الموظفين -->
-        <div id="employees-menu" class="view-section">
-            <div class="input-group"><span class="material-icons">person</span>
-                <select id="eName"><option value="" disabled selected data-ar="اختر اسمك..." data-en="Select Name...">اختر اسمك...</option>
-                    <option value="Suhail Satar">Suhail Satar</option><option value="bayna ahmed">bayna ahmed</option><option value="Fatmah yamahi">Fatmah yamahi</option><option value="Deema">Deema</option>
-                </select>
-            </div>
-            <div class="input-group"><span class="material-icons">fingerprint</span>
-                <select id="eType"><option value="" disabled selected data-ar="نوع البصمة..." data-en="Punch Type...">نوع البصمة...</option>
-                    <option value="حضور" data-ar="دخول (حضور)" data-en="Check In">دخول (حضور)</option><option value="انصراف" data-ar="خروج (انصراف)" data-en="Check Out">خروج (انصراف)</option>
-                </select>
-            </div>
-            <div class="input-group"><span class="material-icons">lock</span><input type="password" id="ePass" placeholder="الرقم السري" data-ar="الرقم السري" data-en="Password"></div>
-            <div class="input-group"><span class="material-icons">note</span><input type="text" id="eNote" placeholder="ملاحظة (اختياري)" data-ar="ملاحظة (اختياري)" data-en="Note (Optional)"></div>
-            <div class="action-buttons">
-                <button class="submit-btn" id="eSubmit" onclick="punchEmp()">اعتماد البصمة</button>
-                <button class="records-btn" onclick="fetchMyRecords('eName', 'ePass', 'emps')">سجلاتي</button>
-            </div>
-            <p id="eMsg"></p>
-            <button class="back-btn" onclick="showView('main-menu')">الرجوع للقائمة</button>
+        <!-- مؤشر الـ GPS الذكي -->
+        <div class="gps-status" id="gpsStatus">
+            <i class="fa-solid fa-location-crosshairs fa-spin"></i>
+            <span id="gpsText">جاري تحديد المسافة عن المصنع...</span>
         </div>
 
-        <!-- 2. بوابة السائقين -->
-        <div id="drivers-menu" class="view-section">
-            <div class="input-group"><span class="material-icons">person</span>
-                <select id="dName"><option value="" disabled selected data-ar="اختر اسمك..." data-en="Select Name...">اختر اسمك...</option>
-                    <option value="أيمن">أيمن / Ayman</option><option value="ربيع">ربيع / Rabie</option><option value="سليم">سليم / Saleem</option>
+        <!-- حقول النموذج الموحدة -->
+        <div class="input-group">
+            <label id="lblEmpName">اسم الموظف:</label>
+            <div class="input-wrapper">
+                <i class="fa-solid fa-user"></i>
+                <select id="userSelect">
+                    <option value="" disabled selected>اختر اسمك من القائمة...</option>
                 </select>
             </div>
-            <div class="input-group"><span class="material-icons">fingerprint</span>
-                <select id="dType"><option value="" disabled selected data-ar="نوع البصمة..." data-en="Punch Type...">نوع البصمة...</option>
-                    <option value="حضور" data-ar="دخول (حضور)" data-en="Check In">دخول (حضور)</option><option value="انصراف" data-ar="خروج (انصراف)" data-en="Check Out">خروج (انصراف)</option>
-                </select>
-            </div>
-            <div class="input-group"><span class="material-icons">lock</span><input type="password" id="dPass" placeholder="الرقم السري" data-ar="الرقم السري" data-en="Password"></div>
-            <div class="input-group"><span class="material-icons">note</span><input type="text" id="dNote" placeholder="ملاحظة (اختياري)" data-ar="ملاحظة (اختياري)" data-en="Note (Optional)"></div>
-            <div class="action-buttons">
-                <button class="submit-btn" id="dSubmit" onclick="punchDriver()">اعتماد البصمة</button>
-                <button class="records-btn" onclick="fetchMyRecords('dName', 'dPass', 'drivers')">سجلاتي</button>
-            </div>
-            <p id="dMsg"></p>
-            <button class="back-btn" onclick="showView('main-menu')">الرجوع للقائمة</button>
         </div>
 
-        <!-- 3. بوابة المحصلين -->
-        <div id="collectors-menu" class="view-section">
-            <div class="input-group"><span class="material-icons">person</span>
-                <select id="cName"><option value="" disabled selected data-ar="اختر اسمك..." data-en="Select Name...">اختر اسمك...</option>
-                    <option value="علاء">علاء / Alaa</option><option value="عيشة">عيشة / Aisha</option>
+        <div class="input-group">
+            <label id="lblPunchType">نوع البصمة:</label>
+            <div class="input-wrapper">
+                <i class="fa-solid fa-arrow-right-to-bracket"></i>
+                <select id="punchType">
+                    <option value="حضور">دخول (حضور)</option>
+                    <option value="انصراف">خروج (انصراف)</option>
                 </select>
             </div>
-            <div class="input-group"><span class="material-icons">fingerprint</span>
-                <select id="cType"><option value="" disabled selected data-ar="نوع البصمة..." data-en="Punch Type...">نوع البصمة...</option>
-                    <option value="حضور" data-ar="دخول (حضور)" data-en="Check In">دخول (حضور)</option><option value="انصراف" data-ar="خروج (انصراف)" data-en="Check Out">خروج (انصراف)</option>
-                </select>
-            </div>
-            <div class="input-group"><span class="material-icons">lock</span><input type="password" id="cPass" placeholder="الرقم السري" data-ar="الرقم السري" data-en="Password"></div>
-            <div class="input-group"><span class="material-icons">note</span><input type="text" id="cNote" placeholder="ملاحظة (اختياري)" data-ar="ملاحظة (اختياري)" data-en="Note (Optional)"></div>
-            <div class="action-buttons">
-                <button class="submit-btn" id="cSubmit" onclick="punchCol()">اعتماد البصمة</button>
-                <button class="records-btn" onclick="fetchMyRecords('cName', 'cPass', 'cols')">سجلاتي</button>
-            </div>
-            <p id="cMsg"></p>
-            <button class="back-btn" onclick="showView('main-menu')">الرجوع للقائمة</button>
         </div>
+
+        <div class="input-group">
+            <label id="lblPass">الرقم السري (PIN):</label>
+            <div class="input-wrapper">
+                <i class="fa-solid fa-lock"></i>
+                <input type="password" id="userPass" placeholder="أدخل رقمك السري" inputmode="numeric">
+            </div>
+        </div>
+
+        <div class="input-group">
+            <label id="lblNote">ملاحظة (اختياري):</label>
+            <div class="input-wrapper">
+                <i class="fa-solid fa-message"></i>
+                <input type="text" id="userNote" placeholder="اكتب ملاحظة إن وجدت...">
+            </div>
+        </div>
+
+        <!-- خيار حفظ البيانات على هذا الجهاز -->
+        <label class="remember-box">
+            <input type="checkbox" id="rememberMe">
+            <span id="txtRemember">حفظ اسمي ورقمي السري على هذا الجهاز لسرعة التبصيم</span>
+        </label>
+
+        <!-- أزرار الإجراءات -->
+        <div class="action-buttons">
+            <button class="btn-submit" id="btnSubmit" onclick="submitPunch()">
+                <i class="fa-solid fa-circle-check"></i> <span id="txtSubmit">اعتماد البصمة</span>
+            </button>
+            <button class="btn-records" onclick="openRecordsModal()">
+                <i class="fa-solid fa-history"></i> <span id="txtRecords">سجلاتي</span>
+            </button>
+        </div>
+
+        <!-- صندوق التنبيهات والنتائج -->
+        <div id="msgBox"></div>
     </div>
 
-    <!-- الفوتر الرسمي للمصنع (الشهادات والاعتمادات) -->
-    <img src="footer_img.png" alt="Stars Poly Footer" class="footer-img">
+    <!-- الفوتر الرسمي -->
+    <img src="footer_img.png" alt="Footer" class="footer-img" onerror="this.style.display='none'">
 
+    <!-- Modal عرض السجلات السابقة -->
     <div id="recordsModal" class="modal">
         <div class="modal-content">
-            <div class="modal-header"><h3 style="margin:0; color:var(--primary);" id="modalTitle">سجلاتي</h3><button class="close-btn" onclick="closeModal()">X</button></div>
+            <div class="modal-header">
+                <h3 style="color:var(--primary); font-size:16px;" id="modalTitle">
+                    <i class="fa-solid fa-list-check"></i> آخر سجلات البصمة
+                </h3>
+                <button class="close-btn" onclick="closeModal()"><i class="fa-solid fa-xmark"></i></button>
+            </div>
             <div id="recordsList">جاري التحميل...</div>
         </div>
     </div>
 
     <script>
         const dbUrl = "https://attendance-system-47995-default-rtdb.firebaseio.com/attendance.json";
-        const FACTORY_LAT = 25.1161977; const FACTORY_LNG = 55.2345118; const ALLOWED_KM = 0.5;
         
-        const emps = { "Suhail Satar": "suh9988", "bayna ahmed": "bay5544", "Fatmah yamahi": "fat7766", "Deema": "dee3322" };
-        const drivers = { "أيمن": "aym33", "ربيع": "rab44", "سليم": "sal55" };
-        const cols = { "علاء": "alaa11", "عيشة": "aish22" };
+        // إحداثيات المصنع والمسافة المسموحة (0.5 كم = 500 متر)
+        const FACTORY_LAT = 25.1161977; 
+        const FACTORY_LNG = 55.2345118; 
+        const ALLOWED_KM = 0.5;
 
-        let lang = "ar";
+        // قاعدة بيانات المستخدمين
+        const DB_USERS = {
+            emp: {
+                titleAr: 'موظف', titleEn: 'Employee',
+                list: {
+                    "Suhail Satar": "suh9988",
+                    "bayna ahmed": "bay5544",
+                    "Fatmah yamahi": "fat7766",
+                    "Deema": "dee3322"
+                }
+            },
+            driver: {
+                titleAr: 'سائق', titleEn: 'Driver',
+                list: {
+                    "أيمن": "aym33",
+                    "ربيع": "rab44",
+                    "سليم": "sal55"
+                }
+            },
+            col: {
+                titleAr: 'محصل', titleEn: 'Collector',
+                list: {
+                    "علاء": "alaa11",
+                    "عيشة": "aish22"
+                }
+            }
+        };
 
-        function toggleLang() {
-            lang = lang === "ar" ? "en" : "ar";
-            document.documentElement.dir = lang === "ar" ? "rtl" : "ltr";
-            document.querySelector('.lang-btn').innerText = lang === "ar" ? "EN" : "عربي";
-            
-            document.getElementById("title").innerText = lang === "ar" ? "نظام الحضور والانصراف" : "Attendance System";
-            document.getElementById("btnEmp").innerText = lang === "ar" ? "بوابة الموظفين" : "Employees Portal";
-            document.getElementById("btnDriv").innerText = lang === "ar" ? "بوابة السائقين" : "Drivers Portal";
-            document.getElementById("btnCol").innerText = lang === "ar" ? "بوابة المحصلين" : "Collectors Portal";
-            
-            document.querySelectorAll('.submit-btn').forEach(b => b.innerText = lang === "ar" ? "اعتماد البصمة" : "Submit");
-            document.querySelectorAll('.records-btn').forEach(b => b.innerText = lang === "ar" ? "سجلاتي" : "My Records");
-            document.querySelectorAll('.back-btn').forEach(b => b.innerText = lang === "ar" ? "الرجوع للقائمة" : "Back to Menu");
-            document.getElementById("modalTitle").innerText = lang === "ar" ? "سجلاتي" : "My Records";
-            
-            document.querySelectorAll('option[data-ar]').forEach(o => o.innerText = o.getAttribute('data-'+lang));
-            ['ePass', 'dPass', 'cPass', 'eNote', 'dNote', 'cNote'].forEach(id => {
-                const el = document.getElementById(id); el.placeholder = el.getAttribute('data-'+lang);
-            });
-        }
+        let currentRole = 'emp';
+        let lang = 'ar';
+        let currentPos = null;
+        let distanceToFactory = null;
 
-        function showView(id) {
-            document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-            document.getElementById("eMsg").innerText = ""; document.getElementById("dMsg").innerText = ""; document.getElementById("cMsg").innerText = "";
+        // الساعة الرقمية المباشرة
+        setInterval(() => {
+            const now = new Date();
+            document.getElementById("liveTime").innerText = now.toLocaleTimeString(lang === 'ar' ? 'ar-EG' : 'en-US');
+        }, 1000);
+
+        // بدء التشغيل
+        window.addEventListener('DOMContentLoaded', () => {
+            initGPS();
+            loadRoleOptions('emp');
+            loadSavedUser();
+        });
+
+        // تفعيل فحص الـ GPS وحساب المسافة
+        function initGPS() {
+            const statusEl = document.getElementById("gpsStatus");
+            const textEl = document.getElementById("gpsText");
+
+            if (!navigator.geolocation) {
+                textEl.innerText = lang === 'ar' ? "متصفحك لا يدعم تحديد الموقع GPS" : "GPS not supported";
+                statusEl.className = "gps-status warn";
+                return;
+            }
+
+            navigator.geolocation.watchPosition(pos => {
+                currentPos = pos;
+                const distKm = getDist(pos.coords.latitude, pos.coords.longitude, FACTORY_LAT, FACTORY_LNG);
+                distanceToFactory = distKm;
+                const distMeters = Math.round(distKm * 1000);
+
+                if (distKm <= ALLOWED_KM) {
+                    statusEl.className = "gps-status ok";
+                    textEl.innerHTML = `<i class="fa-solid fa-circle-check"></i> ${lang==='ar' ? `داخل نطاق المصنع (${distMeters} متر)` : `Inside factory area (${distMeters}m)`}`;
+                } else {
+                    statusEl.className = "gps-status warn";
+                    textEl.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> ${lang==='ar' ? `خارج نطاق المصنع (${distMeters} متر)` : `Outside factory area (${distMeters}m)`}`;
+                }
+            }, err => {
+                statusEl.className = "gps-status warn";
+                textEl.innerHTML = `<i class="fa-solid fa-location-slash"></i> ${lang==='ar' ? "يرجى تفعيل صلاحية الـ GPS للموقع" : "Please enable GPS permission"}`;
+            }, { enableHighAccuracy: true });
         }
 
         function getDist(lat1, lon1, lat2, lon2) {
@@ -196,84 +523,266 @@
             return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         }
 
-        function punchDriver() {
-            const name = document.getElementById("dName").value, type = document.getElementById("dType").value, pass = document.getElementById("dPass").value.trim(), note = document.getElementById("dNote").value;
-            const msg = document.getElementById("dMsg"), btn = document.getElementById("dSubmit");
-            if(!name || !type) { msg.innerText = lang==="ar"?"اختر الاسم والنوع!":"Select Name and Type!"; msg.style.color="red"; return; }
-            if(drivers[name] !== pass) { msg.innerText = lang==="ar"?"الرقم السري خطأ!":"Wrong Password!"; msg.style.color="red"; return; }
-            
-            btn.disabled = true; msg.innerText = lang==="ar"?"جاري تحديد الموقع...":"Locating..."; msg.style.color="#f39c12";
-            if(navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(pos => {
-                    if(getDist(pos.coords.latitude, pos.coords.longitude, FACTORY_LAT, FACTORY_LNG) <= ALLOWED_KM) {
-                        sendData(name, type, pos, 'سائق', note, msg, btn, true);
-                    } else {
-                        const failedNote = note ? (note + ' | ❌ محاولة مرفوضة (خارج المصنع)') : '❌ محاولة مرفوضة (خارج المصنع)';
-                        sendData(name, type, pos, 'سائق (محاولة مرفوضة)', failedNote, msg, btn, false);
-                    }
-                }, err => { btn.disabled=false; msg.innerText=lang==="ar"?"❌ اسمح بالموقع!":"❌ Allow GPS!"; msg.style.color="red"; }, {enableHighAccuracy:true});
+        // تغيير القسم المختار (موظف / سائق / محصل)
+        function setRole(roleKey, btn) {
+            currentRole = roleKey;
+            document.querySelectorAll('.dept-tab').forEach(t => t.classList.remove('active'));
+            btn.classList.add('active');
+            loadRoleOptions(roleKey);
+            clearMsg();
+        }
+
+        function loadRoleOptions(roleKey) {
+            const sel = document.getElementById("userSelect");
+            sel.innerHTML = `<option value="" disabled selected>${lang==='ar'?'اختر اسمك من القائمة...':'Select your name...'}</option>`;
+            const users = DB_USERS[roleKey].list;
+            for (let name in users) {
+                sel.innerHTML += `<option value="${name}">${name}</option>`;
             }
         }
 
-        function punchEmp() {
-            const name = document.getElementById("eName").value, type = document.getElementById("eType").value, pass = document.getElementById("ePass").value.trim(), note = document.getElementById("eNote").value;
-            const msg = document.getElementById("eMsg"), btn = document.getElementById("eSubmit");
-            if(!name || !type) { msg.innerText = lang==="ar"?"اختر الاسم والنوع!":"Select Name and Type!"; msg.style.color="red"; return; }
-            if(emps[name] !== pass) { msg.innerText = lang==="ar"?"الرقم السري خطأ!":"Wrong Password!"; msg.style.color="red"; return; }
-            btn.disabled = true; msg.innerText = lang==="ar"?"جاري تحديد الموقع...":"Locating..."; msg.style.color="#f39c12";
-            if(navigator.geolocation) { navigator.geolocation.getCurrentPosition(pos => sendData(name, type, pos, 'موظف', note, msg, btn, true), err => { btn.disabled=false; msg.innerText=lang==="ar"?"❌ اسمح بالموقع!":"❌ Allow GPS!"; msg.style.color="red"; }, {enableHighAccuracy:true}); }
+        // حفظ واسترجاع بيانات المستخدم على الهاتف
+        function loadSavedUser() {
+            const savedRole = localStorage.getItem('punch_role');
+            const savedName = localStorage.getItem('punch_name');
+            const savedPass = localStorage.getItem('punch_pass');
+
+            if (savedRole && DB_USERS[savedRole]) {
+                const btn = document.getElementById(savedRole === 'emp' ? 'tabEmp' : (savedRole === 'driver' ? 'tabDriv' : 'tabCol'));
+                setRole(savedRole, btn);
+            }
+            if (savedName) {
+                document.getElementById("userSelect").value = savedName;
+            }
+            if (savedPass) {
+                document.getElementById("userPass").value = savedPass;
+                document.getElementById("rememberMe").checked = true;
+            }
         }
 
-        function punchCol() {
-            const name = document.getElementById("cName").value, type = document.getElementById("cType").value, pass = document.getElementById("cPass").value.trim(), note = document.getElementById("cNote").value;
-            const msg = document.getElementById("cMsg"), btn = document.getElementById("cSubmit");
-            if(!name || !type) { msg.innerText = lang==="ar"?"اختر الاسم والنوع!":"Select Name and Type!"; msg.style.color="red"; return; }
-            if(cols[name] !== pass) { msg.innerText = lang==="ar"?"الرقم السري خطأ!":"Wrong Password!"; msg.style.color="red"; return; }
-            btn.disabled = true; msg.innerText = lang==="ar"?"جاري تحديد الموقع...":"Locating..."; msg.style.color="#f39c12";
-            if(navigator.geolocation) { navigator.geolocation.getCurrentPosition(pos => sendData(name, type, pos, 'محصل', note, msg, btn, true), err => { btn.disabled=false; msg.innerText=lang==="ar"?"❌ اسمح بالموقع!":"❌ Allow GPS!"; msg.style.color="red"; }, {enableHighAccuracy:true}); }
+        function playBeep() {
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = "sine";
+                osc.frequency.setValueAtTime(587.33, ctx.currentTime); // D5
+                gain.gain.setValueAtTime(0.1, ctx.currentTime);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start();
+                osc.stop(ctx.currentTime + 0.2);
+            } catch(e){}
         }
 
-        function sendData(name, type, pos, role, note, msgEl, btnEl, isSuccess) {
-            const data = { employeeName: name, attendanceType: type, role: role, note: note || '', serverTime: { ".sv": "timestamp" }, location: `https://www.google.com/maps?q=${pos.coords.latitude},${pos.coords.longitude}` };
-            fetch(dbUrl, { method: 'POST', body: JSON.stringify(data) }).then(res => {
-                if(res.ok) {
-                    if(isSuccess) {
-                        msgEl.innerText = lang==="ar"?`✅ تمت البصمة ${name}`:`✅ Success ${name}`; msgEl.style.color="green"; btnEl.innerText="✔️";
-                    } else {
-                        msgEl.innerText = lang==="ar"?"❌ عذراً، لا يمكنك التبصيم وأنت خارج المصنع!":"❌ Sorry, you must be inside the factory to punch in!"; msgEl.style.color="red"; btnEl.disabled=false; btnEl.innerText=lang==="ar"?"اعتماد البصمة":"Submit";
-                    }
+        // اعتماد البصمة
+        function submitPunch() {
+            const name = document.getElementById("userSelect").value;
+            const punchType = document.getElementById("punchType").value;
+            const pass = document.getElementById("userPass").value.trim();
+            const note = document.getElementById("userNote").value.trim();
+            const remember = document.getElementById("rememberMe").checked;
+            const btn = document.getElementById("btnSubmit");
+
+            if (!name) {
+                showMsg(lang==='ar' ? "يرجى اختيار اسمك أولاً!" : "Please select your name!", "error");
+                return;
+            }
+
+            const expectedPass = DB_USERS[currentRole].list[name];
+            if (!pass || pass !== expectedPass) {
+                showMsg(lang==='ar' ? "الرقم السري غير صحيح!" : "Incorrect PIN!", "error");
+                return;
+            }
+
+            // حفظ البيانات محلياً إذا تم اختيار تذكرني
+            if (remember) {
+                localStorage.setItem('punch_role', currentRole);
+                localStorage.setItem('punch_name', name);
+                localStorage.setItem('punch_pass', pass);
+            } else {
+                localStorage.removeItem('punch_role');
+                localStorage.removeItem('punch_name');
+                localStorage.removeItem('punch_pass');
+            }
+
+            // التحقق من الموقع
+            btn.disabled = true;
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> ${lang==='ar'?'جاري الاعتماد...':'Processing...'}`;
+            showMsg(lang==='ar' ? "جاري التحقق من الموقع وإرسال البصمة..." : "Verifying location...", "info");
+
+            if (!navigator.geolocation) {
+                sendRecord(name, punchType, null, false, note, btn);
+                return;
+            }
+
+            navigator.geolocation.getCurrentPosition(pos => {
+                const dist = getDist(pos.coords.latitude, pos.coords.longitude, FACTORY_LAT, FACTORY_LNG);
+                const isInside = dist <= ALLOWED_KM;
+
+                // شرط الموقع للسائقين وبقية الأقسام
+                if (currentRole === 'driver' && !isInside) {
+                    const failedNote = note ? (note + ' | ❌ محاولة خارج المصنع') : '❌ محاولة خارج المصنع';
+                    sendRecord(name, punchType, pos, false, failedNote, btn);
+                } else {
+                    sendRecord(name, punchType, pos, true, note, btn);
                 }
-            }).catch(() => { btnEl.disabled=false; msgEl.innerText=lang==="ar"?"خطأ اتصال":"Network Error"; msgEl.style.color="red"; });
+            }, err => {
+                btn.disabled = false;
+                btn.innerHTML = `<i class="fa-solid fa-circle-check"></i> ${lang==='ar'?'اعتماد البصمة':'Submit'}`;
+                showMsg(lang==='ar' ? "❌ يرجى السماح بتحديد الموقع (GPS) لاعتماد البصمة!" : "❌ Please allow GPS access!", "error");
+            }, { enableHighAccuracy: true });
         }
 
-        function fetchMyRecords(nameId, passId, roleObjStr) {
-            const name = document.getElementById(nameId).value;
-            const msg = document.getElementById(nameId === 'dName' ? 'dMsg' : (nameId === 'eName' ? 'eMsg' : 'cMsg'));
-            if(!name) { msg.innerText = lang==="ar"?"اختر اسمك أولاً!":"Select your name first!"; msg.style.color="red"; return; }
-            if(passId) {
-                const pass = document.getElementById(passId).value.trim();
-                const dictObj = roleObjStr === 'emps' ? emps : (roleObjStr === 'drivers' ? drivers : cols);
-                if(dictObj[name] !== pass) { msg.innerText = lang==="ar"?"أدخل الرقم السري الصحيح!":"Enter correct password!"; msg.style.color="red"; return; }
+        function sendRecord(name, type, pos, isSuccess, note, btn) {
+            let roleTitle = DB_USERS[currentRole].titleAr;
+            if (!isSuccess && currentRole === 'driver') {
+                roleTitle = 'سائق (محاولة مرفوضة)';
             }
-            document.getElementById("recordsModal").style.display = "flex";
-            const list = document.getElementById("recordsList"); list.innerHTML = lang==="ar"?"جاري التحميل...":"Loading...";
-            fetch(dbUrl).then(res => res.json()).then(data => {
-                if(!data) { list.innerHTML = lang==="ar"?"لا توجد سجلات":"No records found"; return; }
-                let myRecords = [];
-                for(let key in data) { if(data[key].employeeName === name) myRecords.push(data[key]); }
-                if(myRecords.length === 0) { list.innerHTML = lang==="ar"?"لا توجد سجلات":"No records found"; return; }
-                myRecords.sort((a,b) => (b.serverTime||0) - (a.serverTime||0)); 
-                list.innerHTML = "";
-                myRecords.slice(0, 10).forEach(r => {
-                    let d = new Date(r.serverTime);
-                    let timeStr = `${d.getFullYear()}/${d.getMonth()+1}/${d.getDate()} - ${d.getHours()}:${String(d.getMinutes()).padStart(2,'0')}`;
-                    let typeClass = r.attendanceType === 'حضور' ? 'badge-in' : 'badge-out';
-                    let noteHtml = r.note ? `<div class="note-text">ملاحظة: ${r.note}</div>` : '';
-                    list.innerHTML += `<div class="record-item"><div class="record-header"><span>${timeStr}</span> <span class="${typeClass}">${r.attendanceType}</span></div>${noteHtml}</div>`;
-                });
+
+            const payload = {
+                employeeName: name,
+                attendanceType: type,
+                role: roleTitle,
+                note: note || '',
+                serverTime: { ".sv": "timestamp" },
+                location: pos ? `https://www.google.com/maps?q=${pos.coords.latitude},${pos.coords.longitude}` : 'موقع غير متوفر'
+            };
+
+            fetch(dbUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            })
+            .then(res => {
+                btn.disabled = false;
+                btn.innerHTML = `<i class="fa-solid fa-circle-check"></i> ${lang==='ar'?'اعتماد البصمة':'Submit'}`;
+                
+                if (res.ok) {
+                    if (isSuccess) {
+                        playBeep();
+                        showMsg(lang==='ar' ? `✅ تم تسجيل ${type} بنجاح للأستاذ (${name})` : `✅ ${type} registered successfully for (${name})`, "success");
+                    } else {
+                        showMsg(lang==='ar' ? "❌ عذراً! لا يمكن التبصيم لأنك خارج نطاق المصنع." : "❌ Failed! You are outside factory area.", "error");
+                    }
+                } else {
+                    showMsg(lang==='ar' ? "حدث خطأ في الخادم، حاول ثانية." : "Server error, try again.", "error");
+                }
+            })
+            .catch(() => {
+                btn.disabled = false;
+                btn.innerHTML = `<i class="fa-solid fa-circle-check"></i> ${lang==='ar'?'اعتماد البصمة':'Submit'}`;
+                showMsg(lang==='ar' ? "تعذر الاتصال بقاعدة البيانات. تحقق من الإنترنت." : "Connection failed.", "error");
             });
         }
-        function closeModal() { document.getElementById("recordsModal").style.display = "none"; }
+
+        function showMsg(text, type) {
+            const el = document.getElementById("msgBox");
+            el.style.display = "block";
+            el.className = `msg-${type}`;
+            el.innerHTML = text;
+        }
+
+        function clearMsg() {
+            document.getElementById("msgBox").style.display = "none";
+        }
+
+        // عرض سجلات الموظف
+        function openRecordsModal() {
+            const name = document.getElementById("userSelect").value;
+            const pass = document.getElementById("userPass").value.trim();
+
+            if (!name) {
+                showMsg(lang==='ar' ? "اختر اسمك أولاً لعرض سجلاتك!" : "Select your name first!", "error");
+                return;
+            }
+
+            const expectedPass = DB_USERS[currentRole].list[name];
+            if (pass !== expectedPass) {
+                showMsg(lang==='ar' ? "أدخل رقمك السري لعرض سجلاتك!" : "Enter your PIN to view records!", "error");
+                return;
+            }
+
+            document.getElementById("recordsModal").style.display = "flex";
+            const list = document.getElementById("recordsList");
+            list.innerHTML = `<div style="text-align:center; padding:20px;"><i class="fa-solid fa-spinner fa-spin"></i> ${lang==='ar'?'جاري جلب السجلات...':'Loading...'}</div>`;
+
+            fetch(dbUrl)
+                .then(res => res.json())
+                .then(data => {
+                    if (!data) {
+                        list.innerHTML = `<div style="text-align:center; color:#94a3b8; padding:20px;">${lang==='ar'?'لا توجد سجلات سابقة':'No records found'}</div>`;
+                        return;
+                    }
+                    const myRecords = [];
+                    for (let key in data) {
+                        if (data[key].employeeName === name) myRecords.push(data[key]);
+                    }
+
+                    if (myRecords.length === 0) {
+                        list.innerHTML = `<div style="text-align:center; color:#94a3b8; padding:20px;">${lang==='ar'?'لا توجد سجلات مسجلة لهذا الاسم':'No records found'}</div>`;
+                        return;
+                    }
+
+                    myRecords.sort((a,b) => (b.serverTime||0) - (a.serverTime||0));
+                    list.innerHTML = "";
+
+                    myRecords.slice(0, 15).forEach(r => {
+                        const d = new Date(r.serverTime);
+                        const dateStr = `${d.getFullYear()}/${d.getMonth()+1}/${d.getDate()}`;
+                        const timeStr = d.toLocaleTimeString(lang==='ar'?'ar-EG':'en-US');
+                        const isFailed = r.role && r.role.includes('مرفوضة');
+
+                        let badgeHtml = '';
+                        if (isFailed) badgeHtml = `<span class="badge-failed">مرفوض</span>`;
+                        else if (r.attendanceType === 'حضور') badgeHtml = `<span class="badge-in">حضور</span>`;
+                        else badgeHtml = `<span class="badge-out">انصراف</span>`;
+
+                        list.innerHTML += `
+                            <div class="record-card">
+                                <div class="record-top">
+                                    <span style="font-weight:700; font-size:13px; color:#1e293b;">${dateStr} - ${timeStr}</span>
+                                    ${badgeHtml}
+                                </div>
+                                ${r.note ? `<div style="font-size:12px; color:#64748b;"><i class="fa-regular fa-comment"></i> ${r.note}</div>` : ''}
+                            </div>
+                        `;
+                    });
+                });
+        }
+
+        function closeModal() {
+            document.getElementById("recordsModal").style.display = "none";
+        }
+
+        // التبديل بين اللغات
+        function toggleLang() {
+            lang = lang === 'ar' ? 'en' : 'ar';
+            document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+            document.documentElement.lang = lang;
+            document.querySelector('.lang-btn').innerText = lang === 'ar' ? 'EN' : 'عربي';
+
+            document.getElementById("txtTitle").innerHTML = lang === 'ar' ? '<i class="fa-solid fa-fingerprint"></i> تسجيل الدوام اليومي' : '<i class="fa-solid fa-fingerprint"></i> Daily Attendance';
+            document.getElementById("tabEmp").innerHTML = `<i class="fa-solid fa-briefcase"></i> ${lang==='ar'?'موظف':'Employee'}`;
+            document.getElementById("tabDriv").innerHTML = `<i class="fa-solid fa-truck"></i> ${lang==='ar'?'سائق':'Driver'}`;
+            document.getElementById("tabCol").innerHTML = `<i class="fa-solid fa-wallet"></i> ${lang==='ar'?'محصل':'Collector'}`;
+            
+            document.getElementById("lblEmpName").innerText = lang === 'ar' ? 'اسم الموظف:' : 'Employee Name:';
+            document.getElementById("lblPunchType").innerText = lang === 'ar' ? 'نوع البصمة:' : 'Punch Type:';
+            document.getElementById("lblPass").innerText = lang === 'ar' ? 'الرقم السري (PIN):' : 'Password (PIN):';
+            document.getElementById("lblNote").innerText = lang === 'ar' ? 'ملاحظة (اختياري):' : 'Note (Optional):';
+            document.getElementById("txtRemember").innerText = lang === 'ar' ? 'حفظ اسمي ورقمي السري على هذا الجهاز لسرعة التبصيم' : 'Remember my name and PIN on this device';
+            
+            document.getElementById("txtSubmit").innerText = lang === 'ar' ? 'اعتماد البصمة' : 'Submit Punch';
+            document.getElementById("txtRecords").innerText = lang === 'ar' ? 'سجلاتي' : 'My Records';
+            document.getElementById("modalTitle").innerHTML = `<i class="fa-solid fa-list-check"></i> ${lang==='ar'?'آخر سجلات البصمة':'Recent Records'}`;
+
+            document.getElementById("userPass").placeholder = lang === 'ar' ? 'أدخل رقمك السري' : 'Enter your PIN';
+            document.getElementById("userNote").placeholder = lang === 'ar' ? 'اكتب ملاحظة إن وجدت...' : 'Write note if any...';
+
+            loadRoleOptions(currentRole);
+            initGPS();
+        }
     </script>
 </body>
 </html>
