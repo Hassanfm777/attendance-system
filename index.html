@@ -10,8 +10,11 @@
         * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; transition: all 0.3s ease; }
         body { background-color: var(--bg); color: var(--text); display: flex; flex-direction: column; align-items: center; min-height: 100vh; margin: 0; padding: 20px; }
         
-        .top-bar { width: 100%; max-width: 450px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .logo-placeholder { width: 60px; height: 60px; border-radius: 50%; background: var(--bg); box-shadow: 5px 5px 10px var(--shadow-dark), -5px -5px 10px var(--shadow-light); display: flex; justify-content: center; align-items: center; font-weight: bold; font-size: 10px; color: var(--primary); }
+        /* تنسيق الهيدر والفوتر الجديد */
+        .header-img { width: 100%; max-width: 600px; height: auto; margin-bottom: 10px; mix-blend-mode: multiply; }
+        .footer-img { width: 100%; max-width: 700px; height: auto; margin-top: 40px; margin-bottom: 20px; mix-blend-mode: multiply; opacity: 0.9; }
+
+        .top-bar { width: 100%; max-width: 450px; display: flex; justify-content: flex-end; margin-bottom: 15px; }
         .lang-btn { width: 50px; height: 50px; border-radius: 50%; border: none; background: var(--bg); box-shadow: 5px 5px 10px var(--shadow-dark), -5px -5px 10px var(--shadow-light); color: var(--primary); font-weight: bold; cursor: pointer; }
         .lang-btn:active { box-shadow: inset 5px 5px 10px var(--shadow-dark), inset -5px -5px 10px var(--shadow-light); }
 
@@ -56,56 +59,36 @@
 </head>
 <body>
 
+    <!-- الهيدر الرسمي للمصنع -->
+    <img src="header.png" alt="Stars Poly Header" class="header-img">
+
     <div class="top-bar">
-        <div class="logo-placeholder">LOGO</div>
         <button class="lang-btn" onclick="toggleLang()">EN</button>
     </div>
 
     <div class="card">
         <h2 id="title">نظام الحضور والانصراف</h2>
 
-        <!-- القائمة الرئيسية -->
         <div id="main-menu" class="view-section active">
-            <button class="big-btn" onclick="showView('employees-menu')">
-                <span class="material-icons">business_center</span> <span id="btnEmp">بوابة الموظفين</span>
-            </button>
-            <button class="big-btn" onclick="showView('drivers-menu')">
-                <span class="material-icons">local_shipping</span> <span id="btnDriv">بوابة السائقين</span>
-            </button>
-            <button class="big-btn" onclick="showView('collectors-menu')">
-                <span class="material-icons">account_balance_wallet</span> <span id="btnCol">بوابة المحصلين</span>
-            </button>
+            <button class="big-btn" onclick="showView('employees-menu')"><span class="material-icons">business_center</span> <span id="btnEmp">بوابة الموظفين</span></button>
+            <button class="big-btn" onclick="showView('drivers-menu')"><span class="material-icons">local_shipping</span> <span id="btnDriv">بوابة السائقين</span></button>
+            <button class="big-btn" onclick="showView('collectors-menu')"><span class="material-icons">account_balance_wallet</span> <span id="btnCol">بوابة المحصلين</span></button>
         </div>
 
         <!-- 1. بوابة الموظفين -->
         <div id="employees-menu" class="view-section">
-            <div class="input-group">
-                <span class="material-icons">person</span>
-                <select id="eName">
-                    <option value="" disabled selected data-ar="اختر اسمك..." data-en="Select Name...">اختر اسمك...</option>
-                    <option value="Suhail Satar">Suhail Satar</option>
-                    <option value="bayna ahmed">bayna ahmed</option>
-                    <option value="Fatmah yamahi">Fatmah yamahi</option>
-                    <option value="Deema">Deema</option>
+            <div class="input-group"><span class="material-icons">person</span>
+                <select id="eName"><option value="" disabled selected data-ar="اختر اسمك..." data-en="Select Name...">اختر اسمك...</option>
+                    <option value="Suhail Satar">Suhail Satar</option><option value="bayna ahmed">bayna ahmed</option><option value="Fatmah yamahi">Fatmah yamahi</option><option value="Deema">Deema</option>
                 </select>
             </div>
-            <div class="input-group">
-                <span class="material-icons">fingerprint</span>
-                <select id="eType">
-                    <option value="" disabled selected data-ar="نوع البصمة..." data-en="Punch Type...">نوع البصمة...</option>
-                    <option value="حضور" data-ar="دخول (حضور)" data-en="Check In">دخول (حضور)</option>
-                    <option value="انصراف" data-ar="خروج (انصراف)" data-en="Check Out">خروج (انصراف)</option>
+            <div class="input-group"><span class="material-icons">fingerprint</span>
+                <select id="eType"><option value="" disabled selected data-ar="نوع البصمة..." data-en="Punch Type...">نوع البصمة...</option>
+                    <option value="حضور" data-ar="دخول (حضور)" data-en="Check In">دخول (حضور)</option><option value="انصراف" data-ar="خروج (انصراف)" data-en="Check Out">خروج (انصراف)</option>
                 </select>
             </div>
-            <div class="input-group">
-                <span class="material-icons">lock</span>
-                <input type="password" id="ePass" placeholder="الرقم السري" data-ar="الرقم السري" data-en="Password">
-            </div>
-            <div class="input-group">
-                <span class="material-icons">note</span>
-                <input type="text" id="eNote" placeholder="ملاحظة (اختياري)" data-ar="ملاحظة (اختياري)" data-en="Note (Optional)">
-            </div>
-            
+            <div class="input-group"><span class="material-icons">lock</span><input type="password" id="ePass" placeholder="الرقم السري" data-ar="الرقم السري" data-en="Password"></div>
+            <div class="input-group"><span class="material-icons">note</span><input type="text" id="eNote" placeholder="ملاحظة (اختياري)" data-ar="ملاحظة (اختياري)" data-en="Note (Optional)"></div>
             <div class="action-buttons">
                 <button class="submit-btn" id="eSubmit" onclick="punchEmp()">اعتماد البصمة</button>
                 <button class="records-btn" onclick="fetchMyRecords('eName', 'ePass', 'emps')">سجلاتي</button>
@@ -114,33 +97,23 @@
             <button class="back-btn" onclick="showView('main-menu')">الرجوع للقائمة</button>
         </div>
 
-        <!-- 2. بوابة السائقين (بدون رقم سري، تتبع للمصنع) -->
+        <!-- 2. بوابة السائقين -->
         <div id="drivers-menu" class="view-section">
-            <div class="input-group">
-                <span class="material-icons">person</span>
-                <select id="dName">
-                    <option value="" disabled selected data-ar="اختر اسمك..." data-en="Select Name...">اختر اسمك...</option>
-                    <option value="أيمن">أيمن / Ayman</option>
-                    <option value="ربيع">ربيع / Rabie</option>
-                    <option value="سليم">سليم / Saleem</option>
+            <div class="input-group"><span class="material-icons">person</span>
+                <select id="dName"><option value="" disabled selected data-ar="اختر اسمك..." data-en="Select Name...">اختر اسمك...</option>
+                    <option value="أيمن">أيمن / Ayman</option><option value="ربيع">ربيع / Rabie</option><option value="سليم">سليم / Saleem</option>
                 </select>
             </div>
-            <div class="input-group">
-                <span class="material-icons">fingerprint</span>
-                <select id="dType">
-                    <option value="" disabled selected data-ar="نوع البصمة..." data-en="Punch Type...">نوع البصمة...</option>
-                    <option value="حضور" data-ar="دخول (حضور)" data-en="Check In">دخول (حضور)</option>
-                    <option value="انصراف" data-ar="خروج (انصراف)" data-en="Check Out">خروج (انصراف)</option>
+            <div class="input-group"><span class="material-icons">fingerprint</span>
+                <select id="dType"><option value="" disabled selected data-ar="نوع البصمة..." data-en="Punch Type...">نوع البصمة...</option>
+                    <option value="حضور" data-ar="دخول (حضور)" data-en="Check In">دخول (حضور)</option><option value="انصراف" data-ar="خروج (انصراف)" data-en="Check Out">خروج (انصراف)</option>
                 </select>
             </div>
-            <div class="input-group">
-                <span class="material-icons">note</span>
-                <input type="text" id="dNote" placeholder="ملاحظة (اختياري)" data-ar="ملاحظة (اختياري)" data-en="Note (Optional)">
-            </div>
-            
+            <div class="input-group"><span class="material-icons">lock</span><input type="password" id="dPass" placeholder="الرقم السري" data-ar="الرقم السري" data-en="Password"></div>
+            <div class="input-group"><span class="material-icons">note</span><input type="text" id="dNote" placeholder="ملاحظة (اختياري)" data-ar="ملاحظة (اختياري)" data-en="Note (Optional)"></div>
             <div class="action-buttons">
                 <button class="submit-btn" id="dSubmit" onclick="punchDriver()">اعتماد البصمة</button>
-                <button class="records-btn" onclick="fetchMyRecords('dName', null, 'drivers')">سجلاتي</button>
+                <button class="records-btn" onclick="fetchMyRecords('dName', 'dPass', 'drivers')">سجلاتي</button>
             </div>
             <p id="dMsg"></p>
             <button class="back-btn" onclick="showView('main-menu')">الرجوع للقائمة</button>
@@ -148,31 +121,18 @@
 
         <!-- 3. بوابة المحصلين -->
         <div id="collectors-menu" class="view-section">
-            <div class="input-group">
-                <span class="material-icons">person</span>
-                <select id="cName">
-                    <option value="" disabled selected data-ar="اختر اسمك..." data-en="Select Name...">اختر اسمك...</option>
-                    <option value="علاء">علاء / Alaa</option>
-                    <option value="عيشة">عيشة / Aisha</option>
+            <div class="input-group"><span class="material-icons">person</span>
+                <select id="cName"><option value="" disabled selected data-ar="اختر اسمك..." data-en="Select Name...">اختر اسمك...</option>
+                    <option value="علاء">علاء / Alaa</option><option value="عيشة">عيشة / Aisha</option>
                 </select>
             </div>
-            <div class="input-group">
-                <span class="material-icons">fingerprint</span>
-                <select id="cType">
-                    <option value="" disabled selected data-ar="نوع البصمة..." data-en="Punch Type...">نوع البصمة...</option>
-                    <option value="حضور" data-ar="دخول (حضور)" data-en="Check In">دخول (حضور)</option>
-                    <option value="انصراف" data-ar="خروج (انصراف)" data-en="Check Out">خروج (انصراف)</option>
+            <div class="input-group"><span class="material-icons">fingerprint</span>
+                <select id="cType"><option value="" disabled selected data-ar="نوع البصمة..." data-en="Punch Type...">نوع البصمة...</option>
+                    <option value="حضور" data-ar="دخول (حضور)" data-en="Check In">دخول (حضور)</option><option value="انصراف" data-ar="خروج (انصراف)" data-en="Check Out">خروج (انصراف)</option>
                 </select>
             </div>
-            <div class="input-group">
-                <span class="material-icons">lock</span>
-                <input type="password" id="cPass" placeholder="الرقم السري" data-ar="الرقم السري" data-en="Password">
-            </div>
-            <div class="input-group">
-                <span class="material-icons">note</span>
-                <input type="text" id="cNote" placeholder="ملاحظة (اختياري)" data-ar="ملاحظة (اختياري)" data-en="Note (Optional)">
-            </div>
-            
+            <div class="input-group"><span class="material-icons">lock</span><input type="password" id="cPass" placeholder="الرقم السري" data-ar="الرقم السري" data-en="Password"></div>
+            <div class="input-group"><span class="material-icons">note</span><input type="text" id="cNote" placeholder="ملاحظة (اختياري)" data-ar="ملاحظة (اختياري)" data-en="Note (Optional)"></div>
             <div class="action-buttons">
                 <button class="submit-btn" id="cSubmit" onclick="punchCol()">اعتماد البصمة</button>
                 <button class="records-btn" onclick="fetchMyRecords('cName', 'cPass', 'cols')">سجلاتي</button>
@@ -182,13 +142,12 @@
         </div>
     </div>
 
-    <!-- نافذة السجلات -->
+    <!-- الفوتر الرسمي للمصنع (الشهادات والاعتمادات) -->
+    <img src="footer_img.png" alt="Stars Poly Footer" class="footer-img">
+
     <div id="recordsModal" class="modal">
         <div class="modal-content">
-            <div class="modal-header">
-                <h3 style="margin:0; color:var(--primary);" id="modalTitle">سجلاتي</h3>
-                <button class="close-btn" onclick="closeModal()">X</button>
-            </div>
+            <div class="modal-header"><h3 style="margin:0; color:var(--primary);" id="modalTitle">سجلاتي</h3><button class="close-btn" onclick="closeModal()">X</button></div>
             <div id="recordsList">جاري التحميل...</div>
         </div>
     </div>
@@ -197,9 +156,9 @@
         const dbUrl = "https://attendance-system-47995-default-rtdb.firebaseio.com/attendance.json";
         const FACTORY_LAT = 25.1161977; const FACTORY_LNG = 55.2345118; const ALLOWED_KM = 0.5;
         
-        // الأرقام السرية
         const emps = { "Suhail Satar": "suh9988", "bayna ahmed": "bay5544", "Fatmah yamahi": "fat7766", "Deema": "dee3322" };
-        const cols = { "علاء": "alaa11", "عيشة": "aish22" }; // أرقام سرية للمحصلين
+        const drivers = { "أيمن": "aym33", "ربيع": "rab44", "سليم": "sal55" };
+        const cols = { "علاء": "alaa11", "عيشة": "aish22" };
 
         let lang = "ar";
 
@@ -219,9 +178,8 @@
             document.getElementById("modalTitle").innerText = lang === "ar" ? "سجلاتي" : "My Records";
             
             document.querySelectorAll('option[data-ar]').forEach(o => o.innerText = o.getAttribute('data-'+lang));
-            ['ePass', 'cPass', 'eNote', 'dNote', 'cNote'].forEach(id => {
-                const el = document.getElementById(id);
-                el.placeholder = el.getAttribute('data-'+lang);
+            ['ePass', 'dPass', 'cPass', 'eNote', 'dNote', 'cNote'].forEach(id => {
+                const el = document.getElementById(id); el.placeholder = el.getAttribute('data-'+lang);
             });
         }
 
@@ -238,80 +196,73 @@
             return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         }
 
-        // بصمة السائقين
         function punchDriver() {
-            const name = document.getElementById("dName").value, type = document.getElementById("dType").value, note = document.getElementById("dNote").value;
+            const name = document.getElementById("dName").value, type = document.getElementById("dType").value, pass = document.getElementById("dPass").value.trim(), note = document.getElementById("dNote").value;
             const msg = document.getElementById("dMsg"), btn = document.getElementById("dSubmit");
             if(!name || !type) { msg.innerText = lang==="ar"?"اختر الاسم والنوع!":"Select Name and Type!"; msg.style.color="red"; return; }
+            if(drivers[name] !== pass) { msg.innerText = lang==="ar"?"الرقم السري خطأ!":"Wrong Password!"; msg.style.color="red"; return; }
             
             btn.disabled = true; msg.innerText = lang==="ar"?"جاري تحديد الموقع...":"Locating..."; msg.style.color="#f39c12";
             if(navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(pos => {
                     if(getDist(pos.coords.latitude, pos.coords.longitude, FACTORY_LAT, FACTORY_LNG) <= ALLOWED_KM) {
-                        sendData(name, type, pos, 'سائق', note, msg, btn);
-                    } else { btn.disabled=false; msg.innerText=lang==="ar"?"❌ أنت خارج المصنع!":"❌ Out of factory range!"; msg.style.color="red"; }
+                        sendData(name, type, pos, 'سائق', note, msg, btn, true);
+                    } else {
+                        const failedNote = note ? (note + ' | ❌ محاولة مرفوضة (خارج المصنع)') : '❌ محاولة مرفوضة (خارج المصنع)';
+                        sendData(name, type, pos, 'سائق (محاولة مرفوضة)', failedNote, msg, btn, false);
+                    }
                 }, err => { btn.disabled=false; msg.innerText=lang==="ar"?"❌ اسمح بالموقع!":"❌ Allow GPS!"; msg.style.color="red"; }, {enableHighAccuracy:true});
             }
         }
 
-        // بصمة الموظفين
         function punchEmp() {
             const name = document.getElementById("eName").value, type = document.getElementById("eType").value, pass = document.getElementById("ePass").value.trim(), note = document.getElementById("eNote").value;
             const msg = document.getElementById("eMsg"), btn = document.getElementById("eSubmit");
             if(!name || !type) { msg.innerText = lang==="ar"?"اختر الاسم والنوع!":"Select Name and Type!"; msg.style.color="red"; return; }
             if(emps[name] !== pass) { msg.innerText = lang==="ar"?"الرقم السري خطأ!":"Wrong Password!"; msg.style.color="red"; return; }
-            
             btn.disabled = true; msg.innerText = lang==="ar"?"جاري تحديد الموقع...":"Locating..."; msg.style.color="#f39c12";
-            if(navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(pos => sendData(name, type, pos, 'موظف', note, msg, btn), 
-                err => { btn.disabled=false; msg.innerText=lang==="ar"?"❌ اسمح بالموقع!":"❌ Allow GPS!"; msg.style.color="red"; }, {enableHighAccuracy:true});
-            }
+            if(navigator.geolocation) { navigator.geolocation.getCurrentPosition(pos => sendData(name, type, pos, 'موظف', note, msg, btn, true), err => { btn.disabled=false; msg.innerText=lang==="ar"?"❌ اسمح بالموقع!":"❌ Allow GPS!"; msg.style.color="red"; }, {enableHighAccuracy:true}); }
         }
 
-        // بصمة المحصلين
         function punchCol() {
             const name = document.getElementById("cName").value, type = document.getElementById("cType").value, pass = document.getElementById("cPass").value.trim(), note = document.getElementById("cNote").value;
             const msg = document.getElementById("cMsg"), btn = document.getElementById("cSubmit");
             if(!name || !type) { msg.innerText = lang==="ar"?"اختر الاسم والنوع!":"Select Name and Type!"; msg.style.color="red"; return; }
             if(cols[name] !== pass) { msg.innerText = lang==="ar"?"الرقم السري خطأ!":"Wrong Password!"; msg.style.color="red"; return; }
-            
             btn.disabled = true; msg.innerText = lang==="ar"?"جاري تحديد الموقع...":"Locating..."; msg.style.color="#f39c12";
-            if(navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(pos => sendData(name, type, pos, 'محصل', note, msg, btn), 
-                err => { btn.disabled=false; msg.innerText=lang==="ar"?"❌ اسمح بالموقع!":"❌ Allow GPS!"; msg.style.color="red"; }, {enableHighAccuracy:true});
-            }
+            if(navigator.geolocation) { navigator.geolocation.getCurrentPosition(pos => sendData(name, type, pos, 'محصل', note, msg, btn, true), err => { btn.disabled=false; msg.innerText=lang==="ar"?"❌ اسمح بالموقع!":"❌ Allow GPS!"; msg.style.color="red"; }, {enableHighAccuracy:true}); }
         }
 
-        function sendData(name, type, pos, role, note, msgEl, btnEl) {
+        function sendData(name, type, pos, role, note, msgEl, btnEl, isSuccess) {
             const data = { employeeName: name, attendanceType: type, role: role, note: note || '', serverTime: { ".sv": "timestamp" }, location: `https://www.google.com/maps?q=${pos.coords.latitude},${pos.coords.longitude}` };
             fetch(dbUrl, { method: 'POST', body: JSON.stringify(data) }).then(res => {
-                if(res.ok) { msgEl.innerText = lang==="ar"?`✅ تمت البصمة ${name}`:`✅ Success ${name}`; msgEl.style.color="green"; btnEl.innerText="✔️"; }
+                if(res.ok) {
+                    if(isSuccess) {
+                        msgEl.innerText = lang==="ar"?`✅ تمت البصمة ${name}`:`✅ Success ${name}`; msgEl.style.color="green"; btnEl.innerText="✔️";
+                    } else {
+                        msgEl.innerText = lang==="ar"?"❌ عذراً، لا يمكنك التبصيم وأنت خارج المصنع!":"❌ Sorry, you must be inside the factory to punch in!"; msgEl.style.color="red"; btnEl.disabled=false; btnEl.innerText=lang==="ar"?"اعتماد البصمة":"Submit";
+                    }
+                }
             }).catch(() => { btnEl.disabled=false; msgEl.innerText=lang==="ar"?"خطأ اتصال":"Network Error"; msgEl.style.color="red"; });
         }
 
-        function fetchMyRecords(nameId, passId = null, roleObjStr) {
+        function fetchMyRecords(nameId, passId, roleObjStr) {
             const name = document.getElementById(nameId).value;
             const msg = document.getElementById(nameId === 'dName' ? 'dMsg' : (nameId === 'eName' ? 'eMsg' : 'cMsg'));
-            
             if(!name) { msg.innerText = lang==="ar"?"اختر اسمك أولاً!":"Select your name first!"; msg.style.color="red"; return; }
             if(passId) {
                 const pass = document.getElementById(passId).value.trim();
-                const dictObj = roleObjStr === 'emps' ? emps : cols;
-                if(dictObj[name] !== pass) { msg.innerText = lang==="ar"?"أدخل الرقم السري الصحيح لرؤية سجلاتك!":"Enter correct password to see records!"; msg.style.color="red"; return; }
+                const dictObj = roleObjStr === 'emps' ? emps : (roleObjStr === 'drivers' ? drivers : cols);
+                if(dictObj[name] !== pass) { msg.innerText = lang==="ar"?"أدخل الرقم السري الصحيح!":"Enter correct password!"; msg.style.color="red"; return; }
             }
-
             document.getElementById("recordsModal").style.display = "flex";
-            const list = document.getElementById("recordsList");
-            list.innerHTML = lang==="ar"?"جاري التحميل...":"Loading...";
-
+            const list = document.getElementById("recordsList"); list.innerHTML = lang==="ar"?"جاري التحميل...":"Loading...";
             fetch(dbUrl).then(res => res.json()).then(data => {
                 if(!data) { list.innerHTML = lang==="ar"?"لا توجد سجلات":"No records found"; return; }
                 let myRecords = [];
                 for(let key in data) { if(data[key].employeeName === name) myRecords.push(data[key]); }
-                
                 if(myRecords.length === 0) { list.innerHTML = lang==="ar"?"لا توجد سجلات":"No records found"; return; }
                 myRecords.sort((a,b) => (b.serverTime||0) - (a.serverTime||0)); 
-                
                 list.innerHTML = "";
                 myRecords.slice(0, 10).forEach(r => {
                     let d = new Date(r.serverTime);
