@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>تسجيل الحضور والانصراف</title>
     
+    <!-- أيقونة تبويب المتصفح -->
+    <link rel="icon" href="logowhite.png" type="image/png">
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
@@ -137,7 +140,6 @@
         const baseUrl = "https://attendance-system-47995-default-rtdb.firebaseio.com";
         const FACTORY_LAT = 25.1161977; const FACTORY_LNG = 55.2345118;
         
-        // الموظفون الأساسيون (ثابتون)
         const BASE_USERS = {
             "Suhail Satar": "suh9988",
             "bayna ahmed": "bay5544",
@@ -159,28 +161,25 @@
             document.getElementById("filterMonth").value = `${now.getFullYear()}-${m}`;
         });
 
-        // جلب الموظفين المضافين ديناميكياً
+        // جلب الموظفين بدون أي عناوين وتصنيفات للمجموعات
         function fetchUsers() {
             const sel = document.getElementById("userSelect");
             sel.innerHTML = `<option value="" disabled selected>اختر اسمك...</option>`;
             
-            sel.innerHTML += `<optgroup label="الموظفون الأساسيون">`;
-            for(let name in BASE_USERS) { sel.innerHTML += `<option value="BASE_${name}">${name}</option>`; }
-            sel.innerHTML += `</optgroup>`;
+            for(let name in BASE_USERS) { 
+                sel.innerHTML += `<option value="BASE_${name}">${name}</option>`; 
+            }
 
             fetch(`${baseUrl}/users.json`).then(res => res.json()).then(data => {
                 if (data) {
                     dynamicUsers = data;
-                    let hasDynamic = false;
-                    let dynHtml = `<optgroup label="موظفون مضافون حديثاً">`;
+                    let dynHtml = ``;
                     for (let key in data) {
                         if(data[key] && data[key].name && data[key].name !== 'undefined') {
                             dynHtml += `<option value="DYN_${key}">${data[key].name}</option>`;
-                            hasDynamic = true;
                         }
                     }
-                    dynHtml += `</optgroup>`;
-                    if(hasDynamic) sel.innerHTML += dynHtml;
+                    sel.innerHTML += dynHtml;
                 }
                 loadSavedUser();
             }).catch(e => { console.log("لا يوجد موظفين إضافيين"); });
